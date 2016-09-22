@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChDiscussChatRecordEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChDiscussChatRecordEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="chatID" property="chatid" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="volumn" property="volumn" jdbcType="DECIMAL" />
+    <result column="chatFromType" property="chatfromtype" jdbcType="VARCHAR" />
+    <result column="chatFromID" property="chatfromid" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="employeeID" property="employeeid" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, chatID, type, content, price, volumn, chatFromType, chatFromID, status, employeeID, 
+    createdAt
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_discuss_chat_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_discuss_chat_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChDiscussChatRecordEntity" >
+    insert into ch_discuss_chat_record (id, chatID, type, 
+      content, price, volumn, 
+      chatFromType, chatFromID, status, 
+      employeeID, createdAt)
+    values (#{id,jdbcType=INTEGER}, #{chatid,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{volumn,jdbcType=DECIMAL}, 
+      #{chatfromtype,jdbcType=VARCHAR}, #{chatfromid,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{employeeid,jdbcType=INTEGER}, #{createdat,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChDiscussChatRecordEntity" >
+    insert into ch_discuss_chat_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="chatid != null" >
+        chatID,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="volumn != null" >
+        volumn,
+      </if>
+      <if test="chatfromtype != null" >
+        chatFromType,
+      </if>
+      <if test="chatfromid != null" >
+        chatFromID,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="employeeid != null" >
+        employeeID,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="chatid != null" >
+        #{chatid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="volumn != null" >
+        #{volumn,jdbcType=DECIMAL},
+      </if>
+      <if test="chatfromtype != null" >
+        #{chatfromtype,jdbcType=VARCHAR},
+      </if>
+      <if test="chatfromid != null" >
+        #{chatfromid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="employeeid != null" >
+        #{employeeid,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChDiscussChatRecordEntity" >
+    update ch_discuss_chat_record
+    <set >
+      <if test="chatid != null" >
+        chatID = #{chatid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="volumn != null" >
+        volumn = #{volumn,jdbcType=DECIMAL},
+      </if>
+      <if test="chatfromtype != null" >
+        chatFromType = #{chatfromtype,jdbcType=VARCHAR},
+      </if>
+      <if test="chatfromid != null" >
+        chatFromID = #{chatfromid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="employeeid != null" >
+        employeeID = #{employeeid,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChDiscussChatRecordEntity" >
+    update ch_discuss_chat_record
+    set chatID = #{chatid,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      volumn = #{volumn,jdbcType=DECIMAL},
+      chatFromType = #{chatfromtype,jdbcType=VARCHAR},
+      chatFromID = #{chatfromid,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      employeeID = #{employeeid,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

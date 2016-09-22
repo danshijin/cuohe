@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<title>添加线索池</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<link href="${request.getContextPath()}/Public/assets/admin/css/css.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/css/plugins.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/layout.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color">
+<link href="${request.getContextPath()}/Public/assets/admin/css/custom.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/common.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/css/customerDetail.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="${request.getContextPath()}/Public/favicon.ico">
+<!--[if lt IE 9]>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/respond.min.js"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+<script>BASE_URL = '${request.getContextPath()}'</script>
+<script src="${request.getContextPath()}/Public/assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/layout.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/indexComponent.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/commonUtils.js" type="text/javascript"></script>
+<script type="text/javascript" src="${request.getContextPath()}/Public/My97DatePicker/WdatePicker.js"></script>
+<!-- select2  begin -->
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2_locale_zh-CN.js"></script>
+<link href="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css">
+<script src="${request.getContextPath()}/Public/js/customerDetail/businessSel.js" type="text/javascript"></script>
+<!-- select2 end -->
+
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.zh-CN.min.js" type="text/javascript"></script>
+
+</head>
+<body class="page-header-top-fixed">
+<div class="page-header">
+	<!--头部开始-->
+	<#include "/include/top.html" />
+	<!-- 头部信息结束 -->
+
+	<!-- 头部菜单开始 -->
+	<#include "/include/top_menu.html" />
+	<!-- 头部菜单结束 -->
+</div>
+<!-- END HEADER -->
+
+
+<!-- BEGIN PAGE CONTAINER -->
+
+<div class="page-container">
+	<div class="page-content">
+		<div class="container-fluid">
+		<ul class="page-breadcrumb breadcrumb">
+				<li>
+					<a href="#">首页</a><i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+					 客户管理<i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+					 线索池
+				</li>
+				<li class="active">
+					查看线索
+				</li>
+			</ul>
+			<div class="row margin-top-10">
+				<div class="col-md-12">
+								<div class="portlet light bordered">
+								<div> 
+									<h3>
+									查看线索
+									</h3>
+								</div>
+									<div class="portlet-body">
+									 <h4 align="center" style="font-weight:bold;margin-bottom: 20px;">主要信息</h4>
+									 						
+									 <form method="post" id="form1" name="form1">
+									 
+										<table class="tb" cellspacing="1" border="1" >
+											<tr >
+												<td class="tdTitle">负责人</td>
+												<td>
+												<div class="col-md-3" style="width:200px">
+													<select  disabled="disabled" class="form-control" id="userId" name ="userId"> 
+						            		         <#list userList as ulist >           		         
+						            		        
+						            		          <option value="${ulist.id?c}"
+						            		           <#if (comObj?exists && comObj.userId==ulist.id)||((!comObj?exists||!comObj.userId?exists ) && userList?exists && userInfo?exists && ulist.account == userInfo.account)>						            		          
+						            		           selected="selected" 
+						            		            </#if>
+						            		           >${ulist.name}</option> 
+						            		       
+						            		         
+						            		        
+					            				    </#list>
+					            			    </select>
+					            			</div>
+												</td>
+												<td class="tdTitle">联系人</td>
+												<td><input disabled="disabled" style="width: 80%; margin-left:10px" class="form-control" type="text" id="contacterName" name="contacterName" value="${(comObj.contractName)!}"></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">公司名</td>
+												<td>
+												
+												  <div style="float:left;padding-left:5px; "> 
+												<input  disabled="disabled" style="width: 300px; margin-left:10px" class="form-control" type="text" id="companyName" name="companyName" value="${(comObj.companyName)!''}"></div>
+												&nbsp;&nbsp;<div style="float:left;clear: both;" class="col-md-3"></div>
+												  										
+												
+												</div></td> 
+												<td class="tdTitle">性别</td> 
+
+												<td > 
+												<label style="margin-left: 20px;" >
+													<input  disabled="disabled"  type="radio" id="sexMan" name="sex" value="0" checked>先生
+												</label>
+													<label style="margin-left: 20px;" >
+												<input    disabled="disabled" type="radio" id="sexWoman" name="sex" value="1" <#if comObj?exists && comObj.sex?exists && comObj.sex==1>checked="checked"</#if> >女士
+ 												</label>
+												</td> 
+											</tr>
+											
+											<tr>
+												<td class="tdTitle">来源</td>
+												<td>
+												<div class="col-md-3" style="width:200px">											
+												<select disabled="disabled"  class="form-control" id="categorySource" name ="categorySource">
+												  <#list laiyuanList as ulist >  
+												       <option value="${ulist.id?c}"  <#if comObj?? && comObj.categorySource?? && comObj.categorySource==ulist.id>selected</#if> >${ulist.name}</option> 
+					            				    </#list>
+												</select>
+												</div>
+												</td>
+												<td class="tdTitle">职位</td>
+												<td><input disabled="disabled"  style="width: 80%; margin-left:10px" class="form-control"  type="text" id="position" name="position" value="${(comObj.position)!''}"></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">行业</td>
+												<td> 
+													<input disabled="disabled" style="min-width:240px;max-width:400px;height: 34px; margin-left:10px" class="form-control" type="text" id="salesProducts" name="salesProducts" value="${(comObj.salesProducts)!''}" >
+												</td>
+												<td class="tdTitle">手机</td>
+												<td ><input disabled="disabled" style="width: 80%; margin-left:10px" class="form-control"  type="text"  id="mobilePhone" name="mobilePhone" value="${(comObj.mobilePhone)!''}"></td>
+   										</tr> 
+											<tr>
+												<td class="tdTitle">省份</td>
+												<td>
+												<div class="col-md-3" style="width:200px">
+												<select class="form-control"  disabled="disabled" name="areaId" id="areaId">
+												     <#list parentArea as ulist > 
+						            		          <option  value="${ulist.id?c}" <#if  comObj?exists && comObj.areaId?exists && comObj.areaId==ulist.id>selected</#if> >${ulist.name}</option>
+					            				    </#list>
+												    </select></div>&nbsp;&nbsp; 
+												    <div   class="col-md-3" style="width:200px">
+												     <select  disabled="disabled" class="form-control" name="city" id="cityId" <#if childArea?exists> style="display:block;"<#else>style="display:none;"</#if>>
+												     <#if childArea?exists>	
+												     <option value="0" >--请选择--</option>									
+												     <#list  childArea as ulist > 
+												      <option  value="${ulist.id?c}" <#if  comObj?exists &&comObj.city?exists && comObj.city==ulist.id>selected="selected"</#if> >${ulist.name}</option> 
+												      </#list>
+												     <#else>
+						            		            <option value="0" ></option> 
+					            				    </#if>
+												    </select>
+												    </div>								   
+												    </td>
+												<td class="tdTitle">QQ</td>
+												<td ><input  disabled="disabled" style="width: 80%; margin-left:10px" class="form-control"   type="text" id="qq" name="qq" value="${(comObj.qq)!''}"></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">地址</td>
+												<td><input  disabled="disabled"  style="width: 75%; margin-left:15px" class="form-control"  type="text" id="address" name="address" value="${(comObj.address)!''}"></td>
+												<td class="tdTitle">邮箱</td>
+												<td ><input  disabled="disabled"  style="width: 80%; margin-left:10px" class="form-control"  type="text" id="email" name="email" value="${(comObj.email)!''}"></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">下次联系时间 </td>
+												<td><input  disabled="disabled"   style="width: 75%; margin-left:15px" class="form-control" type="text" id="nextTime" name="nextTime"  value="${(comObj.nextTime)!''}"></td>
+												<td class="tdTitle">下次联系内容</td>
+												<td ><input disabled="disabled"  style="width: 80%; margin-left:10px" class="form-control" type="text" id="nextContext" name="nextContext" value="${(comObj.nextContext)!''}"></td>
+											</tr>
+										</table>
+										
+										
+										
+									 <h4 align="center" style="font-weight:bold; margin-top: 30px;margin-bottom: 20px;">附加信息</h4>
+									   
+										<table class="tb" cellspacing="1" border="1">
+											<tr >
+												<td class="tdTitle">法人</td>
+												<td><input  disabled="disabled" style="width: 80%; margin-left:15px" class="form-control"  type="text" id="corporate" name="corporate" value="${(comObj.corporate)!''}"></td>
+												<td class="tdTitle">联系人2</td>
+												<td><input  disabled="disabled" style="width: 80%; margin-left:10px" class="form-control"  type="text" id="contacterName2" name="contacterName2" value="${(comObj.contacterName2)!''}"></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">公司电话</td>
+												<td><input  disabled="disabled" style="width: 80%; margin-left:15px" class="form-control"  type="text" id="companyPhone" name="companyPhone" value="${(comObj.companyPhone)!''}"></td>
+												<td class="tdTitle">性别</td>
+												<td>
+												<label disabled="disabled" style="margin-left: 20px;"><input type="radio" name="sex2" value="0" checked="checked">先生</label>
+												<label  disabled="disabled" style="margin-left: 20px;"><input type="radio" name="sex2" value="1" <#if comObj?exists  && comObj.sex?exists &&  comObj.sex2==1>checked="checked"</#if> >女士</label>
+												</td>
+											</tr>
+											<tr>
+												<td class="tdTitle">网址</td>
+												<td><input  disabled="disabled"  style="width: 80%; margin-left:15px" class="form-control" type="text" id="compaySite" name="compaySite" value="${(comObj.compaySite)!''}"></td>
+												<td class="tdTitle">职位</td>
+												<td><input disabled="disabled" style="width: 80%; margin-left:10px" class="form-control"  type="text" id="position2" name="position2" value="${(comObj.position2)!''}"></td>
+											</tr>
+											 <tr>
+												<td class="tdTitle">企业类型</td>
+												<td>
+												<div style="vertical-align: text-bottom;">
+												 <#list entTypesList as ulist > 
+												 <label style="margin-left: 20px;">
+												 <input   disabled="disabled" type="checkbox" value="${ulist.id?c}" name="entTypes" <#if (comObj?exists && comObj.entTypes?exists && comObj.entTypes?index_of(","+ulist.id+",")!=-1)|| (comObj?exists && comObj.entTypesName?exists && ulist.id==comObj.entTypesName) > checked="checked"</#if> >${ulist.name}
+												 </label> 
+											    </#list>
+												  </div> 
+												</td>
+												<td class="tdTitle">手机</td>
+												<td ><input disabled="disabled"  style="width: 80%; margin-left:10px" class="form-control" type="text" id="mobilePhone2" name="mobilePhone2" value="${(comObj.mobilePhone2)!''}"></td>
+   										    </tr> 
+											<tr>
+												<td class="tdTitle">员工人数</td>
+												<td>
+												<div class="col-md-3" style="width:200px">
+												<select disabled="disabled"  class="form-control" id="categoryEmployee" name ="categoryEmployee">
+												 <#list empleeyCList as ulist > 
+						            		          <option value="${ulist.id?c}" 
+						            		          <#if comObj?exists && comObj.categoryEmployee==ulist.id>selected="selected"</#if>>${ulist.name}</option>
+					            				    </#list>
+												</select></div></td>
+												<td class="tdTitle">QQ</td>
+												<td ><input disabled="disabled"   style="width: 80%; margin-left:10px" class="form-control"  type="text" id="qq2" name="qq2" value="${(comObj.qq2)!''}"></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">年销售额</td>
+												<td>
+												<div class="col-md-3" style="width:200px">
+												<select class="form-control" disabled="disabled" id="salesVolume" name ="salesVolume">
+												 <#list yearSalesList as ulist > 
+						            		          <option  value="${ulist.id?c}" <#if comObj?exists && comObj.salesVolume?exists && comObj.salesVolume==ulist.id >selected="selected"</#if>>${ulist.name}</option>
+					            				    </#list>
+												</select></div></td>
+												<td class="tdTitle">邮箱</td>
+												<td ><input disabled="disabled" style="width: 80%; margin-left:10px" class="form-control" type="text" id="email2" name="email2" value="${(comObj.email2)!''}"></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">注册时间</td>
+												<td><input disabled="disabled" style="width: 80%; margin-left:15px" type="text"  class="form-control" id="strRegisterDate" name="strRegisterDate" value="${(comObj.strRegisterDate)!''}"/></td>
+												<td ></td>
+												<td ></td>
+											</tr>
+											<tr>
+												<td class="tdTitle">企业性质</td>
+												<td>
+												<div class="col-md-3" style="width:200px">
+												<select disabled="disabled" class="form-control" id="companyProperty" name ="companyProperty">
+												 <#list companyPropertyList as ulist > 
+						            		          <option value="${ulist.id?c}" <#if comObj?exists && comObj.companyProperty==ulist.id>selected="selected"</#if>>${ulist.name}</option>
+					            				    </#list>
+												</select></div></td>
+												<td ></td>
+												<td ></td>
+											</tr>
+										</table>
+										<#if comObj ??>
+										<input id="hfTrailPoolId" name="trailPoolId" value="${(comObj.trailPoolId?c)!''}" type="hidden">
+										<input type="hidden" name="id" value="${(comObj.id)!''}">
+										<input type="hidden" name="conId" value="${(comObj.conId)!''}"> 
+										<input type="hidden" name="conId2" value="${(comObj.conId2)!''}"> 
+										</#if>
+									</form>	
+										<div style="width: 100%;text-align: center;margin-top: 50px;">
+ 													<button  class="btn green" onclick="javascript :history.back(-1);" >
+														<i class="fa fa-plus"></i> 返回
+													</button>  					
+										</div>
+										<br>
+										<br>
+									
+									</div>
+								</div> 
+		</div>
+</div>
+			
+	</div>
+</div>
+</div>
+<!-- END PAGE CONTAINER -->
+
+
+<!-- 底部开始 -->
+<#include "/include/foot.html" />
+<!-- 底部结束 -->
+</body>
+<script>  
+     var companyModel;
+     var businessArr = ['salesProducts'];
+	 jQuery(document).ready(function() {
+		 
+		 
+		 $("#nextTime").datepicker({
+	   	 	language: "zh-CN",
+	        autoclose: true,//选中之后自动隐藏日期选择框
+	        clearBtn: true,//清除按钮
+	        todayBtn: false,//今日按钮
+	        format: "yyyy-mm-dd",//日期格式
+	        startDate: Date()
+		 });
+			
+	      $("#areaId").change(function () {  
+            $.get("getAreaByprovinceId/"+$("#areaId").val()+".do",{},function(data){   
+                if(data!=null){   
+                    var result = "";
+                     for(var obj in data)
+                     {
+                      result +="<option value='"+data[obj].id+"'>"+data[obj].name+"</option>";
+                     }  
+                     if(result!="")
+                     {
+                      $("#cityId").html(result);
+                      $("#cityId").css("display","block");
+                     }else
+                     {
+                       $("#cityId").html("<option value='0'></option>");
+                      $("#cityId").css("display","none");
+                     }
+                }
+            });
+        });
+
+
+       <!--搜索公司-->
+       $("#checkCompanyName").click(function(){     
+           var searchStr = $("#companyName").val();
+         
+			if($.trim(searchStr).length==0){
+				CommonUtils.succModal('提示','请输入公司名称');
+				return;
+			}  
+			companyModel =  CommonUtils.editModal('${request.getContextPath()}/customer/gotoGetCompanyFromMallPage.do?searchString='+encodeURI(encodeURI(searchStr)),800);
+			 
+			  
+         });
+	});
+ 
+	function cleanText()
+	{
+	  $("#contacterName").val(""); 
+	  $("#position").val("");
+	  $("#mobilePhone").val("");
+	  $("#qq").val("");
+	  $("#email").val("");   
+      $("#contacterName2").val(""); 
+	  $("#position2").val("");
+	  $("#mobilePhone2").val("");
+	  $("#qq2").val("");
+	  $("#email2").val("");    
+	}
+	$("#companyName").keydown(function(event){
+		if(event.keyCode == 13){
+			$("#checkCompanyName").click();
+		}
+	});
+
+	//添加线索
+	function trailPoolSave(){  
+if(checkText()){ 
+		$.ajax({
+		     url:"${request.getContextPath()}/TrailPoolPojo/trailPoolSave.do",
+		     type:"post",
+		     dataType:"json",
+		     async:false,
+		     data:$("#form1").serialize(),
+		     success:function(result){ 
+		          if(result.code=="success")
+		          { 
+		             CommonUtils.succModal("提示","添加成功");
+		             window.location.href="${request.getContextPath()}/TrailPoolPojo/getAllList.do";
+		          }else
+		          {
+		             CommonUtils.succModal("警告",result.message);
+		          }
+		     },
+			 });
+		  }
+			 }
+	//联系人修改
+	function trailPoolupfate(){  
+	  if(checkText())
+	  {    
+		 $.ajax({
+		     url:"${request.getContextPath()}/TrailPoolPojo/trailPoolupdate.do", 
+		     type:"post",
+		     dataType:"json",
+		     async:false,
+		     data:$("#form1").serialize(),
+		     success:function(result){ 
+		          if(result.code=="success")
+		          { 
+		             window.location.href="${request.getContextPath()}/TrailPoolPojo/getAllList.do";
+		          }else
+		          {
+		             CommonUtils.succModal("警告",result.message);
+		          }
+		     }
+		   });
+		 }
+	}
+	function checkText()
+	{
+	  	if($("#companyName").val()=="")
+		{
+		   CommonUtils.succModal("警告","公司名不能为空");
+		   return false;
+		}
+	  	var len=getByteLen(  $("#companyName").val()  );
+	  	if(len>100){
+	  		
+	  	  CommonUtils.succModal("警告","公司名过长");
+		   return false;
+	  		
+	  	}
+		var re1 = /^0\d{2,3}-?\d{7,8}$/;
+	    if($("#companyPhone").val()!="")
+	    {
+	        if (!re1.test($("#companyPhone").val())) {
+	             CommonUtils.succModal("警告","请输入正确的公司电话");
+			       return false;
+            }
+        } 
+		if($("#contacterName").val()=="") 
+		{
+		   CommonUtils.succModal("警告","重要联系人姓名不能为空");
+		   return false;
+		} 
+		if($("#mobilePhone").val()=="" ) 
+		{
+		   CommonUtils.succModal("警告","重要联系人手机号不能为空");
+		   return false;
+		}	
+		var myreg = /^0?1\d{10}$/; 
+		if($("#mobilePhone").val()!="" )
+		{
+           if(myreg.test($("#mobilePhone").val())==false )
+           {
+            CommonUtils.succModal("警告","请输入有效的手机号");
+		    return false;
+            } 
+		}	
+		if($("#position").val()=="")
+		{ 
+		   CommonUtils.succModal("警告","重要联系人职位不能为空");
+		   return false;
+		}
+		
+		if($("#mobilePhone2").val()!="" )
+		{
+           if(myreg.test($("#mobilePhone2").val())==false )
+           {
+            CommonUtils.succModal("警告","请输入有效的手机号");
+		    return false;
+            } 
+		}
+		if($("#mobilePhone").val()==$("#mobilePhone2").val())
+		{ 
+		   CommonUtils.succModal("警告","手机号不能重复");
+		    return false;
+		}
+		if($("#qq").val()!="" )
+		{
+		  if (isNaN($("#qq").val())) { 
+	       CommonUtils.succModal("警告","QQ只能是数字");
+		    return false;
+                      　} 
+		}
+		if($("#qq2").val()!="" )
+		{
+		  if (isNaN($("#qq").val())) { 
+	       CommonUtils.succModal("警告","QQ只能是数字");
+		    return false;
+                      　} 
+		}
+		
+        var re3 = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+		if($("#email").val()!=""){ 
+		  	   if(!re3.test($("#email").val())){
+		  	        CommonUtils.succModal("警告","请输入正确邮箱");
+			        return false;
+			    }
+		}
+		if($("#email2").val()!=""){ 
+		  	   if(!re3.test($("#email2").val())){
+			        CommonUtils.succModal("警告","请输入正确邮箱");
+			        return false;
+			    }
+		}
+		
+	    return true; 
+	}
+	 
+	jQuery(document).ready(function() {
+	   
+	   Metronic.init(); // init metronic core componets
+	   Layout.init(); // init layout
+	   IndexComponent.init(); // init index component
+	});
+	recordDate();
+	//初始化日期
+	function recordDate() {
+		var nowDate = new Date();
+        //$('#date-picker').attr("date-date",nowDate.getFullYear()+"/"+parseInt(nowDate.getMonth()+1)+"/"+nowDate.getDate());
+        $('.date-picker').datepicker({
+    	    autoclose: true	   
+    	});
+	}
+	//选择品目 
+	   var brandEl; 
+	   var salesModel;
+		function brandList(el){
+			brandEl = el;  
+			salesModel = CommonUtils.editModal('${request.getContextPath()}/customer/brandlist.do?salesP='+encodeURI(encodeURI($("#salesProducts").val())),600);
+		   
+		}
+		function optionConfirm(){
+			var company = {};
+			company.id = chooseUserId;
+			if(!company.id){
+				alert("请选择公司");
+				return;
+			}
+			$.ajax({
+				type : "POST",
+				url : "${request.getContextPath()}/customer/companyDetail.do?userid="+company.id,
+				dataType : "json",
+				success : function(companyInfo) {
+					companyInfo = $.parseJSON(companyInfo);
+					if(companyInfo && $.isPlainObject(companyInfo)){			
+						//确认这个公司是否存在
+						$.ajax({
+							type : "POST",
+							url : "${request.getContextPath()}/customer/companyByName.do?searchString="+encodeURI(encodeURI(companyInfo.company)),
+							dataType : "json",
+							success : function(type) {
+								if(type==1){
+									alert("客户信息已经存在，不能创建！");
+									history.go(-1);
+									//window.location="${request.getContextPath()}/purchase/getAll.do?type=1";
+								}
+							}
+						});
+						
+						
+						
+						
+						companyOfSearch = {};
+						$('#companyName').val(companyInfo.company||''); 
+						$('#hfAccount').val(chooseUserName||'');
+						$('#salesProducts').val(companyInfo.sell||'');						 
+							$('#level').find('select').val(companyInfo.level);
+						  
+						var areaInfo = companyInfo.area;
+						if(areaInfo && $.isPlainObject(areaInfo)){
+							if(areaInfo.parentID==0){
+								$('#area').find('select').eq(0).val(areaInfo.id);
+							}else{
+								$('#area').find('select').eq(0).val(areaInfo.parentID);
+								setChildAreas($('#area').eq(0),areaInfo.id);
+							}
+						}
+						$('#address').val(companyInfo.address||'');
+						var size = companyInfo.size||'';
+						$('#categoryEmployee').each(function(){
+							if($(this).val()==size){
+								$(this).attr('selected','selected');
+							}
+						});
+						if(companyInfo.buy){
+							$('#buyProducts').val(companyInfo.buy);
+						}
+					//附加信息
+						if($.isNumeric(companyInfo.regyear)){
+							$('#strRegisterDate').val(companyInfo.regyear);
+						}
+						if(companyInfo.telephone){
+							$('#companyPhone').val(companyInfo.telephone);
+						}
+						if(companyInfo.homepage){
+							$('#companySite').val(companyInfo.homepage);
+						}
+					
+						if(companyInfo.account){
+							$('#bankAccount').val(companyInfo.account);
+						}
+						
+						//联系人信息 
+						if(companyInfo.truename){
+						$('#contacterName').val(companyInfo.truename);
+						}
+						if(companyInfo.gender===false){  
+						$('#form1').find("input[name='sex']").eq(0).attr('selected','selected');
+							$('#sexMan').attr('checked','checked');
+						}else if(companyInfo.gender===true){ 
+							$('#sexWoman').attr('checked','checked');
+						$('#form1').find("input[name='sex']").eq(1).attr('selected','selected');
+						}
+						if(companyInfo.career){
+							$('#position').val(companyInfo.career);
+						}
+						if(companyInfo.mobile){
+							$('#mobilePhone').val(companyInfo.mobile);
+						}
+						if(companyInfo.qq){
+							$('#qq').val(companyInfo.qq);				
+						}
+						if(companyInfo.email){
+							$('#email').val(companyInfo.email);
+						}
+						if(companyInfo.admin===true){
+							$("#keyPersonChooseId span:first").addClass("checked");
+						}else if(companyInfo.admin===false){
+							$("#keyPersonChooseId span:last").addClass("checked");
+						}
+						$("#chooseCompanyClose").click();
+							}
+						}
+					});
+					
+				}			
+				function getByteLen(val) {
+		            var len = 0;
+		            for (var i = 0; i < val.length; i++) {
+		                 var a = val.charAt(i);
+		                 if (a.match(/[^\x00-\xff]/ig) != null) 
+		                {
+		                    len += 2;
+		                }
+		                else
+		                {
+		                    len += 1;
+		                }
+		            }
+		            return len;
+		        }
+		
+</script>
+</html>

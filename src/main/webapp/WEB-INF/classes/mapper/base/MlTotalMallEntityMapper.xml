@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.MlTotalMallEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.MlTotalMallEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="mallno" property="mallno" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="catid" property="catid" jdbcType="INTEGER" />
+    <result column="catname" property="catname" jdbcType="VARCHAR" />
+    <result column="ordercount" property="ordercount" jdbcType="INTEGER" />
+    <result column="companycount" property="companycount" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="INTEGER" />
+    <result column="createdate" property="createdate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mallno, name, catid, catname, ordercount, companycount, createtime, createdate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ml_total_mall
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ml_total_mall
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.MlTotalMallEntity" >
+    insert into ml_total_mall (id, mallno, name, 
+      catid, catname, ordercount, 
+      companycount, createtime, createdate
+      )
+    values (#{id,jdbcType=BIGINT}, #{mallno,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{catid,jdbcType=INTEGER}, #{catname,jdbcType=VARCHAR}, #{ordercount,jdbcType=INTEGER}, 
+      #{companycount,jdbcType=INTEGER}, #{createtime,jdbcType=INTEGER}, #{createdate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.MlTotalMallEntity" >
+    insert into ml_total_mall
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mallno != null" >
+        mallno,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="catid != null" >
+        catid,
+      </if>
+      <if test="catname != null" >
+        catname,
+      </if>
+      <if test="ordercount != null" >
+        ordercount,
+      </if>
+      <if test="companycount != null" >
+        companycount,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="createdate != null" >
+        createdate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mallno != null" >
+        #{mallno,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="catid != null" >
+        #{catid,jdbcType=INTEGER},
+      </if>
+      <if test="catname != null" >
+        #{catname,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercount != null" >
+        #{ordercount,jdbcType=INTEGER},
+      </if>
+      <if test="companycount != null" >
+        #{companycount,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.MlTotalMallEntity" >
+    update ml_total_mall
+    <set >
+      <if test="mallno != null" >
+        mallno = #{mallno,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="catid != null" >
+        catid = #{catid,jdbcType=INTEGER},
+      </if>
+      <if test="catname != null" >
+        catname = #{catname,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercount != null" >
+        ordercount = #{ordercount,jdbcType=INTEGER},
+      </if>
+      <if test="companycount != null" >
+        companycount = #{companycount,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        createdate = #{createdate,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.MlTotalMallEntity" >
+    update ml_total_mall
+    set mallno = #{mallno,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      catid = #{catid,jdbcType=INTEGER},
+      catname = #{catname,jdbcType=VARCHAR},
+      ordercount = #{ordercount,jdbcType=INTEGER},
+      companycount = #{companycount,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=INTEGER},
+      createdate = #{createdate,jdbcType=DATE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

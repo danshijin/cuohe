@@ -1,0 +1,194 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.ICounterOfferDao">
+
+	<!-- 查询 当前卖盘最高价 -->
+	<select id="querySellMaxPrice" parameterType="java.lang.Integer"
+		resultType="java.lang.String">
+
+		SELECT MAX(price) FROM ch_pool_price WHERE poolId=#{value}
+		and poolType=1 and status=0
+
+	</select>
+
+	<!-- 查询 当前买盘最低价 -->
+	<select id="queryBuyMinPrice" parameterType="java.lang.Integer"
+		resultType="java.lang.String">
+
+		SELECT MIN(price) FROM ch_pool_price WHERE poolId=#{value}
+		and poolType=2 and status=0
+
+	</select>
+
+	<!-- 查询买盘是否存在 -->
+	<select id="isBuypoolId" parameterType="java.lang.Integer"
+		resultType="java.lang.Float">
+		SELECT price FROM ch_buy_pool WHERE
+		STATUS=0 AND (isClose IS
+		NULL OR isClose =0)
+		AND (isConfirm IS NULL OR isConfirm =0) AND
+		id=#{poolId}
+
+	</select>
+	<!-- 查询卖盘是否存在 -->
+	<select id="isSellpoolId" parameterType="java.lang.Integer"
+		resultType="java.lang.Float">
+		SELECT price FROM ch_sell_pool WHERE
+		STATUS=0 AND (isClose
+		IS NULL OR isClose =0)
+		AND (isConfirm IS NULL OR isConfirm =0) AND
+		id=#{poolId}
+
+	</select>
+
+	<!-- 更新买盘 -->
+	<update id="updateBuypool" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+		UPDATE ch_buy_pool SET
+		lastPrice=#{price} ,
+		lastCusomerName=#{customerName} ,
+		lastMallAccount=
+		#{customerId},
+		poolpriceCount=(SELECT count(customerId) FROM
+		ch_pool_price WHERE poolId=#{poolId} and
+		poolType=1 and status=0 ),
+		lastTime=#{updatedAt} ,
+		isConfirm=#{isConfirm}
+		WHERE id=#{poolId}
+	</update>
+
+	<!-- 更新卖盘 -->
+	<update id="updateSellpool" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+		UPDATE ch_sell_pool
+		SET
+		lastPrice=#{price} ,
+		lastCusomerName=#{customerName} ,
+		lastCustomerId= #{customerId},
+		poolpriceCount=(SELECT count(customerId)
+		FROM ch_pool_price WHERE poolId=#{poolId} and
+		poolType=1 and status=0),
+		lastTime=#{updatedAt} ,
+		isConfirm=#{isConfirm}
+		WHERE id=#{poolId}
+	</update>
+
+
+	<!-- 新建还盘 -->
+	<select id="addCounterOffer" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+		INSERT INTO
+		cuohe.ch_pool_price
+		(
+		poolId,
+		poolType,
+		createdAt,
+		price,
+		account,
+		STATUS,
+		updatedAt,
+		customerId
+		)
+		VALUES
+		(
+		#{poolId},
+		#{poolType},
+		#{createdAt},
+		#{price},
+		#{customerId},
+		0,
+		#{updatedAt},
+		getCustomerIdByAccount(#{customerId})
+		);
+
+	</select>
+	<!-- 修改客户报价 -->
+	<update id="updateCounterOffer" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+		UPDATE
+		ch_pool_price SET price=#{price} ,updatedAt=#{updatedAt} where
+		poolId=#{poolId} and account=#{customerId} and poolType=#{poolType}
+
+	</update>
+
+	<!-- 查询 客户指定报盘是否还价 -->
+	<select id="queryCounterOfferId" parameterType="com.smm.cuohe.domain.CounterOfferEntity"
+		resultType="java.lang.Integer">
+
+		select count(*) from ch_pool_price where poolId=#{poolId}
+		and
+		account=#{customerId} and poolType=#{poolType}
+	</select>
+
+	<!-- 撤销买盘 -->
+	<update id="closeBuyPool" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+
+		UPDATE ch_buy_pool  SET status = 1, updatedAt = now() WHERE id = #{poolId} 
+		
+	</update>
+
+	<!-- 撤销卖盘 -->
+	<update id="closeSellPool" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+	
+		UPDATE  ch_sell_pool SET status = 1, updatedAt=now() WHERE id = #{poolId}
+		
+	</update>
+	<!-- 查询系统消息 -->
+	<select id="querySysNoticePage" parameterType="com.smm.cuohe.domain.SysNotice"
+		resultType="com.smm.cuohe.domain.SysNotice">
+		SELECT id,
+		noticeText,
+		createdAt,
+		isRead,
+		readTime,
+		account,
+		noticeType,
+		updatedAt
+		FROM
+		ch_sys_notice WHERE STATUS=0 AND
+		account=#{customerId} ORDER BY
+		createdAt DESC
+	</select>
+	
+	<!-- 最新消息的总数 -->
+	
+	<select id="querySysNoticeNotRead" parameterType="com.smm.cuohe.domain.SysNotice"
+		resultType="java.lang.Integer">
+		SELECT count(id)
+		FROM
+		ch_sys_notice WHERE STATUS=0 AND isRead = 1 AND
+		account=#{customerId} 
+	</select>
+	
+	<!-- 更新消息为已读 -->
+	<update id="updateNoticeIsRead">
+	update ch_sys_notice SET isRead = 0,updatedAt=now() WHERE id in
+	<foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+    #{item}  
+    </foreach>  
+	</update>
+	
+	<!-- 删除系统指定消息 -->
+	<select id="delSysNotice" parameterType="java.lang.Integer">
+
+		DELETE FROM
+		ch_sys_notice WHERE id=#{value}
+
+	</select>
+	<!-- 修改买盘价格 -->
+	<update id="updateBuyPrice" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+		UPDATE ch_buy_pool SET price = #{price},updatedAt=#{updatedAt}
+		<if test="isConfirm!=null">
+			,isConfirm=#{isConfirm}
+		</if>
+		where id=#{poolId}
+	</update>
+	<!-- 修改卖盘价格 -->
+	<update id="updateSellPrice" parameterType="com.smm.cuohe.domain.CounterOfferEntity">
+		UPDATE ch_sell_pool SET price = #{price},updatedAt=#{updatedAt}
+		<if test="isConfirm!=null">
+			,isConfirm=#{isConfirm}
+		</if>
+		where id=#{poolId}
+	</update>
+
+
+</mapper>

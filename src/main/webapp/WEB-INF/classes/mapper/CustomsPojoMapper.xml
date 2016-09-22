@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.users.CustomsPOJODAO">
+
+    <!-- 查询最新加入客户的前六条 -->
+ 	<select id="getCustomsList" resultType="CustomsPOJO" parameterType="String">
+		SELECT
+			  c.id             id,
+			  c.companyName,
+			  c.entTypes,
+			  g.name    salesVolume,
+			  c.buyBrand           buyBrand,
+			  c.buybrand nameByArea,
+			  u.name nameByUser
+			FROM ch_customs c,
+			  ch_areas a,
+			  ch_users u,
+			  ch_category g
+			WHERE c.areaID = a.id
+			    AND c.PIC = u.id
+			    AND c.status != 1
+			    AND u.status != 1
+			    AND c.salesvolume=g.id
+		    AND c.itemID=#{itemsID}
+		 ORDER BY c.createdAt DESC
+		 LIMIT 6
+     </select>
+     <select id="getCategList" resultType="java.util.Map" parameterType="String">
+     SELECT name FROM ch_category c WHERE id IN (${value}) AND c.modID=1
+     </select>
+</mapper>

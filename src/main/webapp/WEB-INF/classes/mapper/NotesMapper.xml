@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.users.NotesDAO">
+
+    <!--  获取组内共享  -->
+    <select id="notesByOrgan" resultType="Notes" parameterType="java.util.Map">
+        select
+		  id,
+		  itemsId,
+		  noteDate,
+		  noteType,
+		  context,
+		  status,
+		  createdAt,
+		  createdBy,
+		  updatedAt,
+		  updatedBy
+		from ch_notes n where noteType='0' and  itemsId = #{itemid} and date_format(noteDate,'%Y/%m/%d') = #{notedate}
+		and createdBy=#{userid}
+    </select>
+    
+    <!--  个人便签  -->
+    <select id="notesByMe" resultType="Notes" parameterType="java.util.Map">
+        select
+		  id,
+		  itemsId,
+		  noteDate,
+		  noteType,
+		  context,
+		  status,
+		  createdAt,
+		  createdBy,
+		  updatedAt,
+		  updatedBy
+		from ch_notes n where noteType='1' and  createdBy = #{userId}
+    </select>
+
+
+	<!--按用户编号查询创建日期列表-->
+	<select id="getNotesCreateDateByUser" resultType="String" >
+		SELECT createdAt FROM ch_notes WHERE createdBy=#{0} AND itemsId=#{1} ORDER BY createdAt
+	</select>
+    
+	<!--  新增  -->
+    <insert  id="addNotes"  parameterType="Notes">
+	    <selectKey resultType="int" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into ch_notes 
+			(
+				itemsId, 
+				noteDate, 
+				noteType, 
+				context, 
+				createdAt, 
+				createdBy, 
+				updatedAt, 
+				updatedBy
+			)
+			values
+			(
+				#{itemsId}, 
+				#{noteDate}, 
+				#{noteType}, 
+				#{context}, 
+				#{createdAt}, 
+				#{createdBy}, 
+				#{updatedAt}, 
+				#{updatedBy}
+			)
+    </insert>   
+    
+	<!--  修改记录  -->
+    <update  id="updateNotes"  parameterType="Notes">
+        update ch_notes set  context = #{context} ,updatedAt=#{updatedAt},updatedBy=#{updatedBy} where id = #{id}
+    </update >    
+    
+</mapper>

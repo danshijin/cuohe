@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChItemProductsEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChItemProductsEntity" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ItemID" property="itemid" jdbcType="INTEGER" />
+    <result column="ProductName" property="productname" jdbcType="VARCHAR" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="CreatedAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="CreatedBy" property="createdby" jdbcType="INTEGER" />
+    <result column="UpdatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+    <result column="UpdatedBy" property="updatedby" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ItemID, ProductName, Status, CreatedAt, CreatedBy, UpdatedAt, UpdatedBy
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_item_products
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_item_products
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChItemProductsEntity" >
+    insert into ch_item_products (ID, ItemID, ProductName, 
+      Status, CreatedAt, CreatedBy, 
+      UpdatedAt, UpdatedBy)
+    values (#{id,jdbcType=INTEGER}, #{itemid,jdbcType=INTEGER}, #{productname,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createdat,jdbcType=TIMESTAMP}, #{createdby,jdbcType=INTEGER}, 
+      #{updatedat,jdbcType=TIMESTAMP}, #{updatedby,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChItemProductsEntity" >
+    insert into ch_item_products
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="itemid != null" >
+        ItemID,
+      </if>
+      <if test="productname != null" >
+        ProductName,
+      </if>
+      <if test="status != null" >
+        Status,
+      </if>
+      <if test="createdat != null" >
+        CreatedAt,
+      </if>
+      <if test="createdby != null" >
+        CreatedBy,
+      </if>
+      <if test="updatedat != null" >
+        UpdatedAt,
+      </if>
+      <if test="updatedby != null" >
+        UpdatedBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="productname != null" >
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        #{updatedby,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChItemProductsEntity" >
+    update ch_item_products
+    <set >
+      <if test="itemid != null" >
+        ItemID = #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="productname != null" >
+        ProductName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        Status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        CreatedAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        CreatedBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        UpdatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        UpdatedBy = #{updatedby,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChItemProductsEntity" >
+    update ch_item_products
+    set ItemID = #{itemid,jdbcType=INTEGER},
+      ProductName = #{productname,jdbcType=VARCHAR},
+      Status = #{status,jdbcType=INTEGER},
+      CreatedAt = #{createdat,jdbcType=TIMESTAMP},
+      CreatedBy = #{createdby,jdbcType=INTEGER},
+      UpdatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      UpdatedBy = #{updatedby,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

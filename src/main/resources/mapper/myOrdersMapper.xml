@@ -1,0 +1,29 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.MyContractDAO">
+
+	<resultMap type="com.smm.cuohe.domain.Contract" id="BigContract">
+	
+		<id property="id" column="id"/>
+		
+		<collection property="subOrders" column="orderId" select="selectSubOrders"></collection>
+		
+		
+	</resultMap>
+	
+	<select id="selectSubOrders" parameterType="int" resultType="com.smm.cuohe.domain.SubOrder">
+	
+		select * from ch_sub_orders where orderId = #{orderId};
+		
+	</select>
+
+	<select id="selectContract" resultMap="BigContract">
+	
+		select * from ch_contract where id = 1;
+	
+	</select>
+
+	
+</mapper>

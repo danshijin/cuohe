@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.smm.cuohe.dao.counts.TrailCountDao">
+ 
+    <!--  统计所有用户线索信息  -->
+  <select id="trailLists" parameterType="java.util.Map"   resultType="com.smm.cuohe.domain.counts.TrailEntity">
+			SELECT a1.name ,a1.zhcount,a2.addcount,a3.fuzecount FROM  (	
+			SELECT  u.id AS id ,u.name AS NAME ,z.zhcount AS zhcount FROM  (  SELECT NAME ,id  FROM  ch_users      ) u  LEFT JOIN (SELECT u.name, updatedby AS userID,COUNT(*) AS zhcount    FROM   ch_trail_pool c ,ch_users   u WHERE c.updatedby=u.id and c.status=2 and c.itemID=${itemsId}  
+			<if test="startDate!=null">
+			 and c.updatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and c.updatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			
+			 GROUP BY updatedby,u.name ) z ON u.id=z.userID 
+			) a1,
+			(
+				SELECT  u.id,u.name,a.addcount  FROM  (  SELECT NAME ,id  FROM  ch_users  ) u LEFT JOIN  (SELECT  t.CreatedBy userID ,u.name ,COUNT(*) addcount    FROM   ch_trail_pool  t  ,ch_users  u WHERE  t.CreatedBy= u.id  and t.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and t.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and t.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+				
+				
+				GROUP BY t.CreatedBy ,u.name) a  ON a.userid=u.id
+			) a2,
+			(      
+			SELECT  u.id,u.name,f.fuzecount FROM  (  SELECT NAME ,id  FROM  ch_users ) u LEFT JOIN (SELECT  t.userID   ,u.name ,COUNT(*) fuzecount    FROM   ch_trail_pool  t  ,ch_users  u WHERE  t.userID= u.id and t.itemID=${itemsId}  
+			<if test="startDate!=null">
+			 and t.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and t.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			
+			 GROUP BY t.userID ,u.name)  f  ON f.userID=u.id
+			) a3 
+			
+			
+			WHERE  a1.id=a2.id  AND a2.id=a3.id AND (a1.zhcount>0 OR a2.addcount >0 OR a3.fuzecount >0 )	 
+			<if test="userId!=null and userId!=0 ">
+        	and  a1.id=${userId} 
+        	</if>
+			<if test="startNum!=null and endNum !=null ">
+        	limit ${startNum},${endNum}
+        	</if>
+			
+    </select>
+    
+    <!-- 查询所有用户 -->
+	<select id="userlists"   resultType="com.smm.cuohe.domain.counts.TrailEntity">
+			SELECT * FROM  ch_users  
+    </select>
+    
+     <!-- 查询所有产品 -->
+	<select id="itemslists" resultType="com.smm.cuohe.domain.counts.TrailEntity">
+			SELECT id AS itemsId ,NAME AS itemsName  FROM ch_items
+
+
+    </select>
+ 	
+ 	
+ 	<!-- -订单统计 -->
+ 	<select id="queryordercounts"  parameterType="java.util.Map"  resultType="com.smm.cuohe.domain.counts.OrderCountEntity">
+ 	
+ 	
+			SELECT a1.name AS userName ,a1.id  AS userId,a1.qt AS qiatancount ,a2.ddz AS builcount ,a3.ddq  AS firmcount FROM 
+			(
+			SELECT  u.name ,u.id ,q.qt FROM ch_users u LEFT JOIN 
+			 
+			(SELECT u.name, employeeId,COUNT(*) qt FROM   ch_chats c ,ch_users u WHERE c.employeeId=u.id  and u.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and c.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and c.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			GROUP BY employeeId,NAME)  q  ON u.id=q.employeeId
+			) a1 ,(
+			
+			SELECT  u.name ,u.id ,d.ddz FROM ch_users u LEFT JOIN 
+			
+			(SELECT  u.name,createdby ,COUNT(*) AS ddz  FROM  ch_orders o ,ch_users u WHERE o.createdby=u.id  and o.itemID=${itemsId} 
+			
+			<if test="startDate!=null">
+			 and o.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and o.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			 GROUP BY createdby ,u.name) d ON d.createdby=u.id
+			) a2 ,(
+			
+			SELECT  u.name ,u.id ,dq.ddq FROM ch_users u LEFT JOIN 
+			(SELECT  u.name,createdby ,COUNT(*) AS ddq  FROM  ch_orders o ,ch_users u WHERE o.createdby=u.id  AND confirmStatus in(0,2) and o.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and o.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and o.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			
+			GROUP BY createdby ,u.name)  dq ON dq.createdby=u.id
+			) a3 WHERE  a1.id=a2.id AND a2.id=a3.id  AND (qt>0 OR ddz>0 OR ddq>0)
+			
+			<if test="userId!=null and userId!=0 ">
+        	and  a1.id=${userId} 
+        	</if>
+			<if test="startNum!=null and endNum !=null ">
+        	limit ${startNum},${endNum}
+        	</if>
+
+ 	</select>	
+ 	
+ 	<!-- 报价统计 -->
+	<select id="querybaojiacounts"  parameterType="java.util.Map" resultType="com.smm.cuohe.domain.counts.OrderCountEntity">
+ 	
+
+	SELECT  a1.name AS companyName,a1.id AS companyID,a1.gooscount,a2.offercount , a3 .baofrrmcount,a4.chenjiaocount FROM 
+			(
+			SELECT u.companyName name ,u.id ,gooscount FROM ch_customs u LEFT JOIN (	
+			SELECT  sellID , COUNT(*) AS gooscount  FROM ch_orders c WHERE c.Status=0 and  c.source =0 and  c.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and c.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and c.CreatedAt &lt; date_add(#{endDate}, interval 1 day)
+			</if>
+			
+			GROUP BY  sellID
+			)   g ON u.id=g.sellID ) a1,(
+			
+			SELECT  u.companyName name ,u.id ,offercount FROM ch_customs u LEFT JOIN (	
+			
+			SELECT  sellID , COUNT(*) AS offercount  FROM ch_orders	 c WHERE c.source in(0) and  confirmStatus in(0,2) and c.Status=0   and c.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and c.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and c.CreatedAt &lt; date_add(#{endDate}, interval 1 day)  
+			</if>
+			
+			
+			GROUP BY  sellID)
+			g ON u.id=g.sellID) a2 ,(
+			
+			SELECT u.companyName name ,u.id ,baofrrmcount FROM ch_customs u LEFT JOIN (
+			SELECT c.sellID  ,SUM(
+					CASE unit
+					WHEN '0' THEN Quantity
+					WHEN '1' THEN Quantity/1000 END
+					)  AS baofrrmcount  FROM    ch_sub_orders s ,ch_orders c  WHERE s.OrderID=c.id  and c.source =0  and  c.Status=0 and s.Status=0   and  c.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and s.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and s.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			
+			 GROUP BY sellID
+			)   g ON u.id=g.sellID) a3  ,(
+			
+			SELECT u.companyName name ,u.id ,chenjiaocount FROM ch_customs u LEFT JOIN (
+			SELECT c.sellID  ,SUM(
+					CASE unit
+					WHEN '0' THEN Quantity
+					WHEN '1' THEN Quantity/1000 END
+					)   AS chenjiaocount  FROM    ch_sub_orders s ,ch_orders c  WHERE s.OrderID=c.id AND  c.source =0 and confirmStatus in(0,2)  and c.Status=0 and s.Status=0   and  c.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and s.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and s.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			
+			 GROUP BY sellID
+			)   g ON u.id=g.sellID
+			
+			) a4  WHERE a1.id=a2.id AND a2.id=a3.id and a2.id=a4.id AND (gooscount>0 OR offercount>0 OR baofrrmcount>0 or chenjiaocount>0)
+			<if test="companyMame!=null and companyMame!='' ">
+        	and  a1.name like '%${companyMame}%'
+        	</if>
+			<if test="startNum!=null and endNum !=null ">
+        	limit ${startNum},${endNum}
+        	</if>
+ 	</select>	
+
+	<!-- 采购统计  -->
+	<select id="querycaigoujiacounts" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.counts.OrderCountEntity">
+ 	
+
+	SELECT  a1.name AS companyName,a1.id AS companyID,a1.progooscount,a2.prooffercount , a3 .profrrmcount FROM 
+			(
+			SELECT u.companyName name ,u.id ,progooscount FROM ch_customs u LEFT JOIN (	
+			SELECT  buyID , COUNT(*) AS progooscount  FROM ch_orders c WHERE c.source =1 and c.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and c.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and c.CreatedAt &lt; date_add(#{endDate}, interval 1 day)  
+			</if>
+			GROUP BY    buyID
+			)   g ON u.id=g.buyID ) a1,(
+			
+			SELECT u.companyName name ,u.id ,prooffercount FROM ch_customs u LEFT JOIN (	
+			
+			SELECT buyID , SUM(
+					CASE unit
+					WHEN '0' THEN Quantity
+					WHEN '1' THEN Quantity/1000 END
+					)  AS prooffercount  FROM  ch_sub_orders s ,ch_orders	 c WHERE  s.OrderID=c.id and c.source =1  AND confirmStatus in(0,2) and c.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and c.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and c.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			GROUP BY  buyID)
+			g ON u.id=g.buyID) a2 ,(
+			
+			SELECT u.companyName name ,u.id ,profrrmcount FROM ch_customs u LEFT JOIN (
+			SELECT c.buyID  ,SUM(
+					CASE unit
+					WHEN '0' THEN Quantity
+					WHEN '1' THEN Quantity/1000 END
+					)   AS profrrmcount  FROM    ch_sub_orders s ,ch_orders c  WHERE s.OrderID=c.id  AND c.source =1  and c.itemID=${itemsId} 
+			<if test="startDate!=null">
+			 and s.CreatedAt &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			and s.CreatedAt &lt; date_add(#{endDate}, interval 1 day) 
+			</if>
+			
+			GROUP BY buyID
+			)   g ON u.id=g.buyID) a3  WHERE a1.id=a2.id AND a2.id=a3.id AND (progooscount>0 OR prooffercount>0 OR profrrmcount>0)
+		<if test="companyMame!=null and companyMame!='' ">
+        	and  a1.name like '%${companyMame}%'
+        	</if>
+			<if test="startNum!=null and endNum !=null ">
+        	limit ${startNum},${endNum}
+        	</if>
+ 	</select>	
+ 	
+ 	<!-- 查询客户企业名称 -->
+ 	<select id="selectcompanyName" parameterType="java.lang.String" resultType="com.smm.cuohe.domain.Customer">
+ 			SELECT id  , companyName  FROM   ch_customs WHERE  itemId=#{value}
+ 	
+ 	</select>
+ 	
+ 	
+
+</mapper>

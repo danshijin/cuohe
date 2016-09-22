@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChBuyingAttrsEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChBuyingAttrsEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="buying_id" property="buyingId" jdbcType="INTEGER" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="attr_id" property="attrId" jdbcType="INTEGER" />
+    <result column="attr_name" property="attrName" jdbcType="VARCHAR" />
+    <result column="attr_value" property="attrValue" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+    <result column="proid" property="proid" jdbcType="INTEGER" />
+    <result column="pro_name" property="proName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, buying_id, item_id, attr_id, attr_name, attr_value, create_time, proid, pro_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_buying_attrs
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_buying_attrs
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChBuyingAttrsEntity" >
+    insert into ch_buying_attrs (id, buying_id, item_id, 
+      attr_id, attr_name, attr_value, 
+      create_time, proid, pro_name
+      )
+    values (#{id,jdbcType=INTEGER}, #{buyingId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, 
+      #{attrId,jdbcType=INTEGER}, #{attrName,jdbcType=VARCHAR}, #{attrValue,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=DATE}, #{proid,jdbcType=INTEGER}, #{proName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChBuyingAttrsEntity" >
+    insert into ch_buying_attrs
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="buyingId != null" >
+        buying_id,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="attrId != null" >
+        attr_id,
+      </if>
+      <if test="attrName != null" >
+        attr_name,
+      </if>
+      <if test="attrValue != null" >
+        attr_value,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="proid != null" >
+        proid,
+      </if>
+      <if test="proName != null" >
+        pro_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="buyingId != null" >
+        #{buyingId,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="attrId != null" >
+        #{attrId,jdbcType=INTEGER},
+      </if>
+      <if test="attrName != null" >
+        #{attrName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValue != null" >
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="proid != null" >
+        #{proid,jdbcType=INTEGER},
+      </if>
+      <if test="proName != null" >
+        #{proName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChBuyingAttrsEntity" >
+    update ch_buying_attrs
+    <set >
+      <if test="buyingId != null" >
+        buying_id = #{buyingId,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="attrId != null" >
+        attr_id = #{attrId,jdbcType=INTEGER},
+      </if>
+      <if test="attrName != null" >
+        attr_name = #{attrName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValue != null" >
+        attr_value = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="proid != null" >
+        proid = #{proid,jdbcType=INTEGER},
+      </if>
+      <if test="proName != null" >
+        pro_name = #{proName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChBuyingAttrsEntity" >
+    update ch_buying_attrs
+    set buying_id = #{buyingId,jdbcType=INTEGER},
+      item_id = #{itemId,jdbcType=INTEGER},
+      attr_id = #{attrId,jdbcType=INTEGER},
+      attr_name = #{attrName,jdbcType=VARCHAR},
+      attr_value = #{attrValue,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=DATE},
+      proid = #{proid,jdbcType=INTEGER},
+      pro_name = #{proName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

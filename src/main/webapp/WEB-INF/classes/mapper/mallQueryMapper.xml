@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.IMallQueryDao">
+	<!-- 每日报价接口： 参考价格、 最高价、最低价 -->
+	<select id="queryTodayPriceBy" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.ItemPrice">
+		SELECT
+		referencePrice,
+		maxPrice,
+		minPrice
+		FROM
+		ch_item_price
+		WHERE STATUS = 0 AND ItemId=#{itemId} AND createdAt = #{date}
+	</select>
+
+	<!-- 指定客户所有买盘列表 -->
+	<select id="queryAllBuyPoolBy" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.MallPoolInfo">
+		SELECT
+		b.id,
+		a.name province,
+		b.ware_name wareName,
+		b.quantity,
+		b.unit,
+		b.createdAt,
+		b.price,
+		b.priceType,
+		b.lastPriceType,
+		2 poolType,
+		b.lastPrice,
+		b.lastCustomerName,
+		b.lastMallAccount,
+		(select count(*) from ch_pool_price where poolId=b.id and poolType=2 and status=0) poolPriceCount,
+		b.initPrice,
+		b.initPriceType,
+		b.isConfirm,
+		o.orderCode orderId,
+		o.mall_buyer_account mallBuyerAccount,
+		o.mall_seller_account mallSellerAccount,
+		b.mall_user_account account,
+		b.ware_id wareId,
+		b.FuturesMonth,
+		b.isClose
+		FROM ch_buy_pool b
+		left  join ch_areas a on b.ware_province = a.id
+		left join  ch_orders o on o.source_id=b.id and o.source in (1,5)
+		WHERE b.ItemsID=#{itemId}
+		AND b.status=0
+		AND b.createSource in (1,2)
+		<if test="account!=null and  account!=''">
+			and b.mall_user_account = #{account}
+		</if>
+		<include refid="queryConditionBuyPool"/> 
+	</select>
+	
+
+	<!-- 指定客户参与的买盘列表 -->
+	<select id="queryInBuyPoolBy" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.MallPoolInfo">
+		SELECT
+		b.id,
+		a.name province,
+		b.ware_name wareName,
+		b.quantity,
+		b.unit,
+		b.createdAt,
+		b.price,
+		b.priceType,
+		b.lastPriceType,
+		2 poolType,
+		b.lastPrice,
+		b.lastCustomerName,
+		b.lastMallAccount,
+		(select count(*) from ch_pool_price where poolId=b.id and poolType=2 and status=0) poolPriceCount,
+		b.initPrice,
+		b.initPriceType,
+		b.isConfirm,
+		o.orderCode orderId,
+		o.mall_buyer_account mallBuyerAccount,
+		o.mall_seller_account mallSellerAccount,
+		p.account,
+		b.ware_id wareId,
+		b.FuturesMonth,
+		b.isClose
+		FROM ch_pool_price p 
+		left join ch_buy_pool b on p.poolId=b.ID and b.status=0
+		left join ch_areas a on  b.ware_province = a.id
+		left join ch_orders o  on o.source_id=b.id and o.source in (1,5)
+		WHERE  p.poolType=2
+		AND p.status=0
+		AND b.createSource in (1,2)
+		AND b.ItemsID=#{itemId}
+		<if test="account!=null and  account!=''">
+			and p.account = #{account}
+		</if>
+		<include refid="queryConditionBuyPool"/> 
+	</select>
+
+	<!-- 指定客户所有卖盘列表 -->
+	<select id="queryAllSellPoolBy" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.MallPoolInfo">
+		SELECT
+		s.id,
+		1 poolType,
+		a.name province,
+		s.ware_name wareName,
+		s.quantity,
+		s.unit,
+		s.createdAt,
+		s.price,
+		s.priceType,
+		s.lastPrice,
+		s.lastPriceType,
+		s.lastCustomerName,
+		s.commodity_id,
+		s.lastMallAccount,
+		(select count(*) from ch_pool_price where poolId=s.id and poolType=1 and status=0) poolPriceCount,
+		s.initPrice,
+		s.initPriceType,
+		s.isConfirm,
+		o.orderCode orderId,
+		o.mall_buyer_account mallBuyerAccount,
+		o.mall_seller_account mallSellerAccount,
+		s.ware_id wareId,
+		s.mall_user_account account,
+		s.FuturesMonth,
+		s.isClose
+		FROM ch_sell_pool s
+		left join ch_areas a on s.ware_province = a.id
+		left join ch_orders o on o.source_id=s.id and o.source in (0,5)
+		WHERE s.ItemsID=#{itemId}
+		AND s.status=0
+		AND s.createSource in (1,2)
+		<if test="account!=null and  account!=''">
+			and s.mall_user_account = #{account}
+		</if>
+		<include refid="queryConditionSellPool"/>
+	</select>
+
+	<!-- 指定客户参与的卖盘列表 -->
+	<select id="queryInSellPoolBy" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.MallPoolInfo">
+		SELECT
+		s.id,
+		a.name province,
+		s.ware_name wareName,
+		s.quantity,
+		s.unit,
+		1 poolType,
+		s.createdAt,
+		s.price,
+		s.priceType,
+		s.lastPrice,
+		s.lastPriceType,
+		s.lastCustomerName ,
+		s.commodity_id,
+		s.lastMallAccount,
+		(select count(*) from ch_pool_price where poolId=s.id and poolType=1 and status=0) poolPriceCount,
+		s.initPrice,
+		s.initPriceType,
+		s.isConfirm,
+		o.orderCode orderId,
+		o.mall_buyer_account mallBuyerAccount,
+		o.mall_seller_account mallSellerAccount,
+		s.ware_id wareId,
+		p.account,
+		s.FuturesMonth,
+		s.isClose
+		FROM  ch_pool_price p
+		left join ch_sell_pool s on  p.poolId=s.id and s.status=0
+		left join ch_areas a on s.ware_province = a.id
+		left join ch_orders o on o.source_id=s.id and o.source in (0,5)
+		WHERE p.poolType=1
+		AND p.status=0
+		AND s.createSource in (1,2)
+		AND s.ItemsID=#{itemId}
+		<if test="account!=null and  account!=''">
+			and p.account = #{account}
+		</if>
+		<include refid="queryConditionSellPool"/>
+	</select>
+	
+	<!-- 当天所有的报盘（卖盘、买盘）列表 -->
+	<select id="queryTodayPoolBy" parameterType="com.smm.cuohe.domain.MallQueryPar"  resultType="com.smm.cuohe.domain.MallPoolInfo">
+		select * from (
+				SELECT
+					b.id,
+					a.name province,
+					b.ware_name wareName,
+					b.quantity,
+					b.unit,
+					b.createdAt,
+					b.commodity_id,
+					b.price,
+					b.ware_id wareId,
+					b.priceType,
+					b.lastPriceType,
+					b.lastPrice,
+					b.lastCustomerName,
+					b.lastMallAccount,
+					(select count(*) from ch_pool_price where poolId=b.id and poolType=2 and status=0) poolPriceCount,
+					b.mall_user_account as account,
+					2 poolType,
+					b.initPriceType,
+					b.initPrice,
+					b.isConfirm,
+					o.orderCode orderId,
+					o.mall_buyer_account mallBuyerAccount,
+					o.mall_seller_account mallSellerAccount,
+					b.FuturesMonth,
+					b.isClose
+				FROM ch_buy_pool b 
+				left join ch_areas a on b.ware_province = a.id
+				left join ch_orders o  on o.source_id=b.id and o.source in (1,5)
+				WHERE b.ItemsID=#{itemId}
+				AND b.status=0
+				AND b.createSource in (1,2)
+				AND DATE(b.createdAt)=DATE(NOW())
+		UNION ALL
+			SELECT
+				s.id,
+				a.name province,
+				s.ware_name wareName,
+				s.quantity,
+				s.unit,
+				s.createdAt,
+				s.commodity_id,
+				s.price,
+				s.ware_id wareId,
+				s.priceType,
+				s.lastPriceType,
+				s.lastPrice,
+				s.lastCustomerName,
+				s.lastMallAccount,
+				(select count(*) from ch_pool_price where poolId=s.id and poolType=1 and status=0) poolPriceCount,
+				s.mall_user_account as account,
+				1 poolType,
+				s.initPriceType,
+				s.initPrice,
+				s.isConfirm,
+				o.orderCode orderId,
+				o.mall_buyer_account mallBuyerAccount,
+				o.mall_seller_account mallSellerAccount,
+				s.FuturesMonth,
+				s.isClose
+				FROM ch_sell_pool s
+				left join ch_areas a on s.ware_province = a.id
+				left join ch_orders o  on o.source_id=s.id and o.source in (0,5)
+			WHERE s.ItemsID=#{itemId}
+			AND s.status=0
+			AND s.createSource in (1,2)
+			AND DATE(s.createdAt)=DATE(NOW())
+		) a where 1=1
+		<!-- <if test="warehouseId!=null and  warehouseId!=''">
+			and wareId in ${warehouseId}
+		</if> -->
+		<if test="account!=null and  account!=''">
+			and account != #{account}
+		</if>
+		<if test="minPrice!=null and  minPrice!=''">
+			and price &gt;=#{minPrice}
+		</if>
+		<if test="maxPrice!=null and  maxPrice!=''">
+			and price &lt;= #{maxPrice}
+		</if>
+		<if test="minQuantity!=null and  minQuantity!=''">
+			and quantity &gt;=#{minQuantity}
+		</if>
+		<if test="maxQuantity!=null and maxQuantity!=''">
+			and quantity &lt;=#{maxQuantity}
+		</if>
+		<if test="startTime!=null">
+			and createdAt &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null">
+			and createdAt &lt;= #{endTime}
+		</if>
+		order by
+		<if test="dateOrderby!=null and dateOrderby==0">
+			createdAt DESC
+		</if>
+		<if test="dateOrderby!=null and dateOrderby==1">
+			createdAt ASC
+		</if>
+		<if test="priceOrderBy!=null and priceOrderBy==0">
+			price DESC
+		</if>
+		<if test="priceOrderBy!=null and priceOrderBy==1">
+			price ASC
+		</if>
+		<if test="startNum!=null and endNum !=null ">
+			limit ${startNum},${endNum}
+		</if>
+	</select>
+
+	<select id="queryTodayPoolBycount" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="java.lang.Integer">
+		select count(*) from (
+				SELECT
+					b.id,
+					a.name province,
+					b.ware_name wareName,
+					b.quantity,
+					b.unit,
+					b.createdAt,
+					b.price,
+					b.ware_id wareId,
+					b.priceType,
+					b.lastPrice,
+					b.lastCustomerName,
+					(select count(*) from ch_pool_price where poolId=b.id and poolType=2 and status=0) poolPriceCount,
+					b.mall_user_account as account,
+					2 poolType,
+					b.initPriceType,
+					b.initPrice
+				FROM ch_buy_pool b 
+				left join ch_areas a on b.ware_province = a.id	
+				WHERE b.ItemsID=#{itemId}
+				AND b.status=0
+				AND b.createSource in (1,2)
+				AND DATE(b.createdAt)=DATE(NOW())
+		UNION ALL
+			SELECT
+				s.id,
+				a.name province,
+				s.ware_name wareName,
+				s.quantity,
+				s.unit,
+				s.createdAt,
+				s.price,
+				s.ware_id wareId,
+				s.priceType,
+				s.lastPrice,
+				s.lastCustomerName,
+				(select count(*) from ch_pool_price where poolId=s.id and poolType=1 and status=0) poolPriceCount,
+				s.mall_user_account as account,
+				1 poolType,
+				s.initPriceType,
+				s.initPrice
+				FROM ch_sell_pool s
+				left join ch_areas a on s.ware_province = a.id
+			WHERE s.ItemsID=#{itemId}
+			AND s.status=0
+			AND s.createSource in (1,2)
+			AND DATE(s.createdAt)=DATE(NOW())
+		) a where 1=1
+		<!-- <if test="warehouseId!=null and  warehouseId!=''">
+			and wareId in ${warehouseId}
+		</if> -->
+		<if test="account!=null and  account!=''">
+			and account != #{account}
+		</if>
+		<if test="minPrice!=null and  minPrice!=''">
+			and price &gt;=#{minPrice}
+		</if>
+		<if test="maxPrice!=null and  maxPrice!=''">
+			and price &lt;= #{maxPrice}
+		</if>
+		<if test="minQuantity!=null and  minQuantity!=''">
+			and quantity &gt;=#{minQuantity}
+		</if>
+		<if test="maxQuantity!=null and maxQuantity!=''">
+			and quantity &lt;=#{maxQuantity}
+		</if>
+		<if test="startTime!=null">
+			and createdAt &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null">
+			and createdAt &lt;= #{endTime}
+		</if>
+	</select>
+	
+	
+	 <select id="getPoolPrice" resultType="java.util.Map" parameterType="com.smm.cuohe.domain.PoolPrice">
+	 		select  pl.id from  ch_pool_price pl where pl.poolId=#{id} and pl.poolType=#{poolType} and pl.account=#{account} and pl.status=0
+ 	 </select>
+
+
+
+	<!-- 当天所有的报盘（卖盘、买盘）列表 -->
+	<select id="queryTodayPoolByAll" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.MallPoolInfo">
+		SELECT
+		b.id,
+		a.name province,
+		b.ware_name wareName,
+		b.quantity,
+		b.unit,
+		b.createdAt,
+		b.price,
+		b.lastPrice,
+		b.lastCustomerName,
+		(select count(*) from ch_pool_price where poolId=b.id and poolType=2 and status=0) poolPriceCount,
+		b.mall_user_account as account,
+		2 poolType,
+		b.initPriceType,
+		b.initPrice
+		FROM ch_buy_pool b 
+		left join ch_areas a on b.ware_province = a.id	
+		WHERE b.ItemsID=#{itemId}
+		AND DATE(b.createdAt)=DATE(NOW())
+		AND b.ware_province = a.id
+
+		UNION ALL
+
+		SELECT
+		s.id,
+		a.name province,
+		s.ware_name wareName,
+		s.quantity,
+		s.unit,
+		s.createdAt,
+		s.price,
+		s.lastPrice,
+		s.lastCustomerName,
+		(select count(*) from ch_pool_price where poolId=s.id and poolType=1 and status=0) poolPriceCount,
+		s.mall_user_account as account,
+		1 poolType,
+		s.initPriceType,
+		s.initPrice
+		FROM ch_sell_pool s
+		left join ch_areas a on s.ware_province = a.id
+		WHERE s.ItemsID=#{itemId}
+		AND DATE(s.createdAt)=DATE(NOW())
+		AND s.ware_province = a.id
+		order by createdAt DESC
+	</select>
+
+	<!-- 每个报盘对应查询： 1，首次还盘记录。 2，最新2条还盘记录， 3，当前用户的还盘记录 -->
+	<select id="queryPoolPriceInfo" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.PoolPriceInfo">
+		SELECT
+		c.companyName,
+		p.createdAt as 'date',
+		p.price
+		FROM ch_pool_price p,
+		ch_customs c
+		WHERE p.poolId = ${poolId}
+		AND p.poolType = ${poolType}
+		AND p.account = c.account
+
+		UNION ALL
+
+		(SELECT
+		c.companyName,
+		p.updatedAt as 'date',
+		p.price
+		FROM ch_pool_price p,
+		ch_customs c
+		WHERE p.poolId = ${poolId}
+		AND p.poolType = ${poolType}
+		AND p.account = c.account
+		ORDER BY p.updatedAt DESC LIMIT 2
+		)
+		UNION ALL
+
+		SELECT
+		c.companyName,
+		p.updatedAt as 'date',
+		p.price
+		FROM ch_pool_price p,
+		ch_customs c
+		WHERE p.poolId = ${poolId}
+		AND p.poolType = ${poolType}
+		AND p.account = c.account
+	</select>
+	
+	<!--1: 首次还盘记录 -->
+	<select id="queryPoolPriceFirst" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.PoolPriceInfo">
+		SELECT
+		c.companyName,
+		p.updatedAt as 'date',
+		p.price,
+		p.priceType
+		FROM ch_pool_price p,
+		ch_customs c
+		WHERE p.poolId = ${poolId}
+		AND p.poolType = ${poolType}
+		AND p.customerid = c.id AND p.status = 0
+		ORDER BY p.id
+		LIMIT 1 
+	</select>
+	
+	<!-- 2:最新2条还盘记录 -->
+	<select id="queryPoolPriceNew2" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.PoolPriceInfo">
+		SELECT
+		c.companyName,
+		p.updatedAt as 'date',
+		p.price,
+		p.priceType
+		FROM ch_pool_price p,
+		ch_customs c
+		WHERE p.poolId = ${poolId}
+		AND p.poolType = ${poolType}
+		AND p.customerid = c.id
+		AND p.status = 0
+		ORDER BY p.id DESC LIMIT 0,2 
+	</select>
+	
+	<!--1: 当前用户的最新还盘 -->
+	<select id="queryPoolPriceCurrentCustomer" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.PoolPriceInfo">
+		SELECT
+		c.companyName,
+		p.updatedAt as 'date',
+		p.price,
+		p.priceType
+		FROM ch_pool_price p,
+		ch_customs c
+		WHERE p.poolId = ${poolId}
+		AND p.poolType = ${poolType}
+		AND p.customerid = c.id
+        AND p.account = #{account,jdbcType=VARCHAR}
+        AND p.status = 0
+		ORDER BY p.id DESC LIMIT 0,1 
+	</select>
+	
+	<!-- 当前报盘的还盘总数 -->
+	<select id="queryCountPool" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="java.lang.Integer">
+		SELECT
+		count(p.id)
+		FROM ch_pool_price p
+		WHERE p.poolId = ${poolId} AND p.poolType = ${poolType} AND status = 0
+	</select>
+	
+	
+
+	<select id="queryOrder" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.MallQueryOrder">
+		  select  * from (SELECT id,
+						1 AS poolType,
+						priceType,
+						price,
+						pl.createdAt ,
+						orId orderId,
+						commodity_id commodityId,
+						mall_user_account mallUserAccount,
+						mallSellerAccount,
+						mallBuyerAccount,
+						'' proName,
+						quantity,
+						unit
+						FROM ch_sell_pool pl
+						LEFT JOIN (SELECT er.orderCode orId, er.source_id , er.mall_seller_account mallSellerAccount, er.mall_buyer_account mallBuyerAccount FROM ch_orders er WHERE er.source in(0,5) and DATE(er.createdAt)=DATE(NOW()) GROUP BY er.source_id) tt ON pl.id = tt.source_id
+						WHERE itemsId =#{itemId} and status = 0
+						AND (lastMallAccount=#{account} OR
+						mall_user_account=#{account} ) AND isconfirm=1
+						and DATE(pl.createdAt)=DATE(NOW())
+						
+				UNION All
+
+						SELECT id,
+						2 AS poolType,
+						priceType,
+						price,
+						bl.createdAt ,
+						orId orderId,
+						commodity_id commodityId,
+						mall_user_account mallUserAccount,
+						mallSellerAccount,
+						mallBuyerAccount,
+						pro_name proName,
+						quantity,
+						unit
+						FROM ch_buy_pool bl
+						LEFT JOIN (SELECT er.orderCode orId, er.source_id , er.mall_seller_account mallSellerAccount, er.mall_buyer_account mallBuyerAccount FROM ch_orders er WHERE er.source in(1,5) and DATE(er.createdAt)=DATE(NOW()) GROUP BY er.source_id) tt ON bl.id = tt.source_id
+						LEFT JOIN (SELECT buying_id,pro_name FROM ch_buying_attrs GROUP BY buying_id ) tr on tr.buying_id=bl.id
+						WHERE itemsId =#{itemId} and status = 0
+						AND (lastMallAccount=#{account} OR
+						mall_user_account=#{account} ) AND isconfirm=1
+						and DATE(bl.createdAt)=DATE(NOW())
+				)a order by createdAt desc  limit ${startNum},${endNum}
+
+	</select>
+	
+	<select id="queryOrderCount" parameterType="com.smm.cuohe.domain.MallQueryPar"
+		resultType="com.smm.cuohe.domain.MallQueryOrder">
+		 		SELECT id,
+						1 AS poolType,
+						priceType,
+						price,
+						pl.createdAt ,
+						orId orderId,
+						commodity_id commodityId,
+						mall_user_account mallUserAccount,
+						mallSellerAccount,
+						mallBuyerAccount,
+						'' proName,
+						quantity,
+						unit
+						FROM ch_sell_pool pl
+						LEFT JOIN (SELECT er.orderCode orId, er.source_id , er.mall_seller_account mallSellerAccount, er.mall_buyer_account mallBuyerAccount FROM ch_orders er WHERE er.source = 0 and DATE(er.createdAt)=DATE(NOW()) GROUP BY er.source_id) tt ON pl.id = tt.source_id
+						WHERE itemsId =#{itemId} and status = 0
+						AND (lastMallAccount=#{account} OR
+						mall_user_account=#{account} ) AND isconfirm=1
+						and DATE(pl.createdAt)=DATE(NOW())
+						
+				UNION All
+
+						SELECT id,
+						2 AS poolType,
+						priceType,
+						price,
+						bl.createdAt ,
+						orId orderId,
+						commodity_id commodityId,
+						mall_user_account mallUserAccount,
+						mallSellerAccount,
+						mallBuyerAccount,
+						pro_name proName,
+						quantity,
+						unit
+						FROM ch_buy_pool bl
+						LEFT JOIN (SELECT er.orderCode orId, er.source_id , er.mall_seller_account mallSellerAccount, er.mall_buyer_account mallBuyerAccount FROM ch_orders er WHERE er.source = 1 and DATE(er.createdAt)=DATE(NOW()) GROUP BY er.source_id) tt ON bl.id = tt.source_id
+						LEFT JOIN (SELECT buying_id,pro_name FROM ch_buying_attrs GROUP BY buying_id ) tr on tr.buying_id=bl.id
+						WHERE itemsId =#{itemId} and status = 0
+						AND (lastMallAccount=#{account} OR
+						mall_user_account=#{account} ) AND isconfirm=1
+						and DATE(bl.createdAt)=DATE(NOW())
+	</select>
+	
+	
+	
+
+	<select id="getAllItemPrice" resultType="com.smm.cuohe.domain.ItemPrice">
+
+		SELECT itemId, itemName, recommendType, recommend, highType, high, lowType,
+		low
+		FROM (SELECT MAX(id) gid FROM ch_item_price GROUP BY itemId) t
+		LEFT JOIN ch_item_price p ON p.id = t.gid
+
+	</select>
+
+	<!-- 判断商城用户是否已存在 -->
+	<select id="isExistAccount" parameterType="com.smm.cuohe.domain.MallQueryPar"  resultType="java.lang.Integer">
+			SELECT 	
+				COUNT(*)
+				 
+				FROM 
+				ch_customs 
+				WHERE account=#{account} AND itemId=#{itemId}
+				AND STATUS = 0
+	</select>
+	
+	<!-- 根据poolid查询当前报盘的状态  -->
+	<select id="queryPoolById" parameterType="com.smm.cuohe.domain.MallQueryPar"  resultType="com.smm.cuohe.domain.MallQueryPar">
+			SELECT o.id AS orderId,o.orderCode AS orderCode,isConfirm,isClose,priceType,price,o.mall_seller_account as mallSellAccount,o.mall_buyer_account as mallBuyAccount FROM 
+			<if test="poolType==2">
+			 ch_buy_pool AS p
+			</if>
+			<if test="poolType==1">
+			 ch_sell_pool AS p
+			</if>
+			LEFT JOIN ch_orders AS o ON p.id = o.source_id AND o.source IN(0,1,5) AND o.Status=0
+			WHERE p.ID = ${poolId} AND p.status = 0
+			
+	</select>
+	
+	
+	<!-- 查询买盘信息  -->
+	<select id="getBuyingAttrsByBuyingId" parameterType="java.lang.Integer"  resultType="com.smm.cuohe.domain.MallQueryOrder">
+			SELECT attr_name attrName,attr_value attrValue FROM ch_buying_attrs where buying_id = #{id}
+	</select>
+	
+	
+	<!-- 查询买盘信息  -->
+	<select id="getCommodityAttrByBuyingId" parameterType="java.lang.Integer"  resultType="com.smm.cuohe.domain.MallQueryOrder">
+			SELECT attr_name attrName,attr_value attrValue FROM ch_commodity_attr where commodity_id = #{id}
+	</select>
+	
+	
+	<select id="getCommodityAttrList" parameterType="java.util.Map"  resultType="com.smm.cuohe.domain.CommodityAttr">
+				SELECT id, attr_name attrName,attr_value attrValue,commodity_name commodityName FROM ch_commodity_attr where commodity_id = #{commodity_id}
+				<if test="productName!=null and  productName!=''">
+					and  commodity_name in ${productName}
+				</if>
+				<if test="attr_name!=null and  attr_name!=''">
+					and   attr_name = #{attr_name}
+				</if>
+	</select>
+	
+	<select id="getBuyingAttrsList" parameterType="java.util.Map"  resultType="com.smm.cuohe.domain.CommodityAttr">
+				SELECT id, attr_name attrName , attr_value attrValue , pro_name commodityName FROM ch_buying_attrs where buying_id = #{id}
+				<if test="productName!=null and  productName!=''">
+					and pro_name in ${productName}
+				</if>
+				<if test="attr_name!=null and  attr_name!=''">
+					and  attr_name = #{attr_name}
+				</if>
+	</select>
+	
+	
+	
+	<sql id="queryConditionBuyPool">
+		<!-- <if test="warehouseId!=null and  warehouseId!=''">
+			and b.ware_id in ${warehouseId}
+		</if> -->
+		<if test="minPrice!=null and  minPrice!=''">
+			and b.price &gt;=#{minPrice}
+		</if>
+		<if test="maxPrice!=null and  maxPrice!=''">
+			and b.price &lt;=#{maxPrice}
+		</if>
+		<if test="minQuantity!=null and  minQuantity!=''">
+			and b.quantity &gt;=#{minQuantity}
+		</if>
+		<if test="maxQuantity!=null and maxQuantity!=''">
+			and b.quantity &lt;=#{maxQuantity}
+		</if>
+		<if test="startTime!=null">
+			and b.createdAt &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null">
+			and b.createdAt &lt;= #{endTime}
+		</if>
+		order by
+		<if test="dateOrderby!=null and dateOrderby==0">
+			b.createdAt DESC
+		</if>
+		<if test="dateOrderby!=null and dateOrderby==1">
+			b.createdAt ASC
+		</if>
+		<if test="priceOrderBy!=null and priceOrderBy==0">
+			b.price DESC
+		</if>
+		<if test="priceOrderBy!=null and priceOrderBy==1">
+			b.price ASC
+		</if>
+		<if test="startNum!=null and endNum !=null ">
+			limit ${startNum},${endNum}
+		</if>
+	</sql>
+	
+	<sql id="queryConditionSellPool">
+		<!-- <if test="warehouseId!=null and  warehouseId!=''">
+			and s.ware_id in ${warehouseId}
+		</if> -->
+		<if test="minPrice!=null and  minPrice!=''">
+			and s.price &gt;=#{minPrice}
+		</if>
+		<if test="maxPrice!=null and  maxPrice!=''">
+			and s.price &lt;= #{maxPrice}
+		</if>
+		<if test="minQuantity!=null and  minQuantity!=''">
+			and s.quantity &gt;=#{minQuantity}
+		</if>
+		<if test="maxQuantity!=null and maxQuantity!=''">
+			and s.quantity &lt;=#{maxQuantity}
+		</if>
+		<if test="startTime!=null">
+			and s.createdAt &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null">
+			and s.createdAt &lt;= #{endTime}
+		</if>
+		order by
+		<if test="dateOrderby!=null and dateOrderby==0">
+			s.createdAt DESC
+		</if>
+		<if test="dateOrderby!=null and dateOrderby==1">
+			s.createdAt ASC
+		</if>
+		<if test="priceOrderBy!=null and priceOrderBy==0">
+			s.price DESC
+		</if>
+		<if test="priceOrderBy!=null and priceOrderBy==1">
+			s.price ASC
+		</if>
+		<if test="startNum!=null and endNum !=null ">
+			limit ${startNum},${endNum}
+		</if>
+	</sql>
+	
+</mapper>

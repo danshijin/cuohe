@@ -1,0 +1,138 @@
+
+.nopadding {
+
+	padding: 0 !important;
+
+}
+
+.nopadding .table {
+
+	margin-bottom: 0;
+
+}
+
+.nopadding .table-bordered {
+
+	border: 0;
+
+}
+
+
+
+/* pagination */
+
+.paging {
+
+	line-height: 16px;
+
+	text-align: right;
+
+	margin-top: 5px;
+
+	margin-right: 10px;
+
+}
+
+.paging a, .paging span {
+
+	font-size: 12px;
+
+	padding: 4px 10px !important;
+
+	border-style: solid;
+
+	border-width: 1px;
+
+	border-color: #dddddd #dddddd #cccccc; /* for IE < 9 */
+
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+
+	display: inline-block;
+
+	line-height: 16px;
+
+	background: #e8e8e8;
+
+	color: #333333;
+
+	text-shadow: 0 1px 0 #ffffff;
+
+	border-radius:2px;
+
+}
+
+.paging .PrevPage, .paging .NextPage {
+
+	background: #e8e8e8;
+
+	color: #222222;
+
+	text-shadow: 0 1px 0 #ffffff;
+
+	cursor: pointer;
+
+}
+
+
+
+.paging .PageMore {
+
+	background: #f5f5f5;
+
+}
+
+
+
+.paging a:hover {
+
+	background: #f5f5f5;
+
+	color: #222222;
+
+	text-shadow: 0 1px 0 #ffffff;
+
+	cursor: pointer;
+
+}
+
+
+
+.paging .first {
+
+	border-radius: 4px 0 0 4px;
+
+}
+
+.paging .last {
+
+	border-radius: 0 4px 4px 0;
+
+}
+
+.paging .PageSel {
+
+	background: #41BEDD !important;
+
+	color: #ffffff !important;
+
+	cursor: default !important;
+
+}
+
+
+
+.paging .btn-disabled {
+
+	color: #AAAAAA !important;
+
+}
+
+
+
+.paging .PageDesc ,.paging .PageDesc span {
+
+	background:none;
+
+	border:none;
+
+}

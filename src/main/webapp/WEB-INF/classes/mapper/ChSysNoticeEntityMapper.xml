@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.notice.NoticeDao" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChSysNoticeEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="noticetext" property="noticetext" jdbcType="VARCHAR" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="isRead" property="isread" jdbcType="INTEGER" />
+    <result column="readTime" property="readtime" jdbcType="TIMESTAMP" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="noticeType" property="noticetype" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="addNotice" parameterType="java.util.Map">
+  	insert into ch_sys_notice (noticetext, createdAt, 
+      isRead, readTime, account, 
+      noticeType, status, updatedAt
+      )
+    values (#{noticetext,jdbcType=VARCHAR}, #{createdat,jdbcType=TIMESTAMP}, 
+      #{isread,jdbcType=INTEGER}, #{readtime,jdbcType=TIMESTAMP}, #{account,jdbcType=VARCHAR}, 
+      #{noticetype,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{updatedat,jdbcType=TIMESTAMP}
+      )
+  
+  </insert>
+</mapper>

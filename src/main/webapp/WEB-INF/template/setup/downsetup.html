@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<title>下游行业设置</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<script>BASE_URL ='${request.getContextPath()}'</script>
+<link href="${request.getContextPath()}/Public/assets/admin/css/css.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/css/plugins.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/layout.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color">
+<link href="${request.getContextPath()}/Public/assets/admin/css/custom.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/common.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="${request.getContextPath()}/Public/favicon.ico">
+<!--[if lt IE 9]>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/respond.min.js"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/layout.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/indexComponent.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/commonUtils.js" type="text/javascript"></script>
+
+<!-- select2  begin -->
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2_locale_zh-CN.js"></script>
+<link href="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css">
+<script src="${request.getContextPath()}/Public/js/customerDetail/businessredion.js" type="text/javascript"></script>
+<!-- select2 end -->
+<style>
+.businessTbl{
+
+	margin-left:10px;
+}
+.businessTbl tr td{
+
+	padding:5px;
+}
+
+</style>
+</head>
+<body class="page-header-top-fixed">
+<div class="page-header">
+	<!--头部开始-->
+	<#include "/include/top.html" />
+	<!-- 头部信息结束 -->
+
+	<!-- 头部菜单开始 -->
+	<#include "/include/top_menu.html" />
+	<!-- 头部菜单结束 -->
+</div>
+<!-- END HEADER -->
+<div class="page-container">
+	<div class="page-content">
+		<div class="container-fluid">
+			<ul class="page-breadcrumb breadcrumb">
+				<li>
+					<a href="#">首页</a><i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+				系统设置<i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+					下游行业设置
+				</li>
+			</ul>
+			<div class="row margin-top-10">
+				<div class="col-md-12">
+					<div class="portlet light bordered" align="center">
+						<form class="form-horizontal" id="prodfrm">
+						<div align="left">
+						<h3> 添加采购商行业 </h3>
+						<div style="margin-bottom:30px;">
+							<input type="text" id="productSel" style="min-width:240px;max-width:400px;height: 25px;" name="productName"/>
+							<button type="submit"  id="savetButton" class="btn green pull" style="margin-left:20px; padding:5px 10px;">添加&nbsp;&nbsp;<i class="m-icon-swapright m-icon-white"></i></button>
+						</div>
+						<h4> 已添加的采购商行业 </h4>
+						<table class="businessTbl">
+							<#list itemprodlist as prod>
+								<tr>
+									<td>
+										<input type="hidden" name="id" value="${prod.id}"/>${prod.productName}
+									</td>
+									<td>
+									<#if prod?? && prod.status!=3>
+										<a style="text-decoration:none;" href="${request.getContextPath()}/downSetUp/delsetup.do?ids=${prod.id}">
+										&nbsp;<img alt="删除" src="${request.getContextPath()}/Public/images/delBusiness.png" >
+										</a>
+										</#if>
+									</td>
+								</tr>
+							</#list>
+						</table>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 底部开始 -->
+<#include "/include/foot.html" />
+<!-- 底部结束 -->
+</body>
+<script>
+//select2使用需要预先定义的businessArr数组
+var businessArr = ['productSel'];
+jQuery(document).ready(function() {
+	   
+	   Metronic.init(); // init metronic core componets
+	   Layout.init(); // init layout
+	});
+	recordDate();
+	//初始化日期
+	function recordDate() {
+		var nowDate = new Date();
+        //$('#date-picker').attr("date-date",nowDate.getFullYear()+"/"+parseInt(nowDate.getMonth()+1)+"/"+nowDate.getDate());
+        $('.date-picker').datepicker({
+    	    autoclose: true	   
+    	});
+	}
+	
+	$("#savetButton").bind("click",function(){
+		
+		  var val=$("#productSel").val();
+		  if(val==null||val==""){
+			  alert("请输入行业名称");
+			  return;
+		  }
+		$.ajax({
+			url : "${request.getContextPath()}/downSetUp/addsetup.do",
+			type : "post",
+			dataType:"json",
+			async: false,
+			data : $("#prodfrm").serialize(),
+			success : function(result) {
+				if(result!="zunzai"){
+					if(result.success!=null){
+						window.location.href="${request.getContextPath()}/downSetUp/setup.do";	
+					}else{
+						alert("行业已存在");
+					}
+			      		
+				}else{
+					alert("行业已存在");
+					
+				}	
+			   }
+		});
+	});
+
+	function resultFormatResult(medata) {
+        return medata.text; 
+	} 
+	      
+	function resultFormatSelection(medata) {
+	        return medata.text; 
+	} 
+	function quit(){
+  		window.location.href="${request.getContextPath()}/buypool/buylist.do";
+	}
+</script>
+</html>
+

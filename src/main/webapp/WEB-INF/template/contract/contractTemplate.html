@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+
+<html lang="en" class="no-js">
+<!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<title>SMM撮合系统</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<link href="${request.getContextPath()}/Public/assets/admin/css/css.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/css/plugins.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/layout.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color">
+<link href="${request.getContextPath()}/Public/assets/admin/css/custom.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/admin/css/common.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+
+<link rel="shortcut icon" href="${request.getContextPath()}/Public/favicon.ico">
+<script>BASE_URL = '${request.getContextPath()}'</script>
+<link href="${request.getContextPath()}/Public/css/customerDetail.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="page-header-top-fixed">
+<!--头部信息结束 -->
+<div class="page-header">
+	<!--头部开始-->
+	<#include "/include/top.html" />
+	<!-- 头部信息结束 -->
+
+
+	<!-- 头部菜单开始 -->
+	<#include "/include/top_menu.html" />
+	<!-- 头部菜单结束 -->
+</div>
+<!-- END HEADER -->
+
+
+<!-- BEGIN PAGE CONTAINER -->
+<div style="width:1140px;margin:0 auto;">
+<div id="editor" >
+<#if content??>
+	${(content)!}
+<#else>
+	<#if itemId == 26293>
+		<#include "/contract/templateOne_bi.html" />
+	<#elseif itemId == 26297>
+		<#include "/contract/templateOne_sb.html" />
+	<#else>
+		<#include "/contract/templateOne.html" />
+	</#if>
+</#if>
+</div>
+</div>
+<br/>
+<div style="margin:0 auto; width: 600px; margin-bottom: 140px;" class="prevCon">
+	<ul id="ulContract">
+		<a href="javascript:void(0);" id="anchor" class="blueBorder"  >发送合同<img id='ctImg' src="${request.getContextPath()}/Public/images/rightArrow.png"></a>
+		<li><a href="javascript:void(0);" class="whiteBackContract" onclick="sendContractByType('email')" >邮件发送</a></li>
+		<li><a href="javascript:void(0);" class="whiteBackContract" onclick="sendContractByType('sms')" >短信发送</a></li>
+		<li><a href="javascript:void(0);" class="whiteBackContract" onclick="sendContractByType('url')" >复制网址</a></li>
+	</ul>
+	<a href="javascript:void(0);" class="blueBorder" onclick="editContract()" >编辑合同</a>
+	<a href="javascript:void(0);" class="blueBack" onclick="confirmAndSubmit()" >确认并提交合同</a>
+	<a href="javascript:void(0);" class="blueBorder" onclick="rtnBack()" >返回</a>
+</div>
+<div style="margin:0 auto; width: 600px; display:none;" class="editCon">
+	<a href="javascript:void(0);" class="blueBorder" onclick="cancelEdit()" >取消编辑</a>
+	<a href="javascript:void(0);" class="blueBack" onclick="submitAndPreview()" >提交并预览</a>
+</div>
+
+<div class="clear"></div>
+<input type="hidden" id="allPrice" value="${allPrice}">
+<br />
+<!-- END PAGE CONTAINER -->
+
+
+<!-- 底部开始 -->
+<#include "/include/foot.html" />
+<!-- 底部结束 -->
+
+<!--[if lt IE 9]>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/respond.min.js"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/layout.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/indexComponent.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/commonUtils.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/js/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/js/customerDetail/jQuery.formatMoney.js" type="text/javascript"></script>
+
+<script>
+
+	jQuery(document).ready(function() {
+	   
+	   Metronic.init(); // init metronic core componets
+	   Layout.init(); // init layout
+	   IndexComponent.init(); // init index component
+	   
+	   $("#sumPrice").html("合计人民币金额："+$.formatMoney($("#allPrice").val()));
+	});
+	recordDate();
+	//初始化日期
+	function recordDate() {
+		var nowDate = new Date();
+        //$('#date-picker').attr("date-date",nowDate.getFullYear()+"/"+parseInt(nowDate.getMonth()+1)+"/"+nowDate.getDate());
+        $('.date-picker').datepicker({
+    	    autoclose: true
+    	});
+	}
+	$(function(){
+		CKEDITOR.replace( 'editor',{allowedContent: true});
+		CKEDITOR.on('instanceReady', function (ev) {
+            CKEDITOR.instances.editor.setReadOnly(true);
+            $("#cke_1_top").css("display","none");
+        });
+		$("#ulContract li").css("display","none");
+		
+		$("#ulContract").hover(function(){
+			$("#ulContract li").css("display", "list-item");
+			$('#ctImg').attr("src", BASE_URL + "/Public/images/downArrow.png");
+			document.documentElement.scrollTop = document.body.scrollTop = $(document).height();
+		},function(){
+			$("#ulContract li").css("display", "none");
+			$('#ctImg').attr("src", BASE_URL + "/Public/images/rightArrow.png");
+		});
+		
+	});
+	function editContract(){
+		$("#cke_1_top").css("display","block");
+		$("#cke_1_contents").css("height", "500px");
+		CKEDITOR.instances.editor.setReadOnly(false);
+		$(".prevCon").css("display","none");
+		$(".editCon").css("display","block");
+	}
+	function rtnBack(){
+		gotoMenu('2','4','/cuohe/order/ordersList.do');
+	}
+	function confirmAndSubmit(){
+// 		var saler = $('#saler').html();
+// 		var tel = $('#tel').html();
+// 		var fax = $('#fax').html();
+// 		var address = $('#address').html();
+	
+		var contract = CKEDITOR.instances.editor.getData();
+// 		//去除
+// 		contract = contract.replace(new RegExp(saler,"gm"),"");
+// 		contract = contract.replace(new RegExp(tel,"gm"),"");
+// 		contract = contract.replace(new RegExp(fax,"gm"),"");
+// 		contract = contract.replace(new RegExp(address,"gm"),"");
+		$.post("addContractWithHtml.do", {"orderId":${(orderId)!}, "orderCode": "${(orderCode)!}","contract":contract},function(data){
+			if(data == "success"){
+				 var r=confirm("提交成功，是否关闭该窗口?")
+				  if (r==true){
+					  CloseWebPage();
+				    }else{
+				    }
+			} else {
+				alert("提交失败：" + data);
+			}
+        });
+	}
+	
+	function CloseWebPage(){
+		 if (navigator.userAgent.indexOf("MSIE") > 0) {
+			  if (navigator.userAgent.indexOf("MSIE 6.0") > 0) {
+				   window.opener = null;
+				   window.close();
+			  } else {
+				   window.open('', '_top');
+				   window.top.close();
+			  }
+		 }else if (navigator.userAgent.indexOf("Firefox") > 0) {
+		  		  window.location.href = 'about:blank ';
+		 } else {
+				  window.opener = null;
+				  window.open('', '_self', '');
+				  window.close();
+		 	}
+	}
+	
+	function submitAndPreview(){
+		CKEDITOR.instances.editor.setReadOnly(true);
+		$("#cke_1_contents").css("height", "1700px");
+        $("#cke_1_top").css("display","none");
+       	$(".prevCon").css("display","block");
+   		$(".editCon").css("display","none");
+	}
+	function cancelEdit(){
+		/* $("#cke_1_top").css("display","none");
+		$("#cke_1_contents").css("height", "1700px");
+		CKEDITOR.instances.editor.setReadOnly(true);
+		$(".prevCon").css("display","block");
+		$(".editCon").css("display","none"); */
+		
+		window.location.reload();
+	}
+	
+	function sendContractByType(sendType){
+		$(".page-header-top-fixed").addClass("loadingAjax");
+		$.get("sendContract.do", {"orderId":${(orderId)!}, "sendType":sendType}, function(data){
+			$(".page-header-top-fixed").removeClass("loadingAjax");
+			// status -1 未确认并提交合同 0 没有采购联系人  1 有一个 2 有多个 3 直接显示合同链接
+			if(data.status <= 1){
+				CommonUtils.confirm('', data.msg);
+			} else if (data.status == 3){
+				if(sendType == 'url'){
+					CommonUtils.editDialog('getContractUrlPage.do?url='+data.msg, 700);
+				}
+			} else {
+				CommonUtils.editModal("showBuyContacter.do?orderId="+${(orderId)!} +"&sendType="+sendType, 600);
+			}
+		});
+	}
+	
+</script>
+</body>
+</html>

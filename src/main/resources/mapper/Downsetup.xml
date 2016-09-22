@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.DownSetUpDao">
+<select id="queryItemsProd" parameterType="java.lang.Integer" resultType="com.smm.cuohe.domain.DownSetUpEntity">
+
+
+SELECT * FROM  ch_item_products WHERE itemId=#{value} and STATUS in (0,3) order by status desc;
+
+</select>
+
+<insert  id ="addTtemsProd" parameterType="com.smm.cuohe.domain.DownSetUpEntity">
+INSERT INTO cuohe.ch_item_products 
+	(
+	ItemID, 
+	ProductName, 
+	STATUS, 
+	CreatedAt, 
+	CreatedBy
+	)
+	VALUES
+	( 
+	#{itemId}, 
+	#{productName}, 
+	#{status}, 
+	#{createdAt}, 
+	#{createdBy}
+	);
+</insert>
+<update id="delItemsProd" parameterType="java.lang.Integer">
+update ch_item_products set status=1 where id=#{value}
+
+</update>
+    	
+<select id="queryItemsProdname" parameterType="com.smm.cuohe.domain.DownSetUpEntity" resultType="com.smm.cuohe.domain.DownSetUpEntity">
+
+
+SELECT * FROM  ch_item_products WHERE  productName=#{productName} and itemId=#{itemId} and STATUS in (0,3)
+
+</select>
+
+</mapper>

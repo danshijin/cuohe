@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--联系人 -->
+<mapper namespace="com.smm.cuohe.dao.IContacterDAO">
+
+	<!-- 获取所有联系人 -->
+	<select id="getAll" resultType="com.smm.cuohe.domain.Contacter">
+		select * from ch_contacter
+	</select>
+	<select id="getContactersByCustomerId" parameterType="java.lang.Integer"
+			resultType="com.smm.cuohe.domain.Contacter">
+		select *,getUserNameById(updatedBy) as updatedUserName
+		from
+		ch_contacter
+		where customerId = #{customerId}
+	</select>
+
+	<select id="getPrimaryPurchaseContacter" parameterType="java.lang.Integer"
+			resultType="com.smm.cuohe.domain.Contacter">
+		SELECT * FROM ch_contacter WHERE customerId = #{id} AND
+		keyperson = 1 AND
+		tidentity in (0, 2) LIMIT 0,1;
+	</select>
+	
+	
+	<select id="getContacterBycustomerId"  parameterType="java.util.Map"  resultType="com.smm.cuohe.domain.Contacter">
+		
+		select * from ch_contacter coer where ${sqlId}
+		
+	</select>
+	
+
+	<!--根据ID获取联系人 -->
+	<select id="getContacterById" resultType="com.smm.cuohe.domain.Contacter"
+		resultMap="contacterObj">
+		select * from ch_contacter where id=#{id}
+	</select>
+
+
+	<!-- 根据企业ID查询是关键人的联系人 -->
+	<select id="getCountByCK" resultType="java.lang.Integer"
+			parameterType="map">
+		select count(*) from ch_contacter where
+		customerId=#{customerId} and
+		keyperson =1
+	</select>
+
+
+	<!-- 根据ID 批量修改联系人删除状态 -->
+	<update id="removeContacter" parameterType="java.lang.String">
+		update ch_contacter set status=1 where id
+		in
+		<foreach item="idItem" collection="array" open="(" separator=","
+				 close=")">
+			#{idItem}
+		</foreach>
+	</update>
+
+
+	<!-- 修改 -->
+	<update id="updateContacter" parameterType="com.smm.cuohe.domain.Contacter">
+		update ch_contacter
+		set
+		customerId = #{customerId, jdbcType=INTEGER } ,
+		name = #{name, jdbcType=VARCHAR } ,
+		position = #{position, jdbcType=VARCHAR} ,
+		sex = #{sex ,jdbcType=INTEGER } ,
+		mobilePhone = #{mobilePhone, jdbcType=VARCHAR } ,
+		telephone = #{telephone, jdbcType=VARCHAR } ,
+		qq = #{qq, jdbcType=VARCHAR } ,
+		email = #{email, jdbcType=VARCHAR } ,
+		keyPerson = #{keyPerson ,jdbcType=INTEGER } ,
+		tidentity = #{tidentity ,jdbcType=INTEGER } ,
+		updatedBy = #{updatedBy,jdbcType=INTEGER } ,
+		updatedAt = now()
+		where id=#{id}
+	</update>
+
+	<!-- 新增 -->
+	<insert id="addContacter" parameterType="com.smm.cuohe.domain.Contacter">
+		insert into ch_contacter
+		(
+		customerId ,
+		name ,
+		position ,
+		sex ,
+		mobilePhone ,
+		telephone ,
+		qq ,
+		email ,
+		keyPerson ,
+		tidentity ,
+		status ,
+		createdAt ,
+		createdBy ,
+		updatedAt ,
+		updatedBy
+		)
+		VALUES
+		(
+		#{customerId } ,
+		#{name } ,
+		#{position } ,
+		#{sex } ,
+		#{mobilePhone } ,
+		#{telephone } ,
+		#{qq } ,
+		#{email } ,
+		#{keyPerson } ,
+		#{tidentity } ,
+		0 ,
+		now() ,
+		#{createdBy} ,
+		now() ,
+		#{createdBy}
+		)
+	</insert>
+
+	<insert id="addContacterBatch" parameterType="java.util.List">
+		insert into ch_contacter
+		(
+		customerId ,
+		name,
+		position ,
+		sex ,
+		mobilePhone ,
+		telephone ,
+		qq ,
+		email ,
+		keyPerson ,
+		tidentity ,
+		status ,
+		createdAt ,
+		createdBy,
+		updatedAt ,
+		updatedBy
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.customerId},
+			#{item.name} ,
+			#{item.position},
+			#{item.sex},
+			#{item.mobilePhone},
+			#{item.telephone},
+			#{item.qq},
+			#{item.email},
+			#{item.keyPerson},
+			#{item.tidentity},
+			0 ,
+			now(),
+			#{item.createdBy},
+			now() ,
+			#{item.createdBy}
+			)
+		</foreach>
+	</insert>
+
+	<!-- 新增 insert by dongmiaonan -->
+	<insert id="addContacterToId" useGeneratedKeys="true"
+			keyProperty="id" parameterType="com.smm.cuohe.domain.Contacter">
+		insert into ch_contacter
+		(
+		customerId ,
+		name,
+		position ,
+		sex ,
+		mobilePhone ,
+		telephone ,
+		qq ,
+		email ,
+		keyPerson ,
+		tidentity ,
+		status ,
+		createdAt ,
+		createdBy ,
+		updatedAt ,
+		updatedBy
+		)
+		VALUES
+		(
+		#{customerId} ,
+		#{name } ,
+		#{position } ,
+		#{sex } ,
+		#{mobilePhone } ,
+		#{telephone } ,
+		#{qq } ,
+		#{email } ,
+		#{keyPerson } ,
+		#{tidentity } ,
+		0 ,
+		now() ,
+		#{createdBy.id },
+		now() ,
+		#{updatedBy.id }
+		); select LAST_INSERT_ID() as id
+
+	</insert>
+
+
+
+	<!-- 修改 -->
+	<update id="modifyContacter" parameterType="com.smm.cuohe.domain.Contacter">
+		update ch_contacter
+		set
+		name = #{name ,jdbcType=VARCHAR } ,
+		sex = #{sex ,jdbcType=INTEGER }
+		,
+		position = #{position ,jdbcType=VARCHAR} ,
+		mobilePhone = #{mobilePhone
+		,jdbcType=INTEGER } ,
+		qq = #{qq ,jdbcType=VARCHAR } ,
+		email = #{email
+		,jdbcType=VARCHAR } ,
+		updatedBy = #{updatedBy.id ,jdbcType=INTEGER } ,
+		updatedAt = now()
+		where id=#{id}
+	</update>
+	<!-- insert by dongmiaonan -->
+	<select id="getContacterByMobile" parameterType="java.util.Map"
+			resultType="com.smm.cuohe.domain.Contacter">
+		select a.id,a.mobilePhone from ch_contacter a left join ch_customs c on a.customerId = c.id where
+		a.mobilePhone=${mobilePhone} and a.companyID=${companyId} and
+		c.itemID=${itemId} and status=0;
+	</select>
+
+	<!--查看联系人 -->
+	<select id="getOne" parameterType="int" resultType="Contacter">
+		select * from
+		user where id = #{id}
+	</select>
+
+	<!--条件查询 联系人数量 -->
+	<select id="getContacterCount" parameterType="java.util.Map"
+			resultType="Integer">
+		select count(*)
+		from ch_contacter a
+		left join ch_customs d on d.id=a.customerId
+		left join ch_users c on c.id=a.createdBy
+		left join ch_items b on b.id=d.itemId
+		where d.itemId = #{itemId}
+
+		<if test="but != null">
+			<if test="but==5">
+				and a.status=1
+			</if>
+			<if test="but!=5">
+				and a.status=0
+			</if>
+			<include refid="recentlyCreated"></include>
+		</if>
+
+		<if test="but==null">
+			and a.status=0
+		</if>
+		<include refid="contacterQueryConditions" />
+
+		<include refid="mysqlPageSearchFoot" />
+	</select>
+
+	<select id="selectCountByName" parameterType="java.lang.String"
+			resultType="java.lang.Integer">
+		select count(*) from ch_contacter where name=#{name}
+	</select>
+
+
+	<!--分页查询 -->
+	<select id="getContacterList" parameterType="java.util.Map"
+			resultType="java.util.Map">
+		select
+		a.id ,
+		b.name itemId ,
+		d.companyName companyName ,
+		a.name ,
+		a.position ,
+		a.sex ,
+		a.mobilePhone ,
+		a.telephone ,
+		a.qq ,
+		a.email ,
+		a.keyPerson ,
+		a.tidentity ,
+		a.status ,
+		a.createdAt ,
+		c.name createdBy ,
+		a.updatedAt ,
+		a.updatedBy
+		from ch_contacter a
+		left join ch_customs d on d.id=a.customerId
+		left join ch_users c on c.id=a.createdBy
+		left join ch_items b on b.id=d.itemId
+		where d.itemId = #{itemId}
+		<if test="but != null">
+			<if test="but==5">
+				and a.status=1
+			</if>
+			<if test="but!=5">
+				and a.status=0
+			</if>
+			<include refid="recentlyCreated"></include>
+		</if>
+
+		<if test="but==null">
+			and a.status=0
+		</if>
+		<include refid="contacterQueryConditions" />
+		<include refid="mysqlPageSearchFoot" />
+	</select>
+
+	<sql id="contacterQueryConditions">
+		<if test="attribute != null and attribute !=''">
+			and
+			${attribute}
+			<if test="operator == 1">
+				like '%${content}%'
+			</if>
+			<if test="operator == 2">
+				not like '%${content}%'
+			</if>
+			<if test="operator == 3">
+				= '${content}'
+			</if>
+			<if test="operator == 4">
+				!= '${content}'
+			</if>
+			<if test="operator == 5">
+				like '${content}%'
+			</if>
+			<if test="operator == 6">
+				like '%${content}'
+			</if>
+			<if test="operator == 7">
+				is null or ${attribute} =''
+			</if>
+			<if test="operator == 8">
+				is not null and ${attribute} !=''
+			</if>
+		</if>
+	</sql>
+	<sql id="recentlyCreated">
+		<if test="but!=null">
+			<if test="but==1">
+				and to_days(a.createdAt) = to_days(now())
+			</if>
+			<if test="but==7">
+				and d.itemID = #{itemId}
+			</if>
+			<if test="but==2">
+				<![CDATA[	and	  date_sub(curdate(), INTERVAL 7 DAY) <= date(a.createdAt)]]>
+			</if>
+			<if test="but==3">
+				<![CDATA[ and	  date_sub(curdate(), INTERVAL 7 DAY) <= date(a.createdAt)]]>
+			</if>
+			<if test="but==4">
+				and to_days(a.updatedAt) = to_days(now())
+			</if>
+
+			<if test="but==6">
+				and a.createdBy = #{createdById}
+			</if>
+		</if>
+	</sql>
+	<sql id="mysqlPageSearchFoot">
+		<if test="_orderby != null">
+			ORDER BY ${_orderby} ${_order}
+		</if>
+		<if test="_start != null and _size != null">
+			LIMIT #{_start} ,
+			#{_size}
+		</if>
+	</sql>
+
+	<delete id="deleteContacterById" parameterType="int">
+		delete from
+		ch_contacter
+		where id = #{id}
+	</delete>
+
+
+
+	<select id="getContacterCustomer" parameterType="int"
+			resultType="com.smm.cuohe.domain.Customer">
+		select id,companyName,entTypes from ch_customs where id =
+		#{customerId}
+	</select>
+
+	<select id="getUserById" parameterType="int"
+			resultType="com.smm.cuohe.domain.User">
+		select id,name from ch_users where id = #{id}
+	</select>
+
+	<resultMap type="com.smm.cuohe.domain.Contacter" id="contacterObj">
+		<id column="id" property="id" />
+		<result column="customerId" property="customerId"/>
+		<result column="name" property="name" />
+		<result column="position" property="position" />
+		<result column="sex" property="sex" />
+		<result column="mobilePhone" property="mobilePhone" />
+		<result column="telephone" property="telephone" />
+		<result column="qq" property="qq" />
+		<result column="email" property="email" />
+		<result column="keyPerson" property="keyPerson" />
+		<result column="tidentity" property="tidentity" />
+		<result column="status" property="status" />
+		<result column="createdAt" property="createdAt" />
+		<result column="updatedAt" property="updatedAt" />
+		<association property="customer" column="customerId" select="getContacterCustomer" />
+		<association property="createdUser" column="createdBy" select="getUserById" />
+		<association property="updatedUser" column="updatedBy" select="getUserById" />
+	</resultMap>
+
+	<select id="getAllCompany" parameterType="java.util.Map"
+			resultType="java.util.Map">
+
+		select a.id, a.companyName,b.name industry,a.commands 
+		from ch_customs a
+		left join ch_items b on b.id=a.itemid
+		where a.itemId = #{itemid}
+		<include refid="contacterQueryConditions" />
+		<include refid="mysqlPageSearchFoot" />
+	</select>
+
+	<select id="getAllCompanyCount" parameterType="java.util.Map"
+			resultType="java.lang.Integer">
+		
+		select count(1) from ch_customs a left join ch_items b on a.itemId = b.id where a.itemId = #{itemid}
+		<include refid="contacterQueryConditions" />
+		
+	</select>
+</mapper>

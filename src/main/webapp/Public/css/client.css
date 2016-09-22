@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+a.headerLine{
+	display:inline-block;
+	padding:.8em 1.5em;
+}
+a.headerLine:link{
+	text-decoration:none;
+}
+a.chosen{
+	background-color:#2d8641;
+	color:#fff;
+}
+a.chosen:hover{
+	color:#ddd;
+}

@@ -1,0 +1,105 @@
+<p style="text-align:center;"><strong><span style="font-size:24px;">销售合同</span></strong></p>
+<table id="ckTblNoBorder" >
+	<tr>
+		<td>供方： ${(contract.sell.companyName)!}</td>
+		<td>合同编号：${orderCode!''}</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>签订时间： <span id='buyer'>${nowDate?substring(0,4)}年${nowDate?substring(4,6)}月${nowDate?substring(6,8)}日</span></td>
+	</tr>
+	<tr>
+		<td>需方： <span id='saler'>${(contract.buy.companyName)!}</span></td>
+		<td>签订地点：${(contract.signMarket)!}</td>
+	</tr>
+</table>
+<br />
+<p>一、产品名称、商标、规格型号、数量、金额、供货时间</p>
+<!--SubOrderBegin-->
+<table id="ckTblBorderOne" style="">
+	<tr>
+		<td>产品名称</td>
+		<#if contract.extAttrOneTitle??>
+			<td>${contract.extAttrOneTitle}</td>
+		</#if>
+		<td>计量单位</td>
+		<td>数量</td>
+		<td>单价（元）</td>
+		<td>总金额（元）</td>
+		<td>备注</td>
+	</tr>
+	<#list contract.commodity as commodity>
+		<tr>
+			<td>${(commodity.name)!}</td>
+			<#if contract.extAttrOneTitle??>
+				<td>${(commodity.extAttrOne)!}</td>
+			</#if>
+			<td>${(commodity.unit)!}</td>
+			<td>${(commodity.quantity)!}</td>
+			<td>${(commodity.price)!}</td>
+			<td>${(commodity.totalPrice)!?string("#.##")} 合计人民币金额：${allPrice!''}</td>
+			<td></td>
+		</tr>
+	</#list>
+	<tr>
+		<td colspan="100" align="left"><p style="color: red;font-size: 20px;" id="sumPrice" ></p></td>
+	</tr>
+</table>
+<!--SubOrderEnd-->
+<!--totalPriceBegin <p style="text-align:right;width:900px;">总计金额：<span style="color: red;">￥${(contract.sumPrice)!?string.number}</span> 元</p> totalPriceEnd-->
+<!-- 
+< br />
+<p>合计人民币金额(大写)：${(contract.sumPrice)!?string.number} （${(contract.sumPriceChs)!}） ，${(contract.deliveryTxt)!}。</p>
+<p>乙方应当于<u></u>前将全部合同价款支付于甲方。</p>
+<br /> 
+ -->
+<p>二、产品质量、技术标准：按照《国家标准：锑锭GB/T1599-2002》<u style="color: red"> 2# </u>执行。</p><!-- 牌号暂时不确定！ -->
+<p>三、交（提）货地点、时间、方式：
+	<u style="color: red">${ware_Province!''}${(contract.ware_name)!}、
+		${deliveryDate?substring(0,4)}年${deliveryDate?substring(4,6)}月${deliveryDate?substring(6,8)}日
+	</u>
+ </p>
+<p>四、运输方式及运输目的地，费用承担：<u style="color: red"><#if delivery ==1 >卖方送货<#else>买方自提</#if></u></p>
+<p>五、货物损耗及误差标准：按照国标《国家标准：锑锭GB/T1599-2002》 <u style="color: red"> ±${poundDiff}‰</u></p>
+<p>六、包装标准及规格：<u style="color: red">木箱/打托包装，每托/箱  一吨包装不回收 </u></p>
+<p>七、验收方法及提出异议期限：<u style="color: red">以供方提供的磅单、质检单为依据，其他元素可参照第三方检测单位计算，如有异议，在收货后七个工作日内提出</u></p>
+<p>八、结算方式：<u style="color: red">款到发货，收到货后开具17%增值税发票。</u></p>
+<p>九、违约责任：按照《合同法》执行。</p>
+<p>十、解决合同纠纷的方式：供需双方协商解决，如协商不成向合同签订地法院提起诉讼。</p>
+<p>十一、其他约定事项：若有变化，以传真为准。</p>
+
+<br />
+<table id="ckTblNoBorder" >
+	<tr>
+		<td>卖方</td>
+		<td>买方</td>
+	</tr>
+	<tr>
+		<td >单位名称（章）：<span id="saler1">${(contract.sell.companyName)!}</span> </td>
+		<td >单位名称（章）：<span id="buyer1">${(contract.buy.companyName)!}</span> </td>
+	</tr>
+	<tr>
+		<td >地址:<span id="address1">${(contract.sell.address)!}</span> </td>
+		<td>地址: ${(contract.buy.address)!}</td>
+	</tr>
+	<tr>
+		<td >法定代表人:<span id="legalperson1">${(contract.sell.corporate)!}</span></td>
+		<td>法定代表人:${(contract.buy.corporate)!}</td>
+	</tr>
+	<tr>
+		<td >委托代理人：<span id="agent1"></span>  </td>
+		<td>委托代理人：</td>
+	</tr>
+	<tr>
+		<td >电话：<span id="tel1">${(contract.sell.companyPhone)!}</span></td>
+		<td>电话：${(contract.buy.companyPhone)!}</td>
+	</tr>
+	<tr>
+		<td >传真：<span id="fax1"></span></td>
+		<td>传真：</td>
+	</tr>
+	<tr>
+		<td >账号：<span id="bankAccount1">${(contract.sell.bankAccount)!}</span></td>
+		<td>账号：${(contract.buy.bankAccount)!}</td>
+	</tr>
+</table>

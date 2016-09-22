@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.ICommodityDAO">
+	
+	<resultMap type="com.smm.cuohe.domain.Commodity" id="CommodityWithAttr">
+	
+		<id property="id" column="id" jdbcType="INTEGER" />
+		
+		<result property="prodId" column="prod_id" jdbcType="INTEGER"/>
+		
+		<result property="catId" column="cat_id" jdbcType="INTEGER"/>
+		
+		<result property="catName" column="cat_name" jdbcType="VARCHAR"/>
+		
+		<result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+	
+		<collection property="attrList" column="id" select="com.smm.cuohe.dao.ICommodityAttrDAO.getCommidtyAttrByCommodityId" />
+	
+	</resultMap>
+	
+	
+	<select id="getCommodityByIdForDealMaker" parameterType="int" resultMap="CommodityWithAttr">
+	
+		select * from ch_commodity where id = #{#commodityId}; 
+	
+	</select>
+	
+	<select id="getItemAttrByItemId" parameterType="int" resultType="com.smm.cuohe.domain.ItemAttr">
+	
+		select * from ch_item_attr where itemId = #{itemId} and status = 0 and mainProperty is not null;
+	
+	</select>
+
+</mapper>

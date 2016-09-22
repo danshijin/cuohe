@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.smm.cuohe.dao.IPoolPriceDao">
+
+<select id="queryIPoolPrice" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.PoolPrice">	
+	
+	SELECT plpe.id  AS id , plpe.poolId as poolId , plpe.poolType as poolType ,  cums.id AS customerId , cums.companyName AS customerName , plpe.price AS price , plpe.priceType as priceType , plpe.updatedAt AS updatedAt ,
+	(SELECT coer.name FROM ch_contacter  coer WHERE coer.customerId= cums.id AND ${tidentity} LIMIT 0,1)AS lxrname,
+	(SELECT coer.mobilePhone FROM ch_contacter  coer WHERE coer.customerId= cums.id AND ${tidentity} LIMIT 0,1)AS mobilePhone
+		FROM  ch_pool_price plpe
+		LEFT JOIN ch_customs cums ON cums.id = plpe.customerId
+	WHERE plpe.status = 0 and plpe.poolType = #{poolType} and plpe.poolId = #{poolId}  ORDER BY plpe.updatedAt desc
+</select>
+
+
+<select id="getPoolPriceById" parameterType="java.lang.Integer" resultType="com.smm.cuohe.domain.PoolPrice">	
+	
+	SELECT * FROM  ch_pool_price plpe WHERE  id=#{id} 
+	
+</select>
+
+
+<select id="getPoolPriceByPoolId" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.PoolPrice">	
+	
+	SELECT * FROM  ch_pool_price plpe WHERE status = 0 and poolId=#{poolId} and poolType=#{poolType} ORDER BY updatedAt desc LIMIT 0,1
+	
+</select>
+
+
+<select id="getPoolPrice" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.PoolPrice">	
+	  SELECT  plpe.id as  id ,
+			  plpe.poolId as poolId,
+			  plpe.poolType as poolType,
+			  plpe.createdAt as createdAt,
+			  plpe.price as price,
+			  plpe.customerId as customerId,
+			  cums.companyName as customerName,
+			  plpe.status as status,
+			  plpe.updatedAt as updatedAt,
+			  plpe.priceType as priceType,
+			  plpe.account as account
+	  FROM  ch_pool_price plpe
+	  LEFT JOIN ch_customs cums ON cums.id = plpe.customerId
+	  WHERE plpe.status = 0 and plpe.poolType=#{poolType} and plpe.poolId=#{poolId}  and plpe.account=#{account}
+</select>
+
+
+<select id="getPoolPriceByMap" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.PoolPrice">	
+	  SELECT  plpe.id as  id ,
+			  plpe.poolId as poolId,
+			  plpe.poolType as poolType,
+			  plpe.createdAt as createdAt,
+			  plpe.price as price,
+			  plpe.customerId as customerId,
+			  cums.companyName as customerName,
+			  plpe.status as status,
+			  plpe.updatedAt as updatedAt,
+			  plpe.priceType as priceType,
+			  plpe.account as account
+	  FROM  ch_pool_price plpe
+	  LEFT JOIN ch_customs cums ON cums.id = plpe.customerId
+	  WHERE plpe.status = 0 and plpe.poolType=#{poolType} and plpe.poolId=#{poolId}  ORDER BY plpe.updatedAt desc LIMIT 0,1
+		
+</select>
+
+
+<select id="getPoolPriceByMap_one" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.PoolPrice">	
+	  SELECT  plpe.id as  id ,
+			  plpe.poolId as poolId,
+			  plpe.poolType as poolType,
+			  plpe.createdAt as createdAt,
+			  plpe.price as price,
+			  plpe.customerId as customerId,
+			  cums.companyName as customerName,
+			  plpe.status as status,
+			  plpe.updatedAt as updatedAt,
+			  plpe.priceType as priceType,
+			  plpe.account as account
+	  FROM  ch_pool_price plpe
+	  LEFT JOIN ch_customs cums ON cums.id = plpe.customerId
+	  WHERE plpe.status = 0 and plpe.poolType=#{poolType} and plpe.poolId=#{poolId}  ORDER BY plpe.updatedAt desc LIMIT 1,1
+		
+</select>
+
+
+
+<update id="deleteById" parameterType="java.lang.Integer">
+
+	update ch_pool_price set status=1 where id=#{id}
+
+</update>
+
+
+
+<update id="updatePool" parameterType="com.smm.cuohe.domain.PoolPrice">
+
+	update ch_pool_price set price=#{price} , updatedAt=#{updatedAt}, priceType=#{priceType} where id=#{id}
+
+</update>
+
+
+<select id="getPoolPriceList" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.PoolPrice">	
+	  select account from ch_pool_price where poolId = #{poolId} and poolType = #{poolType} ORDER BY id desc
+</select>
+
+
+
+
+<insert id="insertnoticeList" parameterType="java.util.Map">
+	   ${sql}
+</insert>
+
+
+
+
+
+
+</mapper>

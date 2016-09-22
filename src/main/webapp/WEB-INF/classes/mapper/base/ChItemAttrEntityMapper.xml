@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChItemAttrEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChItemAttrEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="itemID" property="itemid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="fillMode" property="fillmode" jdbcType="INTEGER" />
+    <result column="dataRegural" property="dataregural" jdbcType="INTEGER" />
+    <result column="default_value" property="defaultValue" jdbcType="VARCHAR" />
+    <result column="mainProperty" property="mainproperty" jdbcType="INTEGER" />
+    <result column="required" property="required" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="listOrder" property="listorder" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="DATE" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="DATE" />
+    <result column="UpdatedBy" property="updatedby" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.smm.cuohe.domain.base.ChItemAttrEntity" extends="BaseResultMap" >
+    <result column="options" property="options" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, itemID, name, fillMode, dataRegural, default_value, mainProperty, required, status, 
+    listOrder, createdAt, createdBy, updatedAt, UpdatedBy
+  </sql>
+  <sql id="Blob_Column_List" >
+    options
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ch_item_attr
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_item_attr
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChItemAttrEntity" >
+    insert into ch_item_attr (id, itemID, name, 
+      fillMode, dataRegural, default_value, 
+      mainProperty, required, status, 
+      listOrder, createdAt, createdBy, 
+      updatedAt, UpdatedBy, options
+      )
+    values (#{id,jdbcType=INTEGER}, #{itemid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{fillmode,jdbcType=INTEGER}, #{dataregural,jdbcType=INTEGER}, #{defaultValue,jdbcType=VARCHAR}, 
+      #{mainproperty,jdbcType=INTEGER}, #{required,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{listorder,jdbcType=INTEGER}, #{createdat,jdbcType=DATE}, #{createdby,jdbcType=INTEGER}, 
+      #{updatedat,jdbcType=DATE}, #{updatedby,jdbcType=INTEGER}, #{options,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChItemAttrEntity" >
+    insert into ch_item_attr
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemid != null" >
+        itemID,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="fillmode != null" >
+        fillMode,
+      </if>
+      <if test="dataregural != null" >
+        dataRegural,
+      </if>
+      <if test="defaultValue != null" >
+        default_value,
+      </if>
+      <if test="mainproperty != null" >
+        mainProperty,
+      </if>
+      <if test="required != null" >
+        required,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="listorder != null" >
+        listOrder,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+      <if test="updatedby != null" >
+        UpdatedBy,
+      </if>
+      <if test="options != null" >
+        options,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="fillmode != null" >
+        #{fillmode,jdbcType=INTEGER},
+      </if>
+      <if test="dataregural != null" >
+        #{dataregural,jdbcType=INTEGER},
+      </if>
+      <if test="defaultValue != null" >
+        #{defaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="mainproperty != null" >
+        #{mainproperty,jdbcType=INTEGER},
+      </if>
+      <if test="required != null" >
+        #{required,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="listorder != null" >
+        #{listorder,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=DATE},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=DATE},
+      </if>
+      <if test="updatedby != null" >
+        #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="options != null" >
+        #{options,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChItemAttrEntity" >
+    update ch_item_attr
+    <set >
+      <if test="itemid != null" >
+        itemID = #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="fillmode != null" >
+        fillMode = #{fillmode,jdbcType=INTEGER},
+      </if>
+      <if test="dataregural != null" >
+        dataRegural = #{dataregural,jdbcType=INTEGER},
+      </if>
+      <if test="defaultValue != null" >
+        default_value = #{defaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="mainproperty != null" >
+        mainProperty = #{mainproperty,jdbcType=INTEGER},
+      </if>
+      <if test="required != null" >
+        required = #{required,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="listorder != null" >
+        listOrder = #{listorder,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=DATE},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=DATE},
+      </if>
+      <if test="updatedby != null" >
+        UpdatedBy = #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="options != null" >
+        options = #{options,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.smm.cuohe.domain.base.ChItemAttrEntity" >
+    update ch_item_attr
+    set itemID = #{itemid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      fillMode = #{fillmode,jdbcType=INTEGER},
+      dataRegural = #{dataregural,jdbcType=INTEGER},
+      default_value = #{defaultValue,jdbcType=VARCHAR},
+      mainProperty = #{mainproperty,jdbcType=INTEGER},
+      required = #{required,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      listOrder = #{listorder,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=DATE},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=DATE},
+      UpdatedBy = #{updatedby,jdbcType=INTEGER},
+      options = #{options,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChItemAttrEntity" >
+    update ch_item_attr
+    set itemID = #{itemid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      fillMode = #{fillmode,jdbcType=INTEGER},
+      dataRegural = #{dataregural,jdbcType=INTEGER},
+      default_value = #{defaultValue,jdbcType=VARCHAR},
+      mainProperty = #{mainproperty,jdbcType=INTEGER},
+      required = #{required,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      listOrder = #{listorder,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=DATE},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=DATE},
+      UpdatedBy = #{updatedby,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

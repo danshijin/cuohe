@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!-- 模态窗口编辑模板 -->
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;">公司信息</h4>
+</div>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body">
+	<div class="portlet-body form">
+		<div class="form-body">
+			<div class="form-group form-md-radios">
+				<div>
+					<table class="tb" cellspacing="1" border="1">
+						<thead>
+							<tr>
+								<th style="width: 5%">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+								<th style="text-align: center">用户名</th>
+								<th style="text-align: center">公司名</th>
+								<th style="text-align: center">联系人</th>
+								<th style="text-align: center">电话</th>
+							</tr>
+						</thead>
+						<tbody>
+							<#if companys??>
+							<#list companys as el>
+							<tr>
+								<td class=""  align="center">
+									<input name="radio" type="radio" onclick="setCompany(this)">
+									<input type="hidden" value="${(el.userid)?c}">
+									<input type="hidden" value="${(el.company)}">
+									<input type="hidden" value="${(el.username)}">
+								</td>
+								<td class=""  align="center">
+									${(el.username)!}
+								</td>
+								<td class="" align="center">
+									${(el.company)!}
+								</td>
+								<td class=""  align="center">
+									${(el.truename)!}
+								</td>
+								<td class=""  align="center">
+									${(el.mobile)!}
+								</td>
+							</tr>
+							
+							</#list>
+							</#if>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer" style="text-align: center;">
+	<button type="button" class="btn default fa fa-times" data-dismiss="modal">关闭</button>
+	<button type="button" onclick="optionConfirm()" class="btn green  fa fa-check">选择</button>
+</div>
+<!-- 结束 -->
+<!-- 业务处理开始 -->
+<script type="text/javascript">
+var company = {};
+function setCompany(obj){
+	company.id = $(obj).nextAll().eq(0).val();
+	company.name = $(obj).nextAll().eq(1).val();
+	company.username = $(obj).nextAll().eq(2).val(); 
+}
+function optionConfirm(){
+	if(!company.id){
+		alert("请选择公司");
+		return;
+	}
+	$.ajax({
+		type : "POST",
+		url : "${request.getContextPath()}/TrailPoolPojo/companyDetail.do?userid="+company.id,
+		dataType : "json",
+		success : function(companyInfo) { 
+		//$("#nextContext").val(companyInfo); 
+			companyInfo = $.parseJSON(companyInfo);
+			if(companyInfo && $.isPlainObject(companyInfo)){
+			   
+				companyOfSearch = {};
+				$('#companyName').val(companyInfo.company||''); 
+				$('#hfAccount').val(company.username||'');
+				/*$('#salesProducts').find('input').val(companyInfo.sell||'');
+				  if(companyInfo.level){
+					$('#level').find('select').val(companyInfo.level);
+				  }
+				var areaInfo = companyInfo.area;
+				if(areaInfo && $.isPlainObject(areaInfo)){
+					if(areaInfo.parentID==0){
+						$('#area').find('select').eq(0).val(areaInfo.id);
+					}else{
+						$('#area').find('select').eq(0).val(areaInfo.parentID);
+						setChildAreas($('#area').find('select').eq(0),areaInfo.id);
+					}
+				}*/
+				$('#address').val(companyInfo.address||'');
+				/*var size = companyInfo.size||'';companyInfo.
+				$('#categoryEmployee').each(function(){
+					if($(this).text()==size){
+						$(this).attr('selected','selected');
+					}
+				});*/
+				/*if(companyInfo.buy){
+					$('#buyProducts').find('input').val(companyInfo.buy);
+				}*/
+				//附加信息
+				if($.isNumeric(companyInfo.regyear)){
+					$('#strRegisterDate').val(companyInfo.regyear);
+				}
+				if(companyInfo.telephone){
+					$('#companyPhone').val(companyInfo.telephone);
+				}
+				if(companyInfo.homepage){
+					$('#companySite').find('input').val(companyInfo.homepage);
+				}
+				/*if(companyInfo.bank){
+					$('#bank').find('input').val(companyInfo.bank);
+				}
+				if(companyInfo.account){
+					$('#bankAccount').find('input').val(companyInfo.account);
+				}*/
+				
+				//联系人信息 
+				if(companyInfo.truename){
+				$('#contacterName').val(companyInfo.truename);
+				}
+				if(companyInfo.gender===false){  
+				$('#form1').find("input[name='sex']").eq(0).attr('selected','selected');
+					//$('#sexMan').attr('checked','checked');
+				}else if(companyInfo.gender===true){ 
+					//$('#sexWoman').attr('checked','checked');
+				$('#form1').find("input[name='sex']").eq(1).attr('selected','selected');
+				}
+				if(companyInfo.career){
+					$('#position').val(companyInfo.career);
+				}
+				if(companyInfo.mobile){
+					$('#mobilePhone').val(companyInfo.mobile);
+				}
+				if(companyInfo.qq){
+					$('#qq').val(companyInfo.qq);				
+				}
+				if(companyInfo.email){
+					$('#email').val(companyInfo.email);
+				}
+				/*if(companyInfo.admin===true){
+					form.find("input[name='keyPerson']").eq(0).attr('selected','selected');
+				}else if(companyInfo.admin===false){
+					form.find("input[name='keyPerson']").eq(1).attr('selected','selected')
+				}*/
+				//companyModel.modal('hide');
+				companyModel.remove();
+			} 
+		} 
+	});
+	$(".close").click(); 
+}
+</script>

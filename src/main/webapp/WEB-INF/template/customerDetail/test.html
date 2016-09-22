@@ -1,0 +1,494 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/js/md5.js" type="text/javascript"></script>
+
+<script>
+	function change(data){
+		if(typeof data.status != "undefined"){
+			$("#status").val(data.status);
+		}
+		if(typeof data.msg != "undefined"){
+			$("#msg").val(data.msg);
+		}
+		if(typeof data.data != "undefined"){
+			
+			var text = "";
+			if(data.data instanceof Array){
+				
+				for(var i = 0; i < data.data.length; i++){
+					for(var attr in data.data[i]){
+						text += attr +" ： " + data.data[i][attr] + "\n";
+					}
+				}
+				
+			} else {
+				for(var attr in data.data){
+					text += attr +" ： " + data.data[attr] + "\n";
+				}
+			}
+			$("#data").val(text);
+		}
+	}
+	
+	function change1(data){
+		if(typeof data.status != "undefined"){
+			$("#status1").val(data.status);
+		}
+		if(typeof data.msg != "undefined"){
+			$("#msg1").val(data.msg);
+		}
+		if ((typeof data.data != "undefined") && (data.data instanceof Object)){
+			
+			var text = "";
+			if(data.data instanceof Array){
+				
+				for(var i = 0; i < data.data.length; i++){
+					for(var attr in data.data[i]){
+						text += attr +" ： " + data.data[i][attr] + "\n";
+					}
+				}
+				
+			} else {
+				for(var attr in data.data){
+					text += attr +" ： " + data.data[attr] + "\n";
+				}
+			}
+			$("#data1").val(text);
+		} else {
+			
+			$("#data1").val(data.data);
+		
+		}
+	}
+</script>
+
+
+<!-- 商城用户接口 -->
+<script>
+	var abc = null;
+	var customerToken = "2af3f65b-f204-45f3-9e89-2c48a3c55bcc";
+	var lastid = 0;
+	var cusChatId = 0;
+	<!-- 商城用户创建回话 -->
+	function customerCreateConversion(){
+		var apiParas = {"uid":0, "item_id":26276, "product_id":536, "ip":"127.0.0.1", "url":"http://www.baidu.com","url_name":"baidu","customerName":encodeURI(encodeURI("李小龙")),"session_id":"93atga042esvfe4njahnde0ur0","lastToken":"d0f81ffb-c8ba-468f-8e89-45d758f873cb"};
+		$.getJSON("${request.getContextPath()}/customerConversation/createConversation.do",apiParas,function(data){
+			if(data.status =="ok" && typeof data.data.token != "undefined"){
+				customerToken = data.data.token;
+				cusChatId = data.data.chatId;
+			}
+			
+			change(data);
+		});
+	}
+	
+	<!-- 商城用户发送聊天 -->
+	function customerSendChat(){
+			
+		var apiParas = {"chatId": cusChatId, "type":3, "content":"customer " + new Date().format("yyyy-MM-dd hh:mm:ss"), "price":0, "volumn":0, "chatFromType":"C","chatFromId":35269, "status":4, "token": customerToken};
+
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/sendChat.do",apiParas,function(data){
+			
+			change(data);
+		});
+		
+	}
+	
+	<!-- 商城用户获取聊天 -->
+	function customerGetChat(){
+		var apiParas = {"lastid": 0, token:customerToken};
+		$.getJSON("${request.getContextPath()}/customerConversation/getChatsByToken.do",apiParas,function(data){
+			debugger;
+			change(data);
+		});
+	}
+	
+	<!-- 合并会话 -->
+	function mergeConversation(){
+		var apiParas = {"uid": 1, token:customerToken,"customerName":"李大龙"};
+		$.getJSON("${request.getContextPath()}/customerConversation/mergeConversation.do",apiParas,function(data){
+			debugger;
+			change(data);
+		});
+	}
+	<!-- 获取合同内容 -->
+	function getContractHtml(){
+		var apiParas = {"uid": 1, "token":customerToken};
+		$.post("${request.getContextPath()}/customerConversation/getContractHtml.do",apiParas,function(data){
+			debugger;
+			change(data);
+		});
+	}
+	
+	<!-- 关闭会话 -->
+	function closeConversation(){
+		var apiParas = {"token": customerToken};
+		$.post("${request.getContextPath()}/customerConversation/closeConversation.do",apiParas,function(data){
+			
+			change(data);
+		});
+	}
+	
+	<!-- 客户在线 -->
+	function customOnline(){
+		var apiParas = {"token": customerToken};
+		$.post("${request.getContextPath()}/customerConversation/customOnline.do",apiParas,function(data){
+			
+			change(data);
+		});
+	}
+	
+	<!-- 买家确认合同 -->
+	function confirmContract(){
+		var apiParas = {"orderNo": "D151300210000231"};
+		$.post("${request.getContextPath()}/customerConversation/confirmContract.do",apiParas,function(data){
+			
+			change(data);
+		});
+	}
+	
+	
+	<!-- 添加线索接口 -->
+	function addTrailPool(){
+		var apiParas = {"companyName": "公司名", "salesProducts":"铜", "position":"经理","contacterName":"赵先生","mobilePhone":"15604455783","sex":0};
+		$.post("${request.getContextPath()}/trailPoolApi/addTrailPool.do",apiParas,function(data){
+			
+			change(data);
+		});
+	}
+	
+</script>
+<!-- 撮合人员接口 -->
+<script >
+	var chatId = 0;
+	var customId = 0;
+	var orderId = 0;
+	var conversationId = 0;
+	<!-- 撮合员登录 -->
+	function dealMakerLogin(){
+		var apiParas = {"userName": "lizy", userPassword:hex_md5("lizy")};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/login.do",apiParas,function(data){
+			
+			change1(data);
+			
+		});
+	}
+	
+	<!-- 撮合员获取会话 -->
+	function dealMakerGetConversion(){
+		var apiParas = {"itemId": 26280, status:5, employeeId: 12};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/getConversations.do",apiParas,function(data){
+			change1(data);
+			chatId = data.data[0].id;
+			customId = data.data[0].customId;
+			conversationId = data.data[0].id;
+		});
+	}
+	
+	<!-- 撮合员发送聊天 -->
+	function dealMakerSendChat(){
+		var apiParas = {"chatId": chatId, "type":0, "content":"dealMaker " + new Date().format("yyyy-MM-dd hh:mm:ss") + "", "price":0, "volumn":0, "chatFromType":"U","chatFromId":1, "employeeId":1,"status":4};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/sendChat.do",apiParas,function(data){
+			
+			change1(data);
+		});
+	}
+	
+	<!-- 撮合员获取聊天 -->
+	function dealMakerGetChat(){
+		var apiParas = {"recordId": "", "chatId":chatId, "customId":customId};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/getChats.do",apiParas,function(data){
+			
+			change1(data);
+		});
+	}
+	
+	<!-- 会话信息(历史成交) -->
+	function countByStatusAndCustomId(){
+		var apiParas = {"customId": customId, "status":5};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/countByStatusAndCustomId.do",apiParas,function(data){
+			
+			debugger;
+			change1(data);
+			
+		});
+	}
+	
+	<!-- 会话信息(历史沟通) -->
+	function countByCustomIdAndItemId(){
+		var apiParas = {"customId": customId, "itemId":26276};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/countByCustomIdAndItemId.do",apiParas,function(data){
+			debugger;
+			change1(data);
+			
+		});
+	}
+	
+	<!-- 更新会话状态 -->
+	function updateConversationStatus(){
+		var apiParas = {"chatId": 27, "dealMakerId":14, "status":4};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/updateConversationStatus.do",apiParas,function(data){
+			
+			change1(data);
+			
+		});
+	}
+	
+	<!-- 获取我的团队信息 -->
+	function getMyTeamInfo(){
+		var apiParas = {"itemId":26276,dealMakerId:13};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/getMyTeamInfo.do",apiParas,function(data){
+			
+			change1(data);
+			
+		});
+	}
+	
+	<!-- 生成订单 -->
+	function generateOrder(){
+		var apiParas = {"itemId": 26276,
+						"sellId":1,
+						"buyId":2,
+						"delivery":1, //交货方式 0：款到发货 1：货到付款
+						"payment":0, //结算方式 0：现汇 1：承兑(三月) 2:承兑(六月)
+						"ware_province":1, //仓库-省份
+						"ware_name":"上海仓库",  //仓库名字
+						"deliveryDate": new Date(),
+						"poundDiff":2,
+						"ttype":0,  //交易类型 0：卖盘生成订单 1:买盘生成订单
+						"status":0,  //订单状态 0：已创建 1：已确认交收 2：已撤销。
+						"source":0, //0:系统产生  1:商城导入或接口进入
+						"createdBy":1,
+						"chatId":27,
+						"customId":1
+						
+						};
+		debugger;
+		$.post("${request.getContextPath()}/buyOrder/generateOrder.do",apiParas,function(data){
+			
+			change1(data);
+			orderId = data.data;
+		});
+	}
+	
+	var contractUrl = "";
+	/* 确认订单(并生成合同) */
+	function confirmOrder(){
+		var apiParas = {"orderId":orderId, "action":1};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/confirmOrder.do",apiParas,function(data){
+			
+			change1(data);
+			contractUrl = data.data;
+		});
+	}
+	
+	/* 会话转移 */
+	function transferConversation(){
+		var apiParas = {"conversationId":27, "currDealMakerId":1, "destDealMakerId":3};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/transferConversation.do",apiParas,function(data){
+			
+			change1(data);
+		});
+	}
+	/* 提交信息结果 */
+	function changeRecordStatus(){
+		var apiParas = {"chatRecordId":264, "destStatus":4, "overtimeSeconds":400};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/changeRecordStatus.do",apiParas,function(data){
+			
+			change1(data);
+		});
+	}
+	
+	/* 查询商品信息 */
+	function getCommodityById(){
+		var apiParas = {"commodityId":311};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/getCommodityById.do",apiParas,function(data){
+			
+			change1(data);
+		});
+	}
+	
+	/* 查询商品信息 */
+	function getItemAttrByItemId(){
+		var apiParas = {"itemId":26276};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/getItemAttrByItemId.do",apiParas,function(data){
+			
+			change1(data);
+			
+		});
+	}
+	
+	/* 查询商品信息 */
+	function updateOnlineStatus(){
+		var apiParas = {"dealMakerId":1,"online":0};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/updateOnlineStatus.do",apiParas,function(data){
+			
+			debugger;
+			change1(data);
+			
+		});
+	}
+	
+	/* 获取所有省份 */
+	function getAllProvince(){
+		var apiParas = {};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/getAllProvince.do", apiParas,function(data){
+			
+			debugger;
+			change1(data);
+			
+		});
+	}
+	
+	/* 获取特定省份中的所有仓库 */
+	function getWarehouseByProvince(){
+		var apiParas = {provinceId:1, itemId:26276};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/getWarehouseByProvince.do",apiParas,function(data){
+			
+			debugger;
+			change1(data);
+			
+		});
+	}
+	/* 根据商城用户的account和itemId在撮合系统中查找是否存在 */
+	function hasCustomerByAccount(){
+		var apiParas = {account:"18970613301", itemId:26276};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/hasCustomerByAccount.do",apiParas,function(data){
+			
+			debugger;
+			change1(data);
+			
+		}).done(ajaxDone);
+	}
+	
+	/* $(function(){
+		var wait = function(){
+			var dtd = $.Deferred();
+			var task = function(){
+				alert("任务执行成功啦！");
+				dtd.resolve();
+			};
+			debugger;
+			setTimeout(task, 2000);
+			return dtd.promise();
+		};
+		debugger;
+		wait().done(function(){alert("全部完事啦");});
+		
+	}); */
+	
+	/* 获取供应商信息 */
+	function queryCustomerByCompanyName(){
+		var apiParas = {companyName:"上海有色网", itemId:26276};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/queryCustomerByCompanyName.do",apiParas,function(data){
+			
+			debugger;
+			change1(data);
+			
+		});
+	}
+	
+	/* 获取历史订单数 */
+	function countHistoryOrder(){
+		var apiParas = {customerName:"hilberthuang", itemId:26276};
+		$.getJSON("${request.getContextPath()}/dealMakerConversation/countHistoryOrder.do",apiParas,function(data){
+			
+			debugger;
+			change1(data);
+			
+		});
+	}
+	
+	
+	
+</script>
+</head>
+
+<body>
+<div style="margin:40px;">
+
+	<input type="button" onclick="customerCreateConversion()" value="客户创建会话">
+	
+	<input type="button" onclick="customerSendChat()" value="客户发送消息">
+	
+	<input type="button" onclick="customerGetChat()" value="客户接收消息">
+
+	<input type="button" onclick="mergeConversation()" value="合并会话">
+	
+	<input type="button" onclick="getContractHtml()" value="获取合同内容 ">
+	
+	<input type="button" onclick="closeConversation()" value="关闭会话 ">
+	
+	<input type="button" onclick="customOnline()" value="客户在线 ">
+	
+	<input type="button" onclick="confirmContract()" value="买家确认合同">
+	
+	<input type="button" onclick="addTrailPool()" value="添加线索">
+	
+	
+</div>
+
+<div style="margin:40px;">
+	
+	<input type="button" onclick="dealMakerLogin()" value="撮合人员登录">
+	
+	<input type="button" onclick="dealMakerGetConversion()" value="撮合人员获取会话">
+	
+	<input type="button" onclick="dealMakerSendChat()" value="撮合人员发送消息">
+	
+	<input type="button" onclick="dealMakerGetChat()" value="撮合人员接收消息">
+	
+	<input type="button" onclick="countByStatusAndCustomId()" value="会话信息(历史成交)">
+	
+	<input type="button" onclick="countByCustomIdAndItemId()" value="会话信息(历史沟通)">
+	
+	<input type="button" onclick="updateConversationStatus()" value="更新会话状态">
+	
+	<input type="button" onclick="getMyTeamInfo()" value="获取我的团队信息">
+	
+	<input type="button" onclick="generateOrder()" value="生成订单">
+	
+	<input type="button" onclick="confirmOrder()" value="确认订单(并生成合同)">
+	
+	<input type="button" onclick="transferConversation()" value="会话转移">
+	
+	<input type="button" onclick="changeRecordStatus()" value="提交信息结果">
+	
+	<input type="button" onclick="getCommodityById()" value="查询商品信息">
+	
+	<input type="button" onclick="getItemAttrByItemId()" value="获取品目扩展属性">
+	
+	<input type="button" onclick="updateOnlineStatus()" value="更改在线状态">
+	
+	<input type="button" onclick="getAllProvince()" value="获取所有省份">
+	
+	<input type="button" onclick="getWarehouseByProvince()" value="获取特定省份中的仓库">
+	
+	<input type="button" onclick="hasCustomerByAccount()" value="商城用户是否在撮合注册">
+	
+	<input type="button" onclick="queryCustomerByCompanyName()" value="获取供应商信息">
+	
+	<input type="button" onclick="countHistoryOrder()" value="获取历史订单数">
+	
+</div>
+<div style="margin:40px;">
+	<input type="text" id="status" />
+	<input type="text" id="msg"/>
+</div>
+<div style="margin:40px;">
+	<textarea cols = 120 rows=10 id="data" ></textarea>
+</div>
+<div style="margin:40px;">
+	<input type="text" id="status1" />
+	<input type="text" id="msg1"/>
+</div>
+<div style="margin:40px;">
+	<textarea cols = 120 rows=10 id="data1" ></textarea>
+</div>
+
+</body>
+
+</html>

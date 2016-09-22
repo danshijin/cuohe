@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.dealmake.BuypoolDao">
+
+	<!-- 查询所有企业 -->
+	<select id="companylist" resultType="com.smm.cuohe.domain.Customer">
+		SELECT id ,companyName FROM
+		ch_customs
+	</select>
+
+	<!-- 查询买盘池 -->
+	<select id="buypoollist" parameterType="java.util.Map"
+		resultType="com.smm.cuohe.domain.dealmake.BuyPoolEntity">
+		SELECT p.*,c.id customsId FROM (
+		SELECT p.CreatedBy ,p.UpdatedAt, p.id
+		,p.itemsID,c.companyName AS companyName,p.title,p.context,t.name
+		AS
+		contacterName ,t.mobilePhone,t.Telephone ,h.name AS areaName
+		,t.keyPerson ,c.id customerId ,p.proStatus
+		FROM ( SELECT * FROM
+		ch_buy_pool WHERE itemsId=${itemId} and status=0 and createSource in (0,2)
+		<if test="userid!=null">
+			AND CreatedBy =${userid}
+		</if>
+		<if test="dept!=null">
+			and CreatedBy>0
+		</if>
+		) p left join ch_customs c on p.customerId=c.id and p.status=0
+
+		left
+		join
+		(SELECT * FROM ch_contacter GROUP BY customerId) t on
+		c.id=t.customerId left join ch_areas h on c.AreaID=h.id ) p
+		LEFT JOIN
+		(SELECT DISTINCT id FROM ch_customs) c ON p.customerId= c.id
+		where 1=1 
+		<if test="ids!=null and ids!=''">
+			and p.id in (${ids})
+		</if>
+		order by UpdatedAt desc
+
+		<if test="startNum!=null and endNum !=null ">
+			limit ${startNum},${endNum}
+		</if>
+	</select>
+
+	<select id="countbuypool" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		<!--SELECT COUNT(*) FROM ( -->
+		<!--SELECT p.CreatedBy , p.id ,p.itemsID,c.name AS companyName,p.title,p.context,t.name -->
+		<!--AS contacterName ,t.mobilePhone,Telephone ,h.name AS areaName -->
+		<!--,t.keyPerson ,p.commodity_id,c.id companyID -->
+		<!--FROM ( SELECT* FROM ch_buy_pool WHERE itemsId=${itemId} -->
+		<!-- -->
+		<!--<if test="userid!=null"> -->
+		<!--AND CreatedBy =${userid} -->
+		<!--</if> -->
+		<!--<if test="dept!=null"> -->
+		<!--AND CreatedBy>0 -->
+		<!--</if> -->
+		<!--) p left JOIN ch_customs c ON p.customerId=c.id AND p.status=0 -->
+		<!-- -->
+		<!--LEFT JOIN (SELECT * FROM ch_contacter GROUP BY companyID) t ON c.id=t.companyID -->
+		<!--LEFT JOIN ch_areas h ON c.AreaID=h.id -->
+		<!--) p LEFT JOIN (SELECT DISTINCT id FROM ch_customs) c ON p.customerId= 
+			c.id -->
+
+		SELECT COUNT(*) FROM
+		(
+		SELECT p.CreatedBy , p.id ,p.itemsID,c.companyName AS
+		companyName,p.title,p.context,t.name AS contacterName
+		,t.mobilePhone,Telephone ,h.name AS areaName,t.keyPerson
+		,p.commodity_id,c.id customerId
+		FROM (SELECT* FROM ch_buy_pool WHERE itemsId=${itemId}
+		<if test="userid!=null"> AND CreatedBy =${userid} </if>
+		<if test="dept!=null"> AND CreatedBy>0 </if>
+		) p
+		left JOIN ch_customs c ON p.customerId=c.id AND p.status=0
+		LEFT JOIN (SELECT * FROM ch_contacter GROUP BY customerId) t ON
+		c.id=t.customerId
+		LEFT JOIN ch_areas h ON c.AreaID=h.id
+		) p
+		LEFT JOIN (SELECT DISTINCT id FROM
+		ch_customs) c ON p.customerId= c.id
+
+	</select>
+
+
+	<!-- 根据ID查询买盘 -->
+
+	<select id="getbuypoolID" parameterType="java.lang.Integer"
+		resultType="com.smm.cuohe.domain.dealmake.BuyPoolEntity">
+
+		
+			SELECT
+				p.id,
+				p.customerId,
+				p.itemsID,
+				e. NAME AS itemsName,
+				f.companyName AS companyname,
+				e.CategoryID AS categoryId,
+				p.Quantity AS quantit,
+				p.unit,
+				p.commodity_id AS commodityID,
+				p.priceType,
+				p.lastPrice AS lastPrice,
+				price,
+				p.lastCustomerId,
+				c.companyName AS lastCustomerName,
+				p.ware_id wareId,
+				mall_buy_id AS mallid
+			  FROM 
+			  ch_buy_pool p 
+			  LEFT JOIN ch_customs c ON p.lastCustomerId = c.id
+			  LEFT JOIN ch_items e ON e.id = p.ItemsID
+			  LEFT JOIN ch_customs f ON p.customerId = f.id
+			  where p.ID = ${value}
+	</select>
+	
+	<select id="getbuypoolById" parameterType="java.lang.Integer"
+		resultType="com.smm.cuohe.domain.dealmake.BuyPoolEntity">
+    		<!-- SELECT
+	         ID id,
+	         Quantity  quantit ,
+	         priceType priceType,
+	         price price,
+	         isClose isClose
+             FROM
+	        ch_buy_pool
+            WHERE
+	        id = #{value} -->
+	        
+	        
+	        SELECT ID id, ItemsID itemsID, customerId customerId, 
+   				Quantity quantit, Unit unit, Title title, 
+   				Context context, Status status, CreatedAt createdAt, 
+  			 	CreatedBy createdBy,
+   				ProStatus createdBy, commodity_id commodityID, mall_buy_id mallid, 
+  			 	mall_user_account mallUserAccount, priceType priceType, isClose isClose, 
+ 				price price, ware_province area,ware_name  wareName, isConfirm isConfirm
+				FROM
+		        ch_buy_pool
+	            WHERE
+		        id = #{value}
+	</select>
+
+
+	<!-- 处理买盘池 -->
+	<update id="probuypool" parameterType="java.lang.Integer">
+		update ch_buy_pool set
+		proStatus=1 where id=#{id}
+
+	</update>
+
+
+	<!-- 删除买盘池 -->
+	<update id="delbuypool" parameterType="java.lang.Integer">
+		update ch_buy_pool set
+		status=1 where id=#{id}
+
+	</update>
+
+	<!-- 添加买盘池 -->
+	<insert id="addbuyPool" parameterType="com.smm.cuohe.domain.dealmake.BuyPoolEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ch_buy_pool
+		(
+		ItemsID,
+		customerId,
+		Quantity,
+		Unit,
+		Title,
+		Context,
+		STATUS,
+		proStatus,
+		commodity_id,
+		mall_buy_id,
+		mall_user_account,
+		CreatedAt,
+		CreatedBy,
+		UpdatedAt,
+		Updatedby,
+		priceType,
+		price,
+		ware_province,
+		ware_Id,
+		ware_Name,
+		initPrice,
+		FuturesMonth,
+		initPriceType
+		<if test="createSource!=null">
+		,createSource
+		</if>
+		)
+		VALUES
+		(
+		#{itemsID},
+		#{customerId},
+		#{quantit},
+		#{unit},
+		#{title},
+		#{context},
+		#{status},
+		#{proStatus},
+		#{commodityID},
+		#{mallid},
+		#{mallUserAccount},
+		now(),
+		#{createdBy},
+		now(),
+		#{updatedBy},
+		#{priceType},
+		#{price},
+		#{area},
+		#{wareId},
+		#{wareName},
+		#{price},
+		#{futuresMonth},
+		#{priceType}
+        <if test="createSource!=null">
+        ,#{createSource}
+        </if>
+		);
+	</insert>
+
+	<insert id="buypublish" parameterType="com.smm.cuohe.domain.dealmake.BuypublishEntity">
+
+		INSERT INTO
+		ch_buy_publish
+		(
+		buyPoolID,
+		account,
+		quantity,
+		createdAt,
+		createdBy,
+		updatedAt,
+		updatedBy
+		)
+		VALUES
+		(
+		#{buyPoolID},
+		#{account},
+		#{quantity},
+		now(),
+		#{createdBy},
+		now(),
+		#{updatedBy}
+		);
+
+	</insert>
+
+	<update id="updateBuyPool" parameterType="com.smm.cuohe.domain.dealmake.BuyPoolEntity">
+		UPDATE ch_buy_pool
+		SET UpdatedAt=now()
+		<if test="quantit!=null">
+			,Quantity = #{quantit}
+		</if>
+		<if test="priceType!=null">
+			,priceType = #{priceType}
+		</if>
+		<if test="price!=null">
+			, price = #{price}
+		</if>
+		<if test="isConfirm!=null">
+			, isConfirm = #{isConfirm}
+		</if>
+		<if test="updatedBy!=null">
+			,updatedby = #{updatedBy}
+		</if>
+		<if test="price!=null and priceType!=2">
+			,isConfirm=(CASE WHEN lastPrice &lt;= #{price} and lastPrice>0 THEN 1 ELSE isConfirm END)
+		</if>
+		<if test="price!=null and priceType==2">
+			,isConfirm=(CASE WHEN lastPrice &gt;= #{price} and lastPrice>0 THEN 1 ELSE isConfirm END)
+		</if>
+		
+		WHERE
+		ID =${id} ;
+
+	</update>
+
+	<!-- 导出买盘池数据 -->
+	<select id="getBuyPoolExportData" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.dealmake.BuyPoolEntity">
+		SELECT
+		p.*,c.id customsId
+		FROM
+		(
+		SELECT
+		p.CreatedBy ,p.UpdatedAt, p.id ,p.itemsID,c.companyName AS
+		companyName,p.title,p.context,t.name
+		AS contacterName ,t.mobilePhone,t.Telephone ,h.name AS areaName
+		,t.keyPerson ,c.id customerId ,p.proStatus
+		FROM
+		ch_buy_pool p
+		left join
+		ch_customs c
+		on p.customerId=c.id and p.status=0
+		left join
+		(SELECT * FROM ch_contacter GROUP BY customerId) t
+		on c.id=t.customerId
+		left join
+		ch_areas h
+		on c.AreaID=h.id
+		) p
+		LEFT JOIN
+		(SELECT DISTINCT id FROM ch_customs) c ON p.customerId= c.id
+		where p.id
+		in
+		<foreach collection="array" item="companyInfo" separator=","
+			open="(" close=")">
+
+			#{companyInfo}
+
+		</foreach>
+		order by UpdatedAt desc
+	</select>
+
+	<!-- 新增扩展属性 -->
+	<insert id="addArrtvalue" parameterType="com.smm.cuohe.domain.AttrValue">
+		INSERT INTO
+		ch_attr_values
+		(
+		AttrID,
+		AttrName,
+		AttrValue,
+		ExtID,
+		STATUS,
+		CreatedAt,
+		CreatedBy
+		)
+		VALUES
+		(
+		#{attrId,jdbcType=INTEGER},
+		#{attrName,jdbcType=VARCHAR},
+		#{attrValue,jdbcType=VARCHAR},
+		#{extId,jdbcType=VARCHAR},
+		0,
+		now(),
+		#{createdBy,jdbcType=INTEGER}
+		);
+
+	</insert>
+	<!-- 查询扩展属性 -->
+	<select id="queryAttrvalue" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.AttrValue">
+		select * from ch_attr_values where commodity_id=#{value}
+	</select>
+
+	<!-- 添加买盘属性 -->
+	<insert id="addBuyPoolAttr" parameterType="com.smm.cuohe.domain.BuyPoolAttr">
+		INSERT INTO
+		ch_buying_attrs
+		(
+		buying_id,
+		item_id,
+		attr_id,
+		attr_name,
+		attr_value,
+		create_time,
+		proid,
+		pro_name
+		)
+		VALUES
+		(
+		#{buying_id,jdbcType=INTEGER},
+		#{item_id,jdbcType=INTEGER},
+		#{attr_id,jdbcType=INTEGER},
+		#{attr_name,jdbcType=VARCHAR},
+		#{attr_value,jdbcType=VARCHAR},
+		now(),
+		#{proid,jdbcType=INTEGER},
+		#{pro_name,jdbcType=VARCHAR}
+		);
+
+	</insert>
+
+	<select id="getMaxIdfromBuypool" resultType="java.lang.Integer">
+		SELECT MAX(Id) FROM
+		ch_buy_pool
+	</select>
+
+	<select id="selbuyAttrValueByBuyId" parameterType="java.lang.Integer"
+		resultType="com.smm.cuohe.domain.AttrValue">
+		SELECT
+		attr_name as attrName,
+		attr_value as attrValue,
+		proid as prodId
+		FROM
+		ch_buying_attrs
+		WHERE buying_id=#{buyId}
+	</select>
+	
+	<select id="getBuyPoolCompanyid" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select  customerId from ch_buy_pool where id = #{poolId}
+	</select>
+</mapper>

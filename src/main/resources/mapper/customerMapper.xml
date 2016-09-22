@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.ICustomerDao">
+
+
+	<select id="queryIdByNameAndItem" resultType="java.lang.Integer">
+		select id from
+		ch_customs where companyName=#{0} and itemID=#{1} limit 1;
+	</select>
+
+	<select id="queryIdByAccountAndItem" resultType="java.lang.Integer">
+		select id from
+		ch_customs where account=#{0} and itemID=#{1} limit 1;
+	</select>
+
+	<insert id="saveCustomer" parameterType="com.smm.cuohe.domain.Customer"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into ch_customs
+		(
+		itemID,
+		PIC,
+		LastComID,
+		TransCount,
+		LastTransTime,
+		status,
+		createdAt,
+		createdBy,
+		updatedAt,
+		updatedBy,
+		categorySource,
+		companyName ,
+		account ,
+		areaID ,
+		address ,
+		entTypes ,
+		level ,
+		salesvolume ,
+		buyproducts ,
+		buybrand ,
+		buyvolume ,
+		salesproducts ,
+		categoryemployee ,
+		categoryfreq ,
+		categorybusiness ,
+		corporate ,
+		registerDate ,
+		companyphone ,
+		companyproperty ,
+		companysite ,
+		taxNo ,
+		bank ,
+		bankAccount ,
+		categoryCredit ,
+		companyAss ,
+		businessLicense ,
+		expiryTime ,
+		commands ,
+		categoryCoo,
+		tag
+
+		)
+		VALUES
+		(
+		#{itemId},
+		#{pic},
+		#{lastComId},
+		#{transCount},
+		#{lastTransTime},
+		0,
+		now(),
+		#{createdBy},
+		now(),
+		#{updatedBy},
+		#{categorySource},
+		#{companyName } ,
+		#{ account } ,
+		#{ areaId } ,
+		#{ address } ,
+		#{ entTypes } ,
+		#{ level } ,
+		#{ salesVolume } ,
+		#{ buyProducts } ,
+		#{ buyBrand } ,
+		#{ buyVolume } ,
+		#{ salesProducts } ,
+		#{ categoryEmployee } ,
+		#{ categoryFreq } ,
+		#{ categoryBusiness } ,
+		#{ corporate } ,
+		#{ registerDate } ,
+		#{companyPhone } ,
+		#{ companyProperty } ,
+		#{ companySite } ,
+		#{ taxNo } ,
+		#{ bank } ,
+		#{ bankAccount } ,
+		#{ categoryCredit } ,
+		#{ companyAss } ,
+		#{ businessLicense } ,
+		#{ expiryTime } ,
+		#{ commands } ,
+		#{ categoryCoo },
+		#{tag}
+		
+
+		)
+		<!--<selectKey keyProperty="id" resultType="java.lang.Integer"> -->
+		   <!--<![CDATA[SELECT LAST_INSERT_ID() as id]]>-->
+		<!--</selectKey> -->
+	</insert>
+
+	<select id="getCustomer" parameterType="com.smm.cuohe.domain.Customer"
+		resultType="com.smm.cuohe.domain.Customer">
+		select *
+		from ch_customs
+		where companyID=#{companyId} and
+		itemID=#{itemId}
+	</select>
+	
+	
+	<select id="getCustomerByAccountAndItemId" parameterType="com.smm.cuohe.domain.Customer" resultType="com.smm.cuohe.domain.Customer">
+	
+		select * from ch_customs where account=#{account} and itemID=#{itemId}
+		
+	</select>
+	
+
+	<select id="getOneById" resultType="com.smm.cuohe.domain.Customer">
+		select * from ch_customs
+		where id=#{id}
+	</select>
+	<select id="queryBrandFromCommodityAttr" parameterType="int"
+		resultType="java.lang.String">
+		select options from ch_item_attr where name = '品牌' and
+		itemId=#{itemId};
+	</select>
+	<update id="restoreCustomer">
+
+		update ch_customs set status = 0, updatedAt = now(),
+		updatedBy = #{userId} where id = #{customerId};
+
+	</update>
+	<!-- 修改下次采购时间 -->
+	<update id="updateremindDate" parameterType="com.smm.cuohe.domain.RemindCustomerEntity">
+
+		UPDATE ch_customs
+		SET remindTime=#{remindTime} where id=#{customerId}
+	</update>
+	<!-- 查询推荐采购商 -->
+	<select id="queryRemindCustomer" parameterType="com.smm.cuohe.domain.RemindCustomerEntity"
+		resultType="com.smm.cuohe.domain.RemindCustomerEntity">
+		SELECT id as customerId ,companyName,categoryFreq,getCategoryNameById(categoryFreq)
+		categoryfreqName,
+		salesVolume,getCategoryNameById(salesVolume)
+		salesVolumeName,
+		buyBrand,PIC,getUserNameById(PIC) PICName
+		FROM
+		ch_customs WHERE  itemId= #{itemId} and  remindTime &lt;= DATE_ADD(#{remindTime}, INTERVAL 2 DAY) AND
+		remindTime &gt;= DATE_ADD(#{remindTime}, INTERVAL -2 DAY) LIMIT 6
+
+
+	</select>
+	
+	<!-- 用户标签  2015年12月18日 下午2:37:05 -->
+	<select id="queryCustomerTag" parameterType="java.util.HashMap" resultType="com.smm.cuohe.domain.Customer">
+		
+		SELECT tag FROM ch_customs where tag is not null and tag != '' and tag like  CONCAT('%',#{tag},'%')
+	
+	</select>
+	
+
+
+</mapper>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChOrdersEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChOrdersEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
+    <result column="itemID" property="itemid" jdbcType="INTEGER" />
+    <result column="sellID" property="sellid" jdbcType="INTEGER" />
+    <result column="buyID" property="buyid" jdbcType="INTEGER" />
+    <result column="delivery" property="delivery" jdbcType="INTEGER" />
+    <result column="receipttype" property="receipttype" jdbcType="INTEGER" />
+    <result column="payment" property="payment" jdbcType="INTEGER" />
+    <result column="ware_Province" property="wareProvince" jdbcType="INTEGER" />
+    <result column="ware_id" property="wareId" jdbcType="INTEGER" />
+    <result column="ware_Name" property="wareName" jdbcType="VARCHAR" />
+    <result column="deliveryDate" property="deliverydate" jdbcType="TIMESTAMP" />
+    <result column="poundDiff" property="pounddiff" jdbcType="REAL" />
+    <result column="ttype" property="ttype" jdbcType="INTEGER" />
+    <result column="OrderStatus" property="orderstatus" jdbcType="INTEGER" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="source" property="source" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+    <result column="updatedBy" property="updatedby" jdbcType="INTEGER" />
+    <result column="mall_seller_account" property="mallSellerAccount" jdbcType="VARCHAR" />
+    <result column="mall_buyer_account" property="mallBuyerAccount" jdbcType="VARCHAR" />
+    <result column="source_id" property="sourceId" jdbcType="INTEGER" />
+    <result column="confirmStatus" property="confirmstatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, orderCode, itemID, sellID, buyID, delivery, receipttype, payment, ware_Province, 
+    ware_id, ware_Name, deliveryDate, poundDiff, ttype, OrderStatus, Status, source, 
+    createdAt, createdBy, updatedAt, updatedBy, mall_seller_account, mall_buyer_account, 
+    source_id, confirmStatus
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChOrdersEntity" >
+    insert into ch_orders (id, orderCode, itemID, 
+      sellID, buyID, delivery, 
+      receipttype, payment, ware_Province, 
+      ware_id, ware_Name, deliveryDate, 
+      poundDiff, ttype, OrderStatus, 
+      Status, source, createdAt, 
+      createdBy, updatedAt, updatedBy, 
+      mall_seller_account, mall_buyer_account, source_id, 
+      confirmStatus)
+    values (#{id,jdbcType=INTEGER}, #{ordercode,jdbcType=VARCHAR}, #{itemid,jdbcType=INTEGER}, 
+      #{sellid,jdbcType=INTEGER}, #{buyid,jdbcType=INTEGER}, #{delivery,jdbcType=INTEGER}, 
+      #{receipttype,jdbcType=INTEGER}, #{payment,jdbcType=INTEGER}, #{wareProvince,jdbcType=INTEGER}, 
+      #{wareId,jdbcType=INTEGER}, #{wareName,jdbcType=VARCHAR}, #{deliverydate,jdbcType=TIMESTAMP}, 
+      #{pounddiff,jdbcType=REAL}, #{ttype,jdbcType=INTEGER}, #{orderstatus,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{source,jdbcType=INTEGER}, #{createdat,jdbcType=TIMESTAMP}, 
+      #{createdby,jdbcType=INTEGER}, #{updatedat,jdbcType=TIMESTAMP}, #{updatedby,jdbcType=INTEGER}, 
+      #{mallSellerAccount,jdbcType=VARCHAR}, #{mallBuyerAccount,jdbcType=VARCHAR}, #{sourceId,jdbcType=INTEGER}, 
+      #{confirmstatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChOrdersEntity" >
+    insert into ch_orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ordercode != null" >
+        orderCode,
+      </if>
+      <if test="itemid != null" >
+        itemID,
+      </if>
+      <if test="sellid != null" >
+        sellID,
+      </if>
+      <if test="buyid != null" >
+        buyID,
+      </if>
+      <if test="delivery != null" >
+        delivery,
+      </if>
+      <if test="receipttype != null" >
+        receipttype,
+      </if>
+      <if test="payment != null" >
+        payment,
+      </if>
+      <if test="wareProvince != null" >
+        ware_Province,
+      </if>
+      <if test="wareId != null" >
+        ware_id,
+      </if>
+      <if test="wareName != null" >
+        ware_Name,
+      </if>
+      <if test="deliverydate != null" >
+        deliveryDate,
+      </if>
+      <if test="pounddiff != null" >
+        poundDiff,
+      </if>
+      <if test="ttype != null" >
+        ttype,
+      </if>
+      <if test="orderstatus != null" >
+        OrderStatus,
+      </if>
+      <if test="status != null" >
+        Status,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+      <if test="updatedby != null" >
+        updatedBy,
+      </if>
+      <if test="mallSellerAccount != null" >
+        mall_seller_account,
+      </if>
+      <if test="mallBuyerAccount != null" >
+        mall_buyer_account,
+      </if>
+      <if test="sourceId != null" >
+        source_id,
+      </if>
+      <if test="confirmstatus != null" >
+        confirmStatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ordercode != null" >
+        #{ordercode,jdbcType=VARCHAR},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="sellid != null" >
+        #{sellid,jdbcType=INTEGER},
+      </if>
+      <if test="buyid != null" >
+        #{buyid,jdbcType=INTEGER},
+      </if>
+      <if test="delivery != null" >
+        #{delivery,jdbcType=INTEGER},
+      </if>
+      <if test="receipttype != null" >
+        #{receipttype,jdbcType=INTEGER},
+      </if>
+      <if test="payment != null" >
+        #{payment,jdbcType=INTEGER},
+      </if>
+      <if test="wareProvince != null" >
+        #{wareProvince,jdbcType=INTEGER},
+      </if>
+      <if test="wareId != null" >
+        #{wareId,jdbcType=INTEGER},
+      </if>
+      <if test="wareName != null" >
+        #{wareName,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverydate != null" >
+        #{deliverydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pounddiff != null" >
+        #{pounddiff,jdbcType=REAL},
+      </if>
+      <if test="ttype != null" >
+        #{ttype,jdbcType=INTEGER},
+      </if>
+      <if test="orderstatus != null" >
+        #{orderstatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="mallSellerAccount != null" >
+        #{mallSellerAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="mallBuyerAccount != null" >
+        #{mallBuyerAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null" >
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmstatus != null" >
+        #{confirmstatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChOrdersEntity" >
+    update ch_orders
+    <set >
+      <if test="ordercode != null" >
+        orderCode = #{ordercode,jdbcType=VARCHAR},
+      </if>
+      <if test="itemid != null" >
+        itemID = #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="sellid != null" >
+        sellID = #{sellid,jdbcType=INTEGER},
+      </if>
+      <if test="buyid != null" >
+        buyID = #{buyid,jdbcType=INTEGER},
+      </if>
+      <if test="delivery != null" >
+        delivery = #{delivery,jdbcType=INTEGER},
+      </if>
+      <if test="receipttype != null" >
+        receipttype = #{receipttype,jdbcType=INTEGER},
+      </if>
+      <if test="payment != null" >
+        payment = #{payment,jdbcType=INTEGER},
+      </if>
+      <if test="wareProvince != null" >
+        ware_Province = #{wareProvince,jdbcType=INTEGER},
+      </if>
+      <if test="wareId != null" >
+        ware_id = #{wareId,jdbcType=INTEGER},
+      </if>
+      <if test="wareName != null" >
+        ware_Name = #{wareName,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverydate != null" >
+        deliveryDate = #{deliverydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pounddiff != null" >
+        poundDiff = #{pounddiff,jdbcType=REAL},
+      </if>
+      <if test="ttype != null" >
+        ttype = #{ttype,jdbcType=INTEGER},
+      </if>
+      <if test="orderstatus != null" >
+        OrderStatus = #{orderstatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        Status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        updatedBy = #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="mallSellerAccount != null" >
+        mall_seller_account = #{mallSellerAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="mallBuyerAccount != null" >
+        mall_buyer_account = #{mallBuyerAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmstatus != null" >
+        confirmStatus = #{confirmstatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChOrdersEntity" >
+    update ch_orders
+    set orderCode = #{ordercode,jdbcType=VARCHAR},
+      itemID = #{itemid,jdbcType=INTEGER},
+      sellID = #{sellid,jdbcType=INTEGER},
+      buyID = #{buyid,jdbcType=INTEGER},
+      delivery = #{delivery,jdbcType=INTEGER},
+      receipttype = #{receipttype,jdbcType=INTEGER},
+      payment = #{payment,jdbcType=INTEGER},
+      ware_Province = #{wareProvince,jdbcType=INTEGER},
+      ware_id = #{wareId,jdbcType=INTEGER},
+      ware_Name = #{wareName,jdbcType=VARCHAR},
+      deliveryDate = #{deliverydate,jdbcType=TIMESTAMP},
+      poundDiff = #{pounddiff,jdbcType=REAL},
+      ttype = #{ttype,jdbcType=INTEGER},
+      OrderStatus = #{orderstatus,jdbcType=INTEGER},
+      Status = #{status,jdbcType=INTEGER},
+      source = #{source,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      updatedBy = #{updatedby,jdbcType=INTEGER},
+      mall_seller_account = #{mallSellerAccount,jdbcType=VARCHAR},
+      mall_buyer_account = #{mallBuyerAccount,jdbcType=VARCHAR},
+      source_id = #{sourceId,jdbcType=INTEGER},
+      confirmStatus = #{confirmstatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

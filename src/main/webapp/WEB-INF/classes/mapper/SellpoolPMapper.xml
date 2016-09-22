@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.users.SellPoolPDAO">
+    
+     <!-- 查询前六条卖盘 -->
+	<select id="getSellPoolList" resultType="SellPoolPOJO" parameterType="String">
+		SELECT s.id id, c.id as commodityId, c.name commodityName, s.price price, s.quantity quantity, s.ware_name wareName, getCompanyNameById(customerId) companyName 
+		FROM ch_sell_pool s left join ch_commodity c on s.commodity_id = c.id 
+		WHERE s.ItemsID=#{itemsID} and s.status = 0 and source=0
+		ORDER BY s.updatedAt DESC ,s.createdAt DESC
+		LIMIT 6
+    </select> 
+  
+    <!-- 根据当前品目ID查询属性名称，属性值 -->
+     <select id="getAttrVal" resultMap="com.smm.cuohe.dao.ICommodityAttrDAO.CommodityAttr" parameterType="java.util.Map">
+     	select attr_name , attr_value
+		from ch_commodity_attr
+		where commodity_id = #{commodityId}
+		order by attr_name
+		LIMIT 1
+    </select>
+    
+</mapper>

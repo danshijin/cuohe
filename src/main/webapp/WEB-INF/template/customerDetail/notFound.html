@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<title>SMM撮合系统</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<link href="${request.getContextPath()}/Public/assets/admin/css/css.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/css/plugins.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/layout.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color">
+<link href="${request.getContextPath()}/Public/assets/admin/css/custom.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/admin/css/common.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/css/kkpager.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="${request.getContextPath()}/Public/favicon.ico">
+<script>BASE_URL = '${request.getContextPath()}'</script>
+<link href="${request.getContextPath()}/Public/css/customerDetail.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="page-header-top-fixed">
+<!--头部信息结束 -->
+<div class="page-header">
+	<!--头部开始-->
+	<#include "/include/top.html" />
+	<!-- 头部信息结束 -->
+
+	<!-- 头部菜单开始 -->
+	<#include "/include/top_menu.html" />
+	<!-- 头部菜单结束 -->
+</div>
+<!-- END HEADER -->
+
+
+<!-- BEGIN PAGE CONTAINER -->
+<div class="page-container">
+	<!-- 内容开始 -->
+	<div class="page-content">
+		<div class="container-fluid">
+		
+			<!-- 当前位置提示开始 -->
+			<ul class="page-breadcrumb breadcrumb">
+				<li>
+					<a href="#">首页</a><i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+					 客户管理<i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+					 客户详情
+				</li>
+			</ul>
+			<!-- 当前位置提示结束 -->
+		
+			<div class="row margin-top-10">
+
+				<div class="col-md-12">
+					<div class="portlet light bordered" align="center">${message}</div>
+
+					<div style="width: 100%;text-align: center;margin-top: 50px;">
+						<a class="btn green"  onclick="window.history.back();">
+							<i class="fa  fa-reply"></i> 返回
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- END PAGE CONTAINER -->
+
+
+<!-- 底部开始 -->
+<#include "/include/foot.html" />
+<!-- 底部结束 -->
+
+
+
+</body>
+</html>

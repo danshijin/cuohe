@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.users.BuyPoolPDAO">
+    
+     <!-- 查询前三条买盘 -->
+	<select id="getBuyPoolList" resultType="BuyPoolPOJO" parameterType="String">
+		SELECT b.ID bid ,b.Title title,b.Context context,p.account account,date_format(b.CreatedAt,'%Y-%m-%d %T') createdAt
+		FROM ch_buy_pool b,ch_customs p
+		WHERE b.customerId=p.id
+		AND b.Status !=1
+		AND p.Status !=1
+		AND b.ItemsID=#{itemsID}
+		AND b.id not in (SELECT source_id  FROM  ch_orders WHERE  source=1)
+		ORDER BY  b.UpdatedAt  DESC
+		LIMIT 3
+    </select> 
+   <select id="getBuyPool" resultType="BuyPoolPOJO" parameterType="String">
+		SELECT b.id bid, b.commodity_id as commodityId, b.quantity quantity, b.title title, 
+		b.context context, b.priceType priceType, b.price price, b.poolPriceCount poolPriceCount, p.companyName 
+		FROM ch_buy_pool b, ch_customs p
+		WHERE b.customerId=p.id
+		AND b.Status !=1
+		AND p.Status !=1
+		AND b.id=#{bid}  
+    </select>
+    
+    <!-- 根据当前品目ID和属性名称查询属性值 -->
+     <select id="getAttrVal" resultMap="com.smm.cuohe.dao.ICommodityAttrDAO.CommodityAttr" parameterType="java.util.Map">
+     
+     	select attr_name, attr_value 
+     	from ch_commodity_attr 
+		where commodity_id = #{commodityId}
+		order by attr_name
+		limit 1;
+    </select>
+    
+    
+    <update id="updateSellPoolPrice" parameterType="com.smm.cuohe.domain.BuyPoolPOJO" >
+    update ch_buy_pool
+    <set >
+      <if test="lastPriceType != null" >
+        lastPriceType = #{lastPriceType},
+      </if>
+      <if test="lastPrice != null" >
+        lastPrice = #{lastPrice},
+      </if>
+        lastCustomerId = #{lastCustomerId},
+      <if test="lastMallAccount != null" >
+        lastMallAccount = #{lastMallAccount},
+      </if>
+      <if test="lastCustomerName != null" >
+        lastCustomerName = #{lastCustomerName},
+      </if>
+      <if test="poolPriceCount != null" >
+        poolPriceCount = #{poolPriceCount},
+      </if>
+        lastTime = #{lastTime},
+      <if test="isConfirm != null" >
+        isConfirm = #{isConfirm},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+    
+    
+    
+    
+    
+    
+    
+    
+</mapper>

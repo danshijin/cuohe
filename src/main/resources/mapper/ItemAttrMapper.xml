@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.IItemAttrDao" >
+<resultMap id="BaseResultMap" type="com.smm.cuohe.domain.ItemAttr" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="itemID" property="itemid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="fillMode" property="fillmode" jdbcType="INTEGER" />
+    <result column="dataRegural" property="dataregural" jdbcType="INTEGER" />
+    <result column="default_value" property="defaulta" jdbcType="VARCHAR" />
+    <result column="options" property="options" jdbcType="VARCHAR" />
+    <result column="mainProperty" property="mainproperty" jdbcType="INTEGER" />
+    <result column="required" property="required" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="listOrder" property="listorder" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="DATE" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="DATE" />
+    <result column="UpdatedBy" property="updatedby" jdbcType="INTEGER" />
+  </resultMap> 
+  
+
+  
+  <!--根据ID查询  -->
+    <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+
+ <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+
+    select * from ch_item_attr
+    where id = #{id,jdbcType=INTEGER}
+  </select> -->
+  
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_item_attr
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertItemAttr" parameterType="com.smm.cuohe.domain.ItemAttr">
+
+  	insert into ch_item_attr ( 
+  	default_value,
+  	itemID, name, fillMode, dataRegural,
+  options, mainProperty, required, status,
+  	  listOrder, createdAt, createdBy, updatedAt, UpdatedBy 
+  	  ) values (
+  	  #{defaulta,jdbcType=VARCHAR},
+  	   #{itemid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+  	   #{fillmode,jdbcType=INTEGER}, #{dataregural,jdbcType=INTEGER}, 
+  	   #{options,jdbcType=VARCHAR}, 
+  	   #{mainproperty,jdbcType=INTEGER},
+  	    #{required,jdbcType=INTEGER}, 
+  	    0, (select  ( case  when  a.id is  null     then   0 else     a.id   END)    a   from (select max(listOrder)+1 id from ch_item_attr) a), now(), #{createdby,jdbcType=INTEGER}, now(), #{updatedby,jdbcType=INTEGER} )
+    </insert>
+
+
+ <!-- 商品属性 查询 -->
+  <select id="getItemAttrByItemsId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from ch_item_attr
+    where itemID = #{itemID,jdbcType=INTEGER}
+    AND  status = 0 and mainProperty  IS NOT NULL  
+  </select> 
+  
+  
+  
+  <!-- 获取所有商品属性 -->
+ <select id="getAll" resultType="java.util.Map" parameterType="java.util.Map">
+ select * from 
+ (
+       select  
+			a.id                   ,
+			a.itemid               ,
+			a.name                 ,
+			(case  
+				when  a.fillmode   =0     THEN '输入框'    
+				when  a.fillmode   =1     THEN '下拉框'    
+				when  a.fillmode   =2     THEN '复选框'    
+				when  a.fillmode   =3     THEN '单选框'    
+			END )  fillmode,
+						(case  
+				when  a.dataregural   =0     THEN '数值'    
+				when  a.dataregural   =1     THEN '英文' 
+				when  a.dataregural   =2     THEN '文本'     
+				when  a.dataregural   =3     THEN '英文+数值'    
+				when  a.dataregural   =4     THEN '自然数'    
+			END )      dataregural          ,
+			a.default_value              ,
+			a.options              ,
+
+			(case  
+				when  a.mainproperty   =0     THEN '普通属性'    
+				when  a.mainproperty   =1     THEN '主要属性' 
+			END )     mainproperty ,
+			
+						(case  
+				when  a.required   =0     THEN '非必填'    
+				when  a.required   =1     THEN '必填项' 
+			END )     required             ,
+			(case  
+				when  a.status   =0     THEN '正常'    
+				when  a.status   =1     THEN '禁用' 
+  
+			END )      status          ,
+			a.listorder            ,
+			a.createdat    ,
+			b.name createdby            ,
+			a.updatedat            ,
+			c.name updatedby  		
+			from ch_item_attr a	 
+		  left join ch_users b on b.id=a.createdby
+		  left join ch_users c on c.id=a.updatedby
+		  
+		  where   a.status =0 and mainProperty  IS NOT NULL  
+  		  ) a
+  		  
+  		   where a.itemId=#{itemId}
+  		   
+
+  		   
+  		   <include refid="contacterQueryConditions"/>
+ 		  	 order by listOrder
+  </select>
+  <!-- 按照名字和品目ID 返回查询数量 用于验证名字不能重复 -->
+  <select id="selectItemAttrByname" parameterType="map" resultType="java.lang.Integer">
+	  	select count(*) from ch_item_attr where  itemid=#{itemid} and	name=#{name}  
+	  			  and   status =0 and mainProperty  IS NOT NULL   
+
+  </select>
+  
+  
+
+  
+  
+  <update id="updateSorting" parameterType="java.util.Map">
+  		  		update ch_item_attr set listOrder=#{listOrder} where id=#{id};
+  </update>
+
+  
+
+  
+  <!-- 获取上一条数据的id和排序 根据排序值-->
+   <select id="getidBySorting1" parameterType="int" resultType="java.util.Map">
+  		  	  <![CDATA[	  select  id,listOrder  from ch_item_attr where listOrder= ( select     min(listOrder)     from ch_item_attr where listOrder>(select  listOrder from  ch_item_attr where id=#{id})   and itemid=(select  itemid from ch_item_attr where id=#{id}))	 ]]> 
+  </select>
+    <!-- 获取下一条数据的id和排序 根据排序值-->
+   <select id="getidBySorting2" parameterType="java.lang.Integer" resultType="java.util.Map">
+  		  	 <![CDATA[		select  id ,listOrder from ch_item_attr where listOrder= ( select     max(listOrder)    from ch_item_attr where listOrder<(select  listOrder from  ch_item_attr where id=#{id})   and itemid=(select  itemid from ch_item_attr where id=#{id}))	]]>
+  </select>
+  
+
+    <!-- 获取最大排序值-->
+  <select id="getmaxlistOrder" resultType="java.lang.Integer">
+  		  	select     max(listOrder)     from ch_item_attr
+  </select>
+  
+  <!-- 批量禁用 -->
+  <update id="disable" parameterType="java.lang.String">
+		update ch_item_attr set status=1 where id 
+			in
+			<foreach item="idItem" collection="array" open="(" separator="," close=")">
+				#{idItem}
+			</foreach>
+	</update>
+	
+	
+ <sql id="contacterQueryConditions" >
+	 	<if test="attribute != null">
+	         <if test="operator == 1 and content!='' ">
+	 		    and   ${attribute} 	like '%${content}%' 
+	   		 </if>  
+	   		<if test="operator == 2 and content!='' ">
+	 			and   ${attribute}  not   like  '%${content}%' 
+	   		 </if>
+	   		<if test="operator == 3 and content!='' ">
+	 			and   ${attribute}  =	'${content}' 
+	   		 </if>
+	   		<if test="operator == 4 and content!='' ">
+	 			and   ${attribute}  !=	'${content}' 
+	   		 </if>
+	   		<if test="operator == 5 and content!='' ">
+	 			and   ${attribute}  like	'${content}%' 
+	   		 </if>	   		 
+	   		<if test="operator == 6 and content!='' ">
+	 			and   ${attribute}  like	'%${content}' 
+	   		 </if>	
+	   		<if test="operator == 7">
+	 			and   ${attribute}  is 	null  
+	   		 </if>	
+	   		<if test="operator == 8">
+	 			and   ${attribute}  is not null 
+	   		 </if>	    		     
+         </if>
+	</sql>	
+	<select id="getItemAttrById" parameterType="map" resultType="com.smm.cuohe.domain.ItemAttr">
+		SELECT * FROM ch_item_attr where id=#{id}	
+	</select>
+	
+	<!-- 根据ID获取商品信息  -->
+	<select id="getItemsById" parameterType="map" resultType="com.smm.cuohe.domain.Items">
+		
+		select * from ch_items where id = #{itemId}
+		
+	</select>
+	
+	
+</mapper>

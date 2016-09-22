@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChPoolPriceEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChPoolPriceEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="poolId" property="poolid" jdbcType="INTEGER" />
+    <result column="poolType" property="pooltype" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="customerId" property="customerid" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+    <result column="priceType" property="pricetype" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, poolId, poolType, createdAt, price, customerId, status, updatedAt, priceType, 
+    account
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_pool_price
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_pool_price
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChPoolPriceEntity" >
+    insert into ch_pool_price (poolId, poolType, 
+      createdAt, price, customerId, 
+      status, updatedAt, priceType, 
+      account)
+    values (#{poolid,jdbcType=INTEGER}, #{pooltype,jdbcType=INTEGER}, 
+      #{createdat,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}, #{customerid,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{updatedat,jdbcType=TIMESTAMP}, #{pricetype,jdbcType=INTEGER}, 
+      #{account,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChPoolPriceEntity" >
+    insert into ch_pool_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="poolid != null" >
+        poolId,
+      </if>
+      <if test="pooltype != null" >
+        poolType,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="customerid != null" >
+        customerId,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+      <if test="pricetype != null" >
+        priceType,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="poolid != null" >
+        #{poolid,jdbcType=INTEGER},
+      </if>
+      <if test="pooltype != null" >
+        #{pooltype,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="customerid != null" >
+        #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pricetype != null" >
+        #{pricetype,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChPoolPriceEntity" >
+    update ch_pool_price
+    <set >
+      <if test="poolid != null" >
+        poolId = #{poolid,jdbcType=INTEGER},
+      </if>
+      <if test="pooltype != null" >
+        poolType = #{pooltype,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="customerid != null" >
+        customerId = #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pricetype != null" >
+        priceType = #{pricetype,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChPoolPriceEntity" >
+    update ch_pool_price
+    set poolId = #{poolid,jdbcType=INTEGER},
+      poolType = #{pooltype,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      price = #{price,jdbcType=DECIMAL},
+      customerId = #{customerid,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      priceType = #{pricetype,jdbcType=INTEGER},
+      account = #{account,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

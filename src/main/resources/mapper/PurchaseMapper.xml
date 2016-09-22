@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.IPurchaseDao">
+	<!-- 查询采购企业 -->
+	<select id="getAll" parameterType="java.util.HashMap"
+		resultType="Purchase">
+
+		SELECT
+		cu.id,
+		cu.companyName,
+		cu.tag,
+		re.updatedAt updatedAtByRecord,
+		re.title,
+		re.context,
+		cu.entTypes,
+		a.name AS salesvolume,
+		con.name nameByContacter,
+		con.mobilePhone,
+		CONCAT(CASE WHEN pro.name IS NULL THEN '' ELSE pro.name END,' ',ar.name) nameByArea,
+		cu.LastTransTime updatedAtByOrder,
+		cu.categoryfreq,
+		c.name freqString,
+		cu.buybrand,
+		u.name nameByUser,
+		cu.createdAt
+		FROM
+		ch_customs cu
+		LEFT JOIN	(SELECT r.* FROM ch_com_records r,(SELECT customerId,MAX(updatedAt) updatedAt FROM ch_com_records GROUP BY customerId) c WHERE r.customerId=c.customerId AND r.updatedAt =c.updatedAt ORDER BY r.customerId)  re ON cu.id = re.customerId
+		LEFT JOIN ch_contacter con ON con.id = (SELECT id FROM ch_contacter WHERE customerId=cu.id AND keyPerson = 1 LIMIT 1)
+		LEFT JOIN ch_areas ar ON cu.areaID = ar.id
+		LEFT JOIN ch_areas pro ON ar.parentID=pro.id
+		LEFT JOIN ch_users u ON cu.PIC = u.id
+		LEFT JOIN ch_category c ON c.id = cu.categoryfreq
+		LEFT JOIN ch_category a ON a.id=cu.salesvolume
+		WHERE cu.categorybusiness IN(1,3)
+		
+		<if test="ids!=null and ids!=''">
+			and cu.id in (${ids})
+		</if>
+		<if test="itemId!=null">
+			and cu.itemID = ${itemId}
+		</if>
+		<if test="str!=null">
+			and ${str}
+		</if>
+		<if test="type ==2">
+			and cu.createdBy=${userId}
+		</if>
+		<if test="type ==3">
+			and cu.createdBy>0
+		</if>
+		<if test="type ==4">
+			and date(cu.createdAt)=DATE(NOW())
+		</if>
+		<if test="type ==5">
+			and date(cu.createdAt)>DATE(DATE_ADD(NOW(),INTERVAL -7
+			DAY))
+		</if>
+		<if test="type ==6">
+			and month(cu.createdAt)=MONTH(NOW())
+		</if>
+		<if test="type ==8">
+			and cu.status=1
+		</if>
+		<if test="type !=8">
+			and cu.status=0
+		</if>
+
+		<if test="type ==7">
+			order by cu.updatedAt desc,cu.id desc
+		</if>
+
+		<if test="type !=7">
+			order by cu.id desc
+		</if>
+
+		<if test="startNum!=null and endNum !=null ">
+        	limit ${startNum},${endNum}
+        </if>
+	</select>
+	
+	<!-- 查询采购企业记录数 -->
+	<select id="getAllCount" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM
+		ch_customs cu LEFT JOIN 
+		(SELECT r.* FROM ch_com_records r,(SELECT customerId,MAX(updatedAt) updatedAt FROM ch_com_records GROUP BY customerId) c WHERE r.customerId=c.customerId AND r.updatedAt =c.updatedAt ORDER BY r.customerId)  re ON cu.id = re.customerId 
+		LEFT JOIN ch_contacter con ON con.id = (SELECT id FROM ch_contacter WHERE customerId=cu.id AND keyPerson = 1 LIMIT 1)
+		LEFT JOIN ch_areas ar ON cu.areaID = ar.id
+		LEFT JOIN ch_users u ON cu.PIC = u.id
+		LEFT JOIN ch_category c ON c.id = cu.categoryfreq 
+		LEFT JOIN ch_category a ON a.id=cu.salesvolume  
+		where cu.categorybusiness IN(1,3) 
+		<if test="itemId!=null">
+			and cu.itemID = ${itemId}
+		</if>
+		<if test="str!=null">
+			and ${str}
+		</if>
+		<if test="type ==2">
+			and cu.createdBy=${userId}
+		</if>
+		<if test="type ==3">
+			and cu.createdBy>0
+		</if>
+		<if test="type ==4">
+			and date(cu.createdAt)=DATE(NOW())
+		</if>
+		<if test="type ==5">
+			and date(cu.createdAt)>DATE(DATE_ADD(NOW(),INTERVAL -7
+			DAY))
+		</if>
+		<if test="type ==6">
+			and month(cu.createdAt)=MONTH(NOW())
+		</if>
+		<if test="type ==8">
+			and cu.status=1
+		</if>
+		<if test="type !=8">
+			and cu.status=0
+		</if>
+
+		<if test="type ==7">
+			order by cu.updatedAt desc ,cu.id desc
+		</if>
+		<if test="type !=7">
+			order by cu.createdAt desc, cu.id desc
+		</if>
+		
+	</select>
+
+	<delete id="deleteByIds" parameterType="java.lang.String">
+		update ch_customs set
+		status =1 where id in (${value})
+	</delete>
+
+	<!-- 根据地区名称查询地区信息 -->
+	<select id="getAreasInfoByCondition" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.Areas">
+		select * from ch_areas where  ${value}
+	</select>
+
+	<!-- 根据联系人条件查询联系人信息 -->
+	<select id="getContacterByCondition" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		select * from ch_contacter where ${value}
+	</select>
+
+	<!-- 根据企业联系人信息查询企业信息 -->
+	<select id="getCompanyInfoByCondition" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.Company">
+		select * from ch_company where ${value}
+	</select>
+
+	<!-- 根据品目名称获得品目信息 -->
+	<select id="getItemsInfoByCondition" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.Items">
+		select * from ch_items where ${value}
+	</select>
+
+	<!-- 根据撮合员工姓名获得员工信息 -->
+	<select id="getUserInfoByCondition" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.User">
+		select * from ch_users where ${value}
+	</select>
+
+	<!-- 根据沟通信息 -->
+	<select id="getComRecordsByCondition" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.ComRecords">
+		select * from ch_com_records where ${value}
+	</select>
+
+	<!-- 根据企业和品目获得客户信息 -->
+	<select id="getCustomsInfoByCondition" parameterType="java.lang.String"
+		resultType="com.smm.cuohe.domain.Customer">
+		select
+		a.id,a.itemID,a.PIC,a.LastComID,a.TransCount,
+		a.LastTransTime,a.status,a.createdAt,a.createdBy,a.updatedAt,a.updatedBy
+		from
+		ch_customs a
+		left join
+		ch_items c
+		on a.itemID=c.id
+		where a.status=0
+		and c.status=0
+		and ${value}
+
+	</select>
+
+	<!-- 插入企业数据 -->
+	<insert id="insertCompanyInfo" parameterType="com.smm.cuohe.domain.Company">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS ID
+		</selectKey>
+
+		insert into ch_company
+		(
+		name,
+		areaID,
+		Status,
+		categorybusiness,
+		entTypes,
+		salesvolume,
+		categoryfreq,
+		buybrand,
+		categoryEmployee,
+		Companyphone,
+		CreatedAt,
+		CreatedBy,
+		UpdatedAt,
+		UpdatedBy)
+		values
+		(
+		#{name},
+		#{areaId},
+		#{status},
+		#{categoryBusiness},
+		#{entTypes},
+		#{salesVolume},
+		#{categoryFreq},
+		#{buyBrand},
+		#{categoryEmployee},
+		#{companyPhone},
+		#{createdAt,jdbcType=TIMESTAMP},
+		#{createdBy},
+		#{updatedAt,jdbcType=TIMESTAMP},
+		#{updatedBy})
+
+	</insert>
+
+	<!-- 更新企业数据 -->
+	<update id="updateCompanyInfo" parameterType="com.smm.cuohe.domain.Company">
+		update
+		ch_company
+		set
+		<if test="name!=null">name=#{name},</if>
+		<if test="areaId!=null">areaID=#{areaId},</if>
+		<if test="categoryBusiness!=null">categorybusiness=#{categoryBusiness},</if>
+		<if test="entTypes!=null">entTypes=#{entTypes},</if>
+		<if test="salesVolume!=null">salesvolume=#{salesVolume},</if>
+		<if test="categoryFreq!=null">categoryfreq=#{categoryFreq},</if>
+		<if test="buyBrand!=null">buybrand=#{buyBrand},</if>
+		<if test="categoryEmployee!=null">categoryEmployee=#{categoryEmployee},</if>
+		<if test="companyPhone!=null">companyPhone=#{companyPhone},</if>
+		<if test="status!=null">status=#{status},</if>
+		updatedAt=#{updatedAt,jdbcType=TIMESTAMP},
+		updatedBy=#{updatedBy}
+		where
+		id=#{id}
+	</update>
+
+	<!-- 插入企业联系人数据 -->
+	<insert id="insertContacterInfo" parameterType="com.smm.cuohe.domain.Contacter">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS ID
+		</selectKey>
+
+		insert into
+		ch_contacter
+		(	
+			name
+			,position
+			,sex
+			,mobilePhone
+			,telephone
+			,qq
+			,email
+			,keyPerson
+			,tidentity
+			,status
+			,createdAt
+			,CreatedBy
+			,UpdatedAt
+			,UpdatedBy
+			,customerId
+		)
+		values
+		(
+			#{name},
+			#{position},
+			#{sex},
+			#{mobilePhone},
+			#{telephone},
+			#{qq},
+			#{email},
+			#{keyPerson},
+			#{tidentity},
+			#{status},
+			#{createdAt,jdbcType=TIMESTAMP},
+			#{createdBy},
+			#{updatedAt,jdbcType=TIMESTAMP},
+			#{updatedBy},
+			#{customerId}
+		)
+
+	</insert>
+
+	<!-- 更新企业联系人 -->
+	<update id="updateContacterInfo" parameterType="com.smm.cuohe.domain.Contacter">
+		update
+		ch_contacter
+		set
+		<if test="name!=null">name=#{name},</if>
+		<if test="position!=null">position=#{position},</if>
+		<if test="sex!=null">sex=#{sex},</if>
+		<if test="mobilePhone!=null">mobilePhone=#{mobilePhone},</if>
+		<if test="telephone!=null">telephone=#{telephone},</if>
+		<if test="qq!=null">qq=#{qq},</if>
+		<if test="email!=null">email=#{email},</if>
+		<if test="keyPerson!=null">keyPerson=#{keyPerson},</if>
+		<if test="tidentity!=null">tidentity=#{tidentity},</if>
+		<if test="status!=null">status=#{status},</if>
+		<if test="customerId!=null">customerId=#{customerId},</if>
+		UpdatedAt=#{updatedAt,jdbcType=TIMESTAMP},
+		UpdatedBy=#{updatedBy}
+		where
+		id=#{id}
+	</update>
+
+	<!-- 插入沟通记录数据 -->
+	<insert id="insertComRecordInfo" parameterType="com.smm.cuohe.domain.ComRecords">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS ID
+		</selectKey>
+
+		insert into ch_com_records
+		(
+		itemID,
+		companyID,
+		contacterId,
+		title,
+		context,
+		createdAt,
+		createdBy,
+		updatedAt,
+		updatedBy
+		)
+		values
+		(
+		#{itemId},
+		#{companyId},
+		#{contacterId},
+		#{title},
+		#{context},
+		#{createdAt,jdbcType=TIMESTAMP},
+		#{createdBy},
+		#{updatedAt,jdbcType=TIMESTAMP},
+		#{updatedBy}
+		)
+
+	</insert>
+
+	<!-- 更新沟通记录数据 -->
+	<update id="updateComRecordInfo" parameterType="com.smm.cuohe.domain.CustomsFull">
+		update
+		ch_com_records
+		set
+		<if test="itemId!=null">itemID=#{itemId},</if>
+		<if test="companyId!=null">companyID=#{companyId},</if>
+		<if test="contacterId!=null">contacterId=#{contacterId},</if>
+		<if test="title!=null">title=#{title},</if>
+		<if test="context!=null">context=#{context},</if>
+		updatedAt=#{updatedAt,jdbcType=TIMESTAMP},
+		updatedBy=#{updatedBy}
+		where
+		id=#{id}
+	</update>
+
+	<!-- 插入客户数据 -->
+	<insert id="insertCustomInfo" parameterType="com.smm.cuohe.domain.Customer">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS ID
+		</selectKey>
+
+		insert into ch_customs
+		(
+			itemID
+			,PIC
+			,LastComID
+			,TransCount
+			,LastTransTime
+			,status
+			,createdAt
+			,createdBy
+			,updatedAt
+			,updatedBy
+			,categorySource
+			,companyName
+			,areaId
+			,address
+			,entTypes
+			,level
+			,salesVolume
+			,buyproducts
+			,buybrand
+			,buyvolume
+			,salesproducts
+			,categoryemployee
+			,categoryfreq
+			,categorybusiness
+			,Corporate
+			,RegisterDate
+			,Companyphone
+			,Companyproperty
+			,Companysite
+			,TaxNo
+			,Bank
+			,BankAccount
+			,categoryCredit
+			,CompanyAss
+			,BusinessLicense
+			,ExpiryTime
+			,Commands
+			,account
+			,categoryCoo
+		)
+		values
+		(
+			#{itemId},
+			#{pic},
+			#{lastComId},
+			#{transCount},
+			#{lastTransTime,jdbcType=TIMESTAMP},
+			#{status},
+			#{createdAt,jdbcType=TIMESTAMP},
+			#{createdBy},
+			#{updatedAt,jdbcType=TIMESTAMP},
+			#{updatedBy},
+			#{categorySource},
+			#{companyName},
+			#{areaId},
+			#{address},
+			#{entTypes},
+			#{level},
+			#{salesVolume},
+			#{buyProducts},
+			#{buyBrand},
+			#{buyVolume},
+			#{salesProducts},
+			#{categoryEmployee},
+			#{categoryFreq},
+			#{categoryBusiness},
+			#{corporate},
+			#{registerDate,jdbcType=TIMESTAMP},
+			#{companyPhone},
+			#{companyProperty},
+			#{companySite},
+			#{taxNo},
+			#{bank},
+			#{bankAccount},
+			#{categoryCredit},
+			#{companyAss},
+			#{businessLicense},
+			#{expiryTime,jdbcType=TIMESTAMP},
+			#{commands},
+			#{account},
+			#{categoryCoo}
+		)
+
+	</insert>
+
+	<!-- 更新客户数据 -->
+	<update id="updateCustomInfo" parameterType="com.smm.cuohe.domain.Customer">
+		update ch_customs
+		set
+		<if test="itemId!=null">itemID=#{itemId},</if>
+		<if test="pic!=null">PIC=#{pic},</if>
+		<if test="lastComId!=null">LastComID=#{lastComId},</if>
+		<if test="transCount!=null">TransCount=#{transCount},</if>
+		<if test="lastTransTime!=null">LastTransTime=#{lastTransTime,jdbcType=TIMESTAMP},</if>
+		<if test="status!=null">status=#{status},</if>
+		<if test="categorySource!=null">categorySource=#{categorySource},</if>
+		<if test="companyName!=null">companyName=#{companyName},</if>
+		<if test="areaId!=null">areaId=#{areaId},</if>
+		<if test="address!=null">address=#{address},</if>
+		<if test="entTypes!=null">entTypes=#{entTypes},</if>
+		<if test="level!=null">level=#{level},</if>
+		<if test="salesVolume!=null">salesVolume=#{salesVolume},</if>
+		<if test="buyProducts!=null">buyproducts=#{buyProducts},</if>
+		<if test="buyBrand!=null">buybrand=#{buyBrand},</if>
+		<if test="buyVolume!=null">buyvolume=#{buyVolume},</if>
+		<if test="salesProducts!=null">salesproducts=#{salesProducts},</if>
+		<if test="categoryEmployee!=null">categoryemployee=#{categoryEmployee},</if>
+		<if test="categoryFreq!=null">categoryfreq=#{categoryFreq},</if>
+		<if test="categoryBusiness!=null">categorybusiness=#{categoryBusiness},</if>
+		<if test="corporate!=null">Corporate=#{corporate},</if>
+		<if test="registerDate!=null">RegisterDate=#{registerDate,jdbcType=TIMESTAMP},</if>
+		<if test="companyPhone!=null">Companyphone=#{companyPhone},</if>
+		<if test="companyProperty!=null">Companyproperty=#{companyProperty},</if>
+		<if test="companySite!=null">Companysite=#{companySite},</if>
+		<if test="taxNo!=null">TaxNo=#{taxNo},</if>
+		<if test="bank!=null">Bank=#{bank},</if>
+		<if test="bankAccount!=null">BankAccount=#{bankAccount},</if>
+		<if test="categoryCredit!=null">categoryCredit=#{categoryCredit},</if>
+		<if test="companyAss!=null">CompanyAss=#{companyAss},</if>
+		<if test="businessLicense!=null">BusinessLicense=#{businessLicense},</if>
+		<if test="expiryTime!=null">ExpiryTime=#{expiryTime,jdbcType=TIMESTAMP},</if>
+		<if test="commands!=null">Commands=#{commands},</if>
+		<if test="account!=null">account=#{account},</if>
+		<if test="categoryCoo!=null">categoryCoo=#{categoryCoo},</if>
+
+		updatedAt=#{updatedAt,jdbcType=TIMESTAMP},
+		updatedBy=#{updatedBy}
+		where
+		id=#{id}
+	</update>
+
+	<!-- 根据id获得导出数据 -->
+	<select id="getExpotDataByID" parameterType="java.lang.String"
+		resultType="Purchase">
+		SELECT
+		cu.id,
+		cu.companyName,
+		re.updatedAt updatedAtByRecord,
+		re.title,
+		re.context,
+		cu.entTypes,
+		a.name AS salesvolume,
+		con.name nameByContacter,
+		con.mobilePhone,
+		ar.name nameByArea,
+		re.createdAt updatedAtByOrder,
+		cu.categoryfreq,
+		c.name freqString,
+		cu.buybrand,
+		u.name nameByUser,
+		cu.createdAt
+		FROM
+		ch_customs cu
+		LEFT JOIN	ch_com_records re ON cu.LastComID = re.id
+		LEFT JOIN ch_contacter con ON con.id = (SELECT id FROM ch_contacter WHERE customerId=cu.id AND keyPerson = 1 LIMIT 1)
+		LEFT JOIN ch_areas ar ON cu.areaID = ar.id
+		LEFT JOIN ch_users u ON cu.PIC = u.id
+		LEFT JOIN ch_category c ON c.id = cu.categoryfreq
+		LEFT JOIN ch_category a ON a.id=cu.salesvolume
+		where  cu.id
+		in
+		<foreach collection="array" item="purchaseInfo" separator=","
+			open="(" close=")">
+
+			#{purchaseInfo}
+
+		</foreach>
+		order by cu.createdAt desc, cu.id desc
+	</select>
+	
+	<select id="selPhoneBycusId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT c.mobilePhone FROM ch_customs s,ch_contacter c WHERE s.id =c.customerId AND c.keyPerson =1 AND s.id IN (${value})
+	</select>
+
+</mapper>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChWareHouseMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChWareHouse" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="catid" property="catid" jdbcType="VARCHAR" />
+    <result column="ItemId" property="itemid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="areaid" property="areaid" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="DATE" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updateAt" property="updateat" jdbcType="DATE" />
+    <result column="updateBy" property="updateby" jdbcType="INTEGER" />
+    <result column="issupervise" property="issupervise" jdbcType="BIT" />
+    <result column="iswhole" property="iswhole" jdbcType="BIT" />
+    <result column="iscooperate" property="iscooperate" jdbcType="BIT" />
+    <result column="createuser" property="createuser" jdbcType="VARCHAR" />
+    <result column="isself" property="isself" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, catid, ItemId, name, company, address, areaid, status, createdAt, createdBy, 
+    updateAt, updateBy, issupervise, iswhole, iscooperate, createuser, isself
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_warehouse
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_warehouse
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChWareHouse" >
+    insert into ch_warehouse (id, catid, ItemId, 
+      name, company, address, 
+      areaid, status, createdAt, 
+      createdBy, updateAt, updateBy, 
+      issupervise, iswhole, iscooperate, 
+      createuser, isself)
+    values (#{id,jdbcType=INTEGER}, #{catid,jdbcType=VARCHAR}, #{itemid,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{areaid,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{createdat,jdbcType=DATE}, 
+      #{createdby,jdbcType=INTEGER}, #{updateat,jdbcType=DATE}, #{updateby,jdbcType=INTEGER}, 
+      #{issupervise,jdbcType=BIT}, #{iswhole,jdbcType=BIT}, #{iscooperate,jdbcType=BIT}, 
+      #{createuser,jdbcType=VARCHAR}, #{isself,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChWareHouse" >
+    insert into ch_warehouse
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="catid != null" >
+        catid,
+      </if>
+      <if test="itemid != null" >
+        ItemId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="areaid != null" >
+        areaid,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="updateat != null" >
+        updateAt,
+      </if>
+      <if test="updateby != null" >
+        updateBy,
+      </if>
+      <if test="issupervise != null" >
+        issupervise,
+      </if>
+      <if test="iswhole != null" >
+        iswhole,
+      </if>
+      <if test="iscooperate != null" >
+        iscooperate,
+      </if>
+      <if test="createuser != null" >
+        createuser,
+      </if>
+      <if test="isself != null" >
+        isself,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="catid != null" >
+        #{catid,jdbcType=VARCHAR},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null" >
+        #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=DATE},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updateat != null" >
+        #{updateat,jdbcType=DATE},
+      </if>
+      <if test="updateby != null" >
+        #{updateby,jdbcType=INTEGER},
+      </if>
+      <if test="issupervise != null" >
+        #{issupervise,jdbcType=BIT},
+      </if>
+      <if test="iswhole != null" >
+        #{iswhole,jdbcType=BIT},
+      </if>
+      <if test="iscooperate != null" >
+        #{iscooperate,jdbcType=BIT},
+      </if>
+      <if test="createuser != null" >
+        #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="isself != null" >
+        #{isself,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChWareHouse" >
+    update ch_warehouse
+    <set >
+      <if test="catid != null" >
+        catid = #{catid,jdbcType=VARCHAR},
+      </if>
+      <if test="itemid != null" >
+        ItemId = #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null" >
+        areaid = #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=DATE},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updateat != null" >
+        updateAt = #{updateat,jdbcType=DATE},
+      </if>
+      <if test="updateby != null" >
+        updateBy = #{updateby,jdbcType=INTEGER},
+      </if>
+      <if test="issupervise != null" >
+        issupervise = #{issupervise,jdbcType=BIT},
+      </if>
+      <if test="iswhole != null" >
+        iswhole = #{iswhole,jdbcType=BIT},
+      </if>
+      <if test="iscooperate != null" >
+        iscooperate = #{iscooperate,jdbcType=BIT},
+      </if>
+      <if test="createuser != null" >
+        createuser = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="isself != null" >
+        isself = #{isself,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChWareHouse" >
+    update ch_warehouse
+    set catid = #{catid,jdbcType=VARCHAR},
+      ItemId = #{itemid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      areaid = #{areaid,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=DATE},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updateAt = #{updateat,jdbcType=DATE},
+      updateBy = #{updateby,jdbcType=INTEGER},
+      issupervise = #{issupervise,jdbcType=BIT},
+      iswhole = #{iswhole,jdbcType=BIT},
+      iscooperate = #{iscooperate,jdbcType=BIT},
+      createuser = #{createuser,jdbcType=VARCHAR},
+      isself = #{isself,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

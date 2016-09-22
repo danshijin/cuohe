@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChCustomsEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChCustomsEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="itemID" property="itemid" jdbcType="INTEGER" />
+    <result column="PIC" property="pic" jdbcType="INTEGER" />
+    <result column="LastComID" property="lastcomid" jdbcType="INTEGER" />
+    <result column="TransCount" property="transcount" jdbcType="INTEGER" />
+    <result column="LastTransTime" property="lasttranstime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+    <result column="updatedBy" property="updatedby" jdbcType="INTEGER" />
+    <result column="categorySource" property="categorysource" jdbcType="INTEGER" />
+    <result column="companyName" property="companyname" jdbcType="VARCHAR" />
+    <result column="areaId" property="areaid" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="entTypes" property="enttypes" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="salesVolume" property="salesvolume" jdbcType="VARCHAR" />
+    <result column="buyproducts" property="buyproducts" jdbcType="VARCHAR" />
+    <result column="buybrand" property="buybrand" jdbcType="VARCHAR" />
+    <result column="buyvolume" property="buyvolume" jdbcType="INTEGER" />
+    <result column="salesproducts" property="salesproducts" jdbcType="VARCHAR" />
+    <result column="categoryemployee" property="categoryemployee" jdbcType="INTEGER" />
+    <result column="categoryfreq" property="categoryfreq" jdbcType="INTEGER" />
+    <result column="categorybusiness" property="categorybusiness" jdbcType="INTEGER" />
+    <result column="Corporate" property="corporate" jdbcType="VARCHAR" />
+    <result column="RegisterDate" property="registerdate" jdbcType="TIMESTAMP" />
+    <result column="Companyphone" property="companyphone" jdbcType="VARCHAR" />
+    <result column="Companyproperty" property="companyproperty" jdbcType="INTEGER" />
+    <result column="Companysite" property="companysite" jdbcType="VARCHAR" />
+    <result column="TaxNo" property="taxno" jdbcType="VARCHAR" />
+    <result column="Bank" property="bank" jdbcType="VARCHAR" />
+    <result column="BankAccount" property="bankaccount" jdbcType="VARCHAR" />
+    <result column="categoryCredit" property="categorycredit" jdbcType="INTEGER" />
+    <result column="CompanyAss" property="companyass" jdbcType="VARCHAR" />
+    <result column="BusinessLicense" property="businesslicense" jdbcType="VARCHAR" />
+    <result column="ExpiryTime" property="expirytime" jdbcType="TIMESTAMP" />
+    <result column="Commands" property="commands" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="categoryCoo" property="categorycoo" jdbcType="INTEGER" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="remindTime" property="remindtime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, itemID, PIC, LastComID, TransCount, LastTransTime, status, createdAt, createdBy, 
+    updatedAt, updatedBy, categorySource, companyName, areaId, address, entTypes, level, 
+    salesVolume, buyproducts, buybrand, buyvolume, salesproducts, categoryemployee, categoryfreq, 
+    categorybusiness, Corporate, RegisterDate, Companyphone, Companyproperty, Companysite, 
+    TaxNo, Bank, BankAccount, categoryCredit, CompanyAss, BusinessLicense, ExpiryTime, 
+    Commands, account, categoryCoo, tag, remindTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_customs
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_customs
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChCustomsEntity" >
+    insert into ch_customs (id, itemID, PIC, 
+      LastComID, TransCount, LastTransTime, 
+      status, createdAt, createdBy, 
+      updatedAt, updatedBy, categorySource, 
+      companyName, areaId, address, 
+      entTypes, level, salesVolume, 
+      buyproducts, buybrand, buyvolume, 
+      salesproducts, categoryemployee, categoryfreq, 
+      categorybusiness, Corporate, RegisterDate, 
+      Companyphone, Companyproperty, Companysite, 
+      TaxNo, Bank, BankAccount, 
+      categoryCredit, CompanyAss, BusinessLicense, 
+      ExpiryTime, Commands, account, 
+      categoryCoo, tag, remindTime
+      )
+    values (#{id,jdbcType=INTEGER}, #{itemid,jdbcType=INTEGER}, #{pic,jdbcType=INTEGER}, 
+      #{lastcomid,jdbcType=INTEGER}, #{transcount,jdbcType=INTEGER}, #{lasttranstime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{createdat,jdbcType=TIMESTAMP}, #{createdby,jdbcType=INTEGER}, 
+      #{updatedat,jdbcType=TIMESTAMP}, #{updatedby,jdbcType=INTEGER}, #{categorysource,jdbcType=INTEGER}, 
+      #{companyname,jdbcType=VARCHAR}, #{areaid,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
+      #{enttypes,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{salesvolume,jdbcType=VARCHAR}, 
+      #{buyproducts,jdbcType=VARCHAR}, #{buybrand,jdbcType=VARCHAR}, #{buyvolume,jdbcType=INTEGER}, 
+      #{salesproducts,jdbcType=VARCHAR}, #{categoryemployee,jdbcType=INTEGER}, #{categoryfreq,jdbcType=INTEGER}, 
+      #{categorybusiness,jdbcType=INTEGER}, #{corporate,jdbcType=VARCHAR}, #{registerdate,jdbcType=TIMESTAMP}, 
+      #{companyphone,jdbcType=VARCHAR}, #{companyproperty,jdbcType=INTEGER}, #{companysite,jdbcType=VARCHAR}, 
+      #{taxno,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, #{bankaccount,jdbcType=VARCHAR}, 
+      #{categorycredit,jdbcType=INTEGER}, #{companyass,jdbcType=VARCHAR}, #{businesslicense,jdbcType=VARCHAR}, 
+      #{expirytime,jdbcType=TIMESTAMP}, #{commands,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
+      #{categorycoo,jdbcType=INTEGER}, #{tag,jdbcType=VARCHAR}, #{remindtime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChCustomsEntity" >
+    insert into ch_customs
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemid != null" >
+        itemID,
+      </if>
+      <if test="pic != null" >
+        PIC,
+      </if>
+      <if test="lastcomid != null" >
+        LastComID,
+      </if>
+      <if test="transcount != null" >
+        TransCount,
+      </if>
+      <if test="lasttranstime != null" >
+        LastTransTime,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+      <if test="updatedby != null" >
+        updatedBy,
+      </if>
+      <if test="categorysource != null" >
+        categorySource,
+      </if>
+      <if test="companyname != null" >
+        companyName,
+      </if>
+      <if test="areaid != null" >
+        areaId,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="enttypes != null" >
+        entTypes,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="salesvolume != null" >
+        salesVolume,
+      </if>
+      <if test="buyproducts != null" >
+        buyproducts,
+      </if>
+      <if test="buybrand != null" >
+        buybrand,
+      </if>
+      <if test="buyvolume != null" >
+        buyvolume,
+      </if>
+      <if test="salesproducts != null" >
+        salesproducts,
+      </if>
+      <if test="categoryemployee != null" >
+        categoryemployee,
+      </if>
+      <if test="categoryfreq != null" >
+        categoryfreq,
+      </if>
+      <if test="categorybusiness != null" >
+        categorybusiness,
+      </if>
+      <if test="corporate != null" >
+        Corporate,
+      </if>
+      <if test="registerdate != null" >
+        RegisterDate,
+      </if>
+      <if test="companyphone != null" >
+        Companyphone,
+      </if>
+      <if test="companyproperty != null" >
+        Companyproperty,
+      </if>
+      <if test="companysite != null" >
+        Companysite,
+      </if>
+      <if test="taxno != null" >
+        TaxNo,
+      </if>
+      <if test="bank != null" >
+        Bank,
+      </if>
+      <if test="bankaccount != null" >
+        BankAccount,
+      </if>
+      <if test="categorycredit != null" >
+        categoryCredit,
+      </if>
+      <if test="companyass != null" >
+        CompanyAss,
+      </if>
+      <if test="businesslicense != null" >
+        BusinessLicense,
+      </if>
+      <if test="expirytime != null" >
+        ExpiryTime,
+      </if>
+      <if test="commands != null" >
+        Commands,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="categorycoo != null" >
+        categoryCoo,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="remindtime != null" >
+        remindTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="pic != null" >
+        #{pic,jdbcType=INTEGER},
+      </if>
+      <if test="lastcomid != null" >
+        #{lastcomid,jdbcType=INTEGER},
+      </if>
+      <if test="transcount != null" >
+        #{transcount,jdbcType=INTEGER},
+      </if>
+      <if test="lasttranstime != null" >
+        #{lasttranstime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="categorysource != null" >
+        #{categorysource,jdbcType=INTEGER},
+      </if>
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null" >
+        #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="enttypes != null" >
+        #{enttypes,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="salesvolume != null" >
+        #{salesvolume,jdbcType=VARCHAR},
+      </if>
+      <if test="buyproducts != null" >
+        #{buyproducts,jdbcType=VARCHAR},
+      </if>
+      <if test="buybrand != null" >
+        #{buybrand,jdbcType=VARCHAR},
+      </if>
+      <if test="buyvolume != null" >
+        #{buyvolume,jdbcType=INTEGER},
+      </if>
+      <if test="salesproducts != null" >
+        #{salesproducts,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryemployee != null" >
+        #{categoryemployee,jdbcType=INTEGER},
+      </if>
+      <if test="categoryfreq != null" >
+        #{categoryfreq,jdbcType=INTEGER},
+      </if>
+      <if test="categorybusiness != null" >
+        #{categorybusiness,jdbcType=INTEGER},
+      </if>
+      <if test="corporate != null" >
+        #{corporate,jdbcType=VARCHAR},
+      </if>
+      <if test="registerdate != null" >
+        #{registerdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyphone != null" >
+        #{companyphone,jdbcType=VARCHAR},
+      </if>
+      <if test="companyproperty != null" >
+        #{companyproperty,jdbcType=INTEGER},
+      </if>
+      <if test="companysite != null" >
+        #{companysite,jdbcType=VARCHAR},
+      </if>
+      <if test="taxno != null" >
+        #{taxno,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankaccount != null" >
+        #{bankaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="categorycredit != null" >
+        #{categorycredit,jdbcType=INTEGER},
+      </if>
+      <if test="companyass != null" >
+        #{companyass,jdbcType=VARCHAR},
+      </if>
+      <if test="businesslicense != null" >
+        #{businesslicense,jdbcType=VARCHAR},
+      </if>
+      <if test="expirytime != null" >
+        #{expirytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commands != null" >
+        #{commands,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="categorycoo != null" >
+        #{categorycoo,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="remindtime != null" >
+        #{remindtime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChCustomsEntity" >
+    update ch_customs
+    <set >
+      <if test="itemid != null" >
+        itemID = #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="pic != null" >
+        PIC = #{pic,jdbcType=INTEGER},
+      </if>
+      <if test="lastcomid != null" >
+        LastComID = #{lastcomid,jdbcType=INTEGER},
+      </if>
+      <if test="transcount != null" >
+        TransCount = #{transcount,jdbcType=INTEGER},
+      </if>
+      <if test="lasttranstime != null" >
+        LastTransTime = #{lasttranstime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        updatedBy = #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="categorysource != null" >
+        categorySource = #{categorysource,jdbcType=INTEGER},
+      </if>
+      <if test="companyname != null" >
+        companyName = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null" >
+        areaId = #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="enttypes != null" >
+        entTypes = #{enttypes,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="salesvolume != null" >
+        salesVolume = #{salesvolume,jdbcType=VARCHAR},
+      </if>
+      <if test="buyproducts != null" >
+        buyproducts = #{buyproducts,jdbcType=VARCHAR},
+      </if>
+      <if test="buybrand != null" >
+        buybrand = #{buybrand,jdbcType=VARCHAR},
+      </if>
+      <if test="buyvolume != null" >
+        buyvolume = #{buyvolume,jdbcType=INTEGER},
+      </if>
+      <if test="salesproducts != null" >
+        salesproducts = #{salesproducts,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryemployee != null" >
+        categoryemployee = #{categoryemployee,jdbcType=INTEGER},
+      </if>
+      <if test="categoryfreq != null" >
+        categoryfreq = #{categoryfreq,jdbcType=INTEGER},
+      </if>
+      <if test="categorybusiness != null" >
+        categorybusiness = #{categorybusiness,jdbcType=INTEGER},
+      </if>
+      <if test="corporate != null" >
+        Corporate = #{corporate,jdbcType=VARCHAR},
+      </if>
+      <if test="registerdate != null" >
+        RegisterDate = #{registerdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyphone != null" >
+        Companyphone = #{companyphone,jdbcType=VARCHAR},
+      </if>
+      <if test="companyproperty != null" >
+        Companyproperty = #{companyproperty,jdbcType=INTEGER},
+      </if>
+      <if test="companysite != null" >
+        Companysite = #{companysite,jdbcType=VARCHAR},
+      </if>
+      <if test="taxno != null" >
+        TaxNo = #{taxno,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        Bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankaccount != null" >
+        BankAccount = #{bankaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="categorycredit != null" >
+        categoryCredit = #{categorycredit,jdbcType=INTEGER},
+      </if>
+      <if test="companyass != null" >
+        CompanyAss = #{companyass,jdbcType=VARCHAR},
+      </if>
+      <if test="businesslicense != null" >
+        BusinessLicense = #{businesslicense,jdbcType=VARCHAR},
+      </if>
+      <if test="expirytime != null" >
+        ExpiryTime = #{expirytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commands != null" >
+        Commands = #{commands,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="categorycoo != null" >
+        categoryCoo = #{categorycoo,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="remindtime != null" >
+        remindTime = #{remindtime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChCustomsEntity" >
+    update ch_customs
+    set itemID = #{itemid,jdbcType=INTEGER},
+      PIC = #{pic,jdbcType=INTEGER},
+      LastComID = #{lastcomid,jdbcType=INTEGER},
+      TransCount = #{transcount,jdbcType=INTEGER},
+      LastTransTime = #{lasttranstime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      updatedBy = #{updatedby,jdbcType=INTEGER},
+      categorySource = #{categorysource,jdbcType=INTEGER},
+      companyName = #{companyname,jdbcType=VARCHAR},
+      areaId = #{areaid,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      entTypes = #{enttypes,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      salesVolume = #{salesvolume,jdbcType=VARCHAR},
+      buyproducts = #{buyproducts,jdbcType=VARCHAR},
+      buybrand = #{buybrand,jdbcType=VARCHAR},
+      buyvolume = #{buyvolume,jdbcType=INTEGER},
+      salesproducts = #{salesproducts,jdbcType=VARCHAR},
+      categoryemployee = #{categoryemployee,jdbcType=INTEGER},
+      categoryfreq = #{categoryfreq,jdbcType=INTEGER},
+      categorybusiness = #{categorybusiness,jdbcType=INTEGER},
+      Corporate = #{corporate,jdbcType=VARCHAR},
+      RegisterDate = #{registerdate,jdbcType=TIMESTAMP},
+      Companyphone = #{companyphone,jdbcType=VARCHAR},
+      Companyproperty = #{companyproperty,jdbcType=INTEGER},
+      Companysite = #{companysite,jdbcType=VARCHAR},
+      TaxNo = #{taxno,jdbcType=VARCHAR},
+      Bank = #{bank,jdbcType=VARCHAR},
+      BankAccount = #{bankaccount,jdbcType=VARCHAR},
+      categoryCredit = #{categorycredit,jdbcType=INTEGER},
+      CompanyAss = #{companyass,jdbcType=VARCHAR},
+      BusinessLicense = #{businesslicense,jdbcType=VARCHAR},
+      ExpiryTime = #{expirytime,jdbcType=TIMESTAMP},
+      Commands = #{commands,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      categoryCoo = #{categorycoo,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=VARCHAR},
+      remindTime = #{remindtime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChTrailPoolEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChTrailPoolEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="itemId" property="itemid" jdbcType="INTEGER" />
+    <result column="userID" property="userid" jdbcType="INTEGER" />
+    <result column="categorySource" property="categorysource" jdbcType="INTEGER" />
+    <result column="nextTime" property="nexttime" jdbcType="VARCHAR" />
+    <result column="nextContext" property="nextcontext" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+    <result column="updatedBy" property="updatedby" jdbcType="INTEGER" />
+    <result column="categoryCoo" property="categorycoo" jdbcType="INTEGER" />
+    <result column="companyName" property="companyname" jdbcType="VARCHAR" />
+    <result column="salesProducts" property="salesproducts" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="corporate" property="corporate" jdbcType="VARCHAR" />
+    <result column="companyPhone" property="companyphone" jdbcType="VARCHAR" />
+    <result column="compaySite" property="compaysite" jdbcType="VARCHAR" />
+    <result column="entTypes" property="enttypes" jdbcType="VARCHAR" />
+    <result column="categoryEmployee" property="categoryemployee" jdbcType="INTEGER" />
+    <result column="salesVolume" property="salesvolume" jdbcType="INTEGER" />
+    <result column="strRegisterDate" property="strregisterdate" jdbcType="VARCHAR" />
+    <result column="companyProperty" property="companyproperty" jdbcType="INTEGER" />
+    <result column="areaId" property="areaid" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, itemId, userID, categorySource, nextTime, nextContext, status, createdAt, createdBy, 
+    updatedAt, updatedBy, categoryCoo, companyName, salesProducts, address, corporate, 
+    companyPhone, compaySite, entTypes, categoryEmployee, salesVolume, strRegisterDate, 
+    companyProperty, areaId, city
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_trail_pool
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_trail_pool
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChTrailPoolEntity" >
+    insert into ch_trail_pool (id, itemId, userID, 
+      categorySource, nextTime, nextContext, 
+      status, createdAt, createdBy, 
+      updatedAt, updatedBy, categoryCoo, 
+      companyName, salesProducts, address, 
+      corporate, companyPhone, compaySite, 
+      entTypes, categoryEmployee, salesVolume, 
+      strRegisterDate, companyProperty, areaId, 
+      city)
+    values (#{id,jdbcType=INTEGER}, #{itemid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 
+      #{categorysource,jdbcType=INTEGER}, #{nexttime,jdbcType=VARCHAR}, #{nextcontext,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createdat,jdbcType=TIMESTAMP}, #{createdby,jdbcType=INTEGER}, 
+      #{updatedat,jdbcType=TIMESTAMP}, #{updatedby,jdbcType=INTEGER}, #{categorycoo,jdbcType=INTEGER}, 
+      #{companyname,jdbcType=VARCHAR}, #{salesproducts,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{corporate,jdbcType=VARCHAR}, #{companyphone,jdbcType=VARCHAR}, #{compaysite,jdbcType=VARCHAR}, 
+      #{enttypes,jdbcType=VARCHAR}, #{categoryemployee,jdbcType=INTEGER}, #{salesvolume,jdbcType=INTEGER}, 
+      #{strregisterdate,jdbcType=VARCHAR}, #{companyproperty,jdbcType=INTEGER}, #{areaid,jdbcType=INTEGER}, 
+      #{city,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChTrailPoolEntity" >
+    insert into ch_trail_pool
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemid != null" >
+        itemId,
+      </if>
+      <if test="userid != null" >
+        userID,
+      </if>
+      <if test="categorysource != null" >
+        categorySource,
+      </if>
+      <if test="nexttime != null" >
+        nextTime,
+      </if>
+      <if test="nextcontext != null" >
+        nextContext,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+      <if test="updatedby != null" >
+        updatedBy,
+      </if>
+      <if test="categorycoo != null" >
+        categoryCoo,
+      </if>
+      <if test="companyname != null" >
+        companyName,
+      </if>
+      <if test="salesproducts != null" >
+        salesProducts,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="corporate != null" >
+        corporate,
+      </if>
+      <if test="companyphone != null" >
+        companyPhone,
+      </if>
+      <if test="compaysite != null" >
+        compaySite,
+      </if>
+      <if test="enttypes != null" >
+        entTypes,
+      </if>
+      <if test="categoryemployee != null" >
+        categoryEmployee,
+      </if>
+      <if test="salesvolume != null" >
+        salesVolume,
+      </if>
+      <if test="strregisterdate != null" >
+        strRegisterDate,
+      </if>
+      <if test="companyproperty != null" >
+        companyProperty,
+      </if>
+      <if test="areaid != null" >
+        areaId,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="categorysource != null" >
+        #{categorysource,jdbcType=INTEGER},
+      </if>
+      <if test="nexttime != null" >
+        #{nexttime,jdbcType=VARCHAR},
+      </if>
+      <if test="nextcontext != null" >
+        #{nextcontext,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="categorycoo != null" >
+        #{categorycoo,jdbcType=INTEGER},
+      </if>
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="salesproducts != null" >
+        #{salesproducts,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="corporate != null" >
+        #{corporate,jdbcType=VARCHAR},
+      </if>
+      <if test="companyphone != null" >
+        #{companyphone,jdbcType=VARCHAR},
+      </if>
+      <if test="compaysite != null" >
+        #{compaysite,jdbcType=VARCHAR},
+      </if>
+      <if test="enttypes != null" >
+        #{enttypes,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryemployee != null" >
+        #{categoryemployee,jdbcType=INTEGER},
+      </if>
+      <if test="salesvolume != null" >
+        #{salesvolume,jdbcType=INTEGER},
+      </if>
+      <if test="strregisterdate != null" >
+        #{strregisterdate,jdbcType=VARCHAR},
+      </if>
+      <if test="companyproperty != null" >
+        #{companyproperty,jdbcType=INTEGER},
+      </if>
+      <if test="areaid != null" >
+        #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChTrailPoolEntity" >
+    update ch_trail_pool
+    <set >
+      <if test="itemid != null" >
+        itemId = #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        userID = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="categorysource != null" >
+        categorySource = #{categorysource,jdbcType=INTEGER},
+      </if>
+      <if test="nexttime != null" >
+        nextTime = #{nexttime,jdbcType=VARCHAR},
+      </if>
+      <if test="nextcontext != null" >
+        nextContext = #{nextcontext,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        updatedBy = #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="categorycoo != null" >
+        categoryCoo = #{categorycoo,jdbcType=INTEGER},
+      </if>
+      <if test="companyname != null" >
+        companyName = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="salesproducts != null" >
+        salesProducts = #{salesproducts,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="corporate != null" >
+        corporate = #{corporate,jdbcType=VARCHAR},
+      </if>
+      <if test="companyphone != null" >
+        companyPhone = #{companyphone,jdbcType=VARCHAR},
+      </if>
+      <if test="compaysite != null" >
+        compaySite = #{compaysite,jdbcType=VARCHAR},
+      </if>
+      <if test="enttypes != null" >
+        entTypes = #{enttypes,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryemployee != null" >
+        categoryEmployee = #{categoryemployee,jdbcType=INTEGER},
+      </if>
+      <if test="salesvolume != null" >
+        salesVolume = #{salesvolume,jdbcType=INTEGER},
+      </if>
+      <if test="strregisterdate != null" >
+        strRegisterDate = #{strregisterdate,jdbcType=VARCHAR},
+      </if>
+      <if test="companyproperty != null" >
+        companyProperty = #{companyproperty,jdbcType=INTEGER},
+      </if>
+      <if test="areaid != null" >
+        areaId = #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChTrailPoolEntity" >
+    update ch_trail_pool
+    set itemId = #{itemid,jdbcType=INTEGER},
+      userID = #{userid,jdbcType=INTEGER},
+      categorySource = #{categorysource,jdbcType=INTEGER},
+      nextTime = #{nexttime,jdbcType=VARCHAR},
+      nextContext = #{nextcontext,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      updatedBy = #{updatedby,jdbcType=INTEGER},
+      categoryCoo = #{categorycoo,jdbcType=INTEGER},
+      companyName = #{companyname,jdbcType=VARCHAR},
+      salesProducts = #{salesproducts,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      corporate = #{corporate,jdbcType=VARCHAR},
+      companyPhone = #{companyphone,jdbcType=VARCHAR},
+      compaySite = #{compaysite,jdbcType=VARCHAR},
+      entTypes = #{enttypes,jdbcType=VARCHAR},
+      categoryEmployee = #{categoryemployee,jdbcType=INTEGER},
+      salesVolume = #{salesvolume,jdbcType=INTEGER},
+      strRegisterDate = #{strregisterdate,jdbcType=VARCHAR},
+      companyProperty = #{companyproperty,jdbcType=INTEGER},
+      areaId = #{areaid,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

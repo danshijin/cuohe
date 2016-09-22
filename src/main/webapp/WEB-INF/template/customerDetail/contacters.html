@@ -1,0 +1,117 @@
+<div class="col-md-12">
+	<div class="portlet light bordered">
+		<div class="portlet-body" style="height: 13px;padding-top: 0px">
+				<div style="float: left;">
+					<span>联系人</span>
+				</div>
+				<div style="float: right;">
+					<button  class="btn btn-xs green" id="addContacter">
+						<i class="fa fa-plus"></i> 添加 
+					</button>
+				</div>
+		</div>
+	</div>    
+</div>
+<div class="col-md-12">
+	<div class="portlet light bordered">
+		<div class="portlet-body" id="ctBody">
+			
+			
+		</div>
+	</div>    
+</div>
+<script>
+	var contacter = ${contactersJson};
+	var contextPath = "${request.getContextPath()}";
+	$(function(){
+		var html ="";
+		for(var i =0; i < contacter.length; i++){
+			
+			html += '<table class="tb" cellspacing="1" border="1">';
+			html += '<tr>';
+			html += '<td class="tdTitle">姓名</td>';
+			html += '<td class="tdContent">'+contacter[i].name+'</td>';
+			html += '<td class="tdTitle">性别</td>';
+			if(contacter[i].sex == 0){
+				html += '<td class="tdContent">先生</td>';
+			} else {
+				html += '<td class="tdContent">女士</td>';
+			}
+			html += '</tr>';
+			html += '<tr>';
+			html += '<td class="tdTitle">职位</td>';
+			html += '<td class="tdContent">'+contacter[i].position+'</td>';
+			html += '<td class="tdTitle">手机</td>';
+			html += '<td class="tdContent">'+contacter[i].mobilePhone+'</td>';
+			html += '</tr>';
+			html += '<tr>';
+			html += '<td class="tdTitle">QQ</td>';
+			html += '<td class="tdContent">'+(contacter[i].qq == null ? "" : contacter[i].qq)+'</td>';
+			html += '<td class="tdTitle">固话</td>';
+			html += '<td class="tdContent">'+(contacter[i].telephone == null ? "" : contacter[i].telephone)+'</td>';
+			html += '</tr>';
+			html += '<tr>';
+			html += '<td class="tdTitle">邮箱</td>';
+			html += '<td class="tdContent">'+(contacter[i].email == null ? "" : contacter[i].email)+'</td>';
+			html += '<td class="tdTitle">交易身份</td>';
+			html += '<td class="tdContent">';
+			//0 采购 1销售  2都有
+			if(contacter[i].tidentity == 0){
+				html += '<a href="javascript:;" class="tidentity cdPurchase">采购</a>';
+			} else if(contacter[i].tidentity == 1){
+				html += '<a href="javascript:;" class="tidentity cdSell">销售</a>';
+			} else if(contacter[i].tidentity == 2){
+				html += '<a href="javascript:;" class="tidentity cdPurchase">采购</a>';
+				html += '<a href="javascript:;" class="tidentity cdSell">销售</a>';
+			}
+			html += '</td>';
+			html += '</tr>';
+			html += '</table>';
+			html += '<div class="entrust">';
+			html += '<em>';
+			html += '<a href="javascript:;" class="btn btn-xs blue ctEdit" ctId='+contacter[i].id+'>';
+			html += '<i class="fa fa-edit"></i> 编辑';
+			html += '</a> ';
+			html += '<a href="javascript:;" class="btn btn-xs green ctDel" ctId='+contacter[i].id+'>';
+			html += '<i class="fa fa-trash-o"></i> 删除';
+			html += '</a> &nbsp;';
+			html += '<i class="fa fa-user"></i>'+contacter[i].updatedUserName+'  &nbsp;';
+			html += '<i class="fa fa-clock-o"></i>'+new Date(contacter[i].updatedAt).format("yyyy-MM-dd hh:mm:ss")+'';
+			html += '</em>';
+			html += '</div>';
+			html += '<br>';
+			html += '<br>';
+		}
+		$("#ctBody").html(html);
+		
+		//可编辑状态
+		$(".ctEdit").each(function(index, element){
+			$(element).click(function(){
+				var id = $(element).attr("ctId");
+				document.location.href=contextPath + "/contacter/contacterModify.do?id=" + id;
+			});
+		});
+		//确认删除
+		$(".ctDel").each(function(index, element){
+			$(element).click(function(){
+				var id = $(element).attr("ctId");
+				CommonUtils.confirm("确认","将删除该联系人信息", "delRecord("+id+")");
+			});
+		});
+		
+		$("#addContacter").click(function(){
+			document.location.href= contextPath + "/contacter/contacterModify.do?customerId="+id +"&companyName="+companyName;
+		});
+		
+	});
+	//删除操作
+	function delRecord(id){
+		$.get("deleteContacterById.do",{"id":id},function(data){
+			if(data="success"){
+				alert("删除成功");
+				$("#contactersA").click();
+			}
+		});
+	}
+	
+</script>

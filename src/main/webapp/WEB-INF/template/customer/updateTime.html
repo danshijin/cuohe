@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- 模态窗口编辑模板 -->
+<form action="" id="myform" class="form-horizontal form-bordered" novalidate="novalidate" method="post">
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;">跳过</h4>
+</div>
+<style>
+	#tab tr td{
+		text-align:left;
+		padding:0;
+	}
+	#tab tr td label{
+		text-align:left;
+		width:100%;
+		height:100%;
+		padding:.2em;
+		padding-left:15px;
+	}
+</style>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+	<div class="modal-body" id="div'">
+		<div align="left" id="divlist">
+		<input type="hidden"  id="id"  name="id" value="${id!}" >
+		下次采购日期：<input type="text" onClick="WdatePicker()" id="remindTime" value="${remindTime!}" name="remindTime" >
+		
+	</div>
+	
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer">
+	<button type="button" class="btn default fa fa-times" data-dismiss="modal"> 取消</button>
+	<button type="button" onclick="saveTiaoGuo()" class="btn green  fa fa-check"> 确定</button>
+</div>
+<!-- 结束 -->
+</form>
+<!-- 业务处理开始 -->
+<script>
+
+	function saveTiaoGuo(){
+		var id=	$("#id").val();
+		var remindTime=	$("#remindTime").val();
+		$.ajax({
+			type : "post",
+			url : BASE_URL + "/notes/tiaoguo.do",
+			data:{
+				"id":id,
+				"remindTime":remindTime
+			},
+			dataType : "json",
+			success : function(res) {
+				if(res.code=="ok"){
+					alert("跳过成功");
+					window.location.href=BASE_URL + "/user/loginSucc.do";
+				}else if(res.code=="remindTimeErron"){
+					alert("跳过失败,下次采购时间 必须大于当前日期");
+				}else {
+					alert("跳过失败");
+				}
+				
+			}
+		});
+		
+	}
+</script>

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.smm.cuohe.dao.IDiscussChatDAO">
+
+<select id="getDealMakerForConversation" resultType="java.util.Map">
+	CALL getDealMakerForConversation(#{customerId}, #{lastToken}, #{customerProduct}, #{customerItemId},#{sysTime,jdbcType=TIMESTAMP});
+</select>
+<insert id="insert" parameterType="com.smm.cuohe.domain.Chats" >
+
+    insert into ch_chats (itemId, token, 
+      <if test="customId != null and customId != 0" >
+        customId,
+      </if>
+      <if test="customerName != null and customerName != ''" >
+        customerName,
+      </if>
+       employeeId,
+       
+       <if test="companyId != null" >
+			customerId,
+		</if>
+		<if test="companyName != null" >
+			companyName,
+		</if>
+		<if test="sellId != null" >
+			sellId,
+		</if>
+		<if test="source != null" >
+			source,
+		</if>
+       sessionId, 
+      productId, ip, url, urlName, 
+      status, createdAt, updatedAt,onlineTime)
+    values (#{itemId,jdbcType=INTEGER}, #{token,jdbcType=VARCHAR},
+      <if test="customId != null and customId != 0" >
+        #{customId,jdbcType=INTEGER},
+      </if>
+      <if test="customerName != null and customerName != ''" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      #{employeeId,jdbcType=INTEGER},
+		<if test="companyId != null" >
+		#{companyId,jdbcType=INTEGER},
+		</if>
+		<if test="companyName != null" >
+			#{companyName,jdbcType=VARCHAR},
+		</if>
+		<if test="sellId != null" >
+			#{sellId, jdbcType=INTEGER},
+		</if>
+		<if test="source != null" >
+			#{source, jdbcType=INTEGER},
+		</if>
+      #{sessionId,jdbcType=VARCHAR},
+      #{productId,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{urlName,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP},#{onlineTime,jdbcType=TIMESTAMP})
+  </insert>
+    
+  <select id="getConversationByToken" parameterType="java.lang.String" resultType="com.smm.cuohe.domain.Chats">
+  
+  	select * from ch_chats where token = #{token}
+  
+  </select>
+  
+  <select id="getChatsForCustomerByToken" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.DiscussChatRecord">
+  	
+  	select * from ch_discuss_chat_record  as chat
+  	where chatId = (select id from ch_chats where token = #{token})
+  	and id > #{lastid}
+<!--   	and createdAt > (select updatedAt from ch_chats where token = #{token}) -->
+  	and chatFromType = 'U'
+  	order by createdAt asc;
+  	
+  </select>
+  
+  <select id="getConversationsForDealMaker" resultType="com.smm.cuohe.domain.Chats">
+  	SELECT *,onlineTime is not null and DATE_ADD(onlineTime, INTERVAL 30 SECOND)>#{sysDate,jdbcType=TIMESTAMP} AS onlineType
+  	FROM ch_chats AS c LEFT JOIN (
+		SELECT r.id as recordId, chatId, TYPE AS lrType, content AS lrContent, price AS lrPrpice, volumn AS lrVolumn, chatFromType AS lrChatFromType, chatFromId AS lrChatFromId, STATUS AS lrStatus, employeeId AS lrEmployeeId, createdAt AS lrCreatedAt  
+		FROM (
+				SELECT MAX(id) AS id FROM ch_discuss_chat_record GROUP BY chatId
+			) AS t LEFT JOIN ch_discuss_chat_record AS r ON t.id = r.id
+		) AS s  ON c.id = s.chatId
+  	WHERE c.itemId= #{itemId} and c.employeeId=#{employeeId} and (onlineTime is not null and DATE_ADD(onlineTime, INTERVAL 30 SECOND) > #{sysDate,jdbcType=TIMESTAMP});
+  	
+  </select>
+  
+  <select id="getChatOnline" resultType="com.smm.cuohe.domain.Chats">
+    SELECT *,onlineTime is not null and DATE_ADD(onlineTime, INTERVAL 30 SECOND)>#{sysDate,jdbcType=TIMESTAMP} AS onlineType
+  	FROM ch_chats AS c LEFT JOIN (
+		SELECT r.id as recordId, chatId, TYPE AS lrType, content AS lrContent, price AS lrPrpice, volumn AS lrVolumn, chatFromType AS lrChatFromType, chatFromId AS lrChatFromId, STATUS AS lrStatus, employeeId AS lrEmployeeId, createdAt AS lrCreatedAt  
+		FROM (
+				SELECT MAX(id) AS id FROM ch_discuss_chat_record GROUP BY chatId
+			) AS t LEFT JOIN ch_discuss_chat_record AS r ON t.id = r.id
+		) AS s  ON c.id = s.chatId
+    where  c.itemId= #{itemId} and c.employeeId=#{employeeId} 
+    <if test="flagDate!=null">
+    and TIMEDIFF(updatedAt,#{flagDate,jdbcType=TIMESTAMP})>0
+    </if>
+  </select>
+  
+  <select id="getChatoffline" resultType="com.smm.cuohe.domain.Chats">
+   SELECT *,onlineTime is not null and DATE_ADD(onlineTime, INTERVAL 30 SECOND)>#{sysDate,jdbcType=TIMESTAMP} AS onlineType
+  	FROM ch_chats AS c LEFT JOIN (
+		SELECT r.id as recordId, chatId, TYPE AS lrType, content AS lrContent, price AS lrPrpice, volumn AS lrVolumn, chatFromType AS lrChatFromType, chatFromId AS lrChatFromId, STATUS AS lrStatus, employeeId AS lrEmployeeId, createdAt AS lrCreatedAt  
+		FROM (
+				SELECT MAX(id) AS id FROM ch_discuss_chat_record GROUP BY chatId
+			) AS t LEFT JOIN ch_discuss_chat_record AS r ON t.id = r.id
+		) AS s  ON c.id = s.chatId
+    where
+    c.itemId= #{itemId} and c.employeeId=#{employeeId} 
+    and ( TIMEDIFF(DATE_ADD(onlineTime, INTERVAL 30 SECOND),#{flagDate,jdbcType=TIMESTAMP})&gt;=0   <!-- >大于 -->
+    and  TIMEDIFF(DATE_ADD(onlineTime, INTERVAL 30 SECOND),#{sysDate,jdbcType=TIMESTAMP})&lt;=0)   <!-- <小于 -->
+  </select>
+  
+  <update id="updateTimeByToken">
+   update ch_chats SET updatedAt = #{sysTime},onlineTime = #{sysTime} WHERE token = #{token}; 
+  </update>
+
+  <select id="getChatsForDealMaker" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.DiscussChatRecord">
+  	
+  	select * from ch_discuss_chat_record where 
+  	chatId = #{chatId}
+  	<if test ="recordId != null">
+  	  and id > #{recordId}
+  	</if>
+  	<if test ="customId != null">
+  	and (chatFromId = #{customId} and chatFromType ='C')
+  	</if>
+  	order by id desc
+  	
+  </select>
+  
+  <select id="mergeConversationForCustomer" parameterType="java.util.Map" resultType="int">
+  
+  	CALL mergeConversationForCustomer(#{uid}, #{token}, #{customerName}, #{companyId}, #{companyName}, #{sysTime,jdbcType=TIMESTAMP});
+  	
+  </select>
+  
+  <select id="countConversationByStatusAndCustomIdForDealMaker" parameterType="int" resultType="int">
+  
+  	select count(1) from ch_chats where customId = #{customId} and status = #{status}
+  	
+  
+  </select>
+  
+  <select id="countConversationByCustomIdAndItemIdForDealMaker" parameterType="java.util.Map" resultType="int">
+  
+  	select count(1) from ch_chats where customId = #{customId} and itemId=#{itemId};
+  	
+  </select>
+  
+  <select id="countHistoryOrder" resultType="int">
+  
+  	select count(1) from ch_orders where (mall_seller_account = #{customerName} or mall_buyer_account = #{customerName}) and OrderStatus = 1
+  	
+  	<if test="itemId!=null">and itemId= #{itemId}</if>
+  
+  </select>
+  
+  <select id="updateConversationStatusForDealMaker" parameterType="java.util.Map" resultType="int">
+  
+  	CALL updateConversationStatus(#{chatId}, #{dealMakerId}, #{status});
+  	
+  </select>
+  
+  <select id="getMyTeamInfo" resultType="java.util.Map">
+  
+  	select id as employeeId, name, online from ch_users where itemId = #{itemId} and id != #{dealMakerId} order by online desc;
+  
+  </select>
+
+  <select id="generateOrderByDealMaker" parameterType="com.smm.cuohe.domain.Order" resultType="int">
+  
+	CALL generateOrderByDealMaker(
+	
+		#{order.itemId, jdbcType=INTEGER},
+		
+        #{order.sellId, jdbcType=INTEGER},
+        
+        #{order.buyId, jdbcType=INTEGER},
+        
+        #{order.delivery, jdbcType=INTEGER},
+        
+        #{order.payment, jdbcType=INTEGER},
+        
+        #{order.ware_province, jdbcType=INTEGER},
+        
+        #{order.ware_name, jdbcType=VARCHAR},
+        
+        #{order.deliveryDate, jdbcType=DATE},
+        
+        #{order.poundDiff, jdbcType=INTEGER},
+        
+        #{order.ttype, jdbcType=INTEGER},
+        
+        #{order.status, jdbcType=INTEGER},
+        
+        #{order.source, jdbcType=INTEGER},
+        
+        #{order.createdBy, jdbcType=INTEGER},
+        
+        #{chatId},
+        
+        #{customId}
+        
+	);
+  
+  </select>
+
+  <update id="updateOrderStatusForDealMaker" parameterType="java.util.Map" >
+	
+    update ch_orders set status = #{status} where id = #{orderId};
+    
+  </update>
+
+  <select id="transferConversationByDealMaker" resultType="int">
+  
+    CALL transferConversationByDealMaker(#{conversationId}, #{currDealMakerId}, #{destDealMakerId}, #{sysTime});
+  
+  </select>
+  
+  <select id="getContractMallUrl" resultType="java.lang.String">
+  
+  	select mallUrl from ch_contract where orderId = (select orderId from ch_chats where customId = #{customerId} and token = #{token});
+  
+  </select>
+  
+  <update id="closeConversationForCustomer" parameterType="java.lang.String">
+  
+  	update ch_chats set status = 4 where token = #{token};
+  
+  </update>
+
+  <update id="customOnline">
+  
+    update ch_chats set onlineTime = #{sysTime,jdbcType=TIMESTAMP} where token = #{token};
+  
+  </update>  
+  
+  <select id="getChatByToken" parameterType="java.lang.String" resultType="java.util.Map">
+  
+  	SELECT c.id, c.customerName, c.companyName, MAX(r.id) lastId FROM ch_chats c LEFT JOIN ch_discuss_chat_record r ON c.id = r.chatId  WHERE token = #{token};
+  
+  </select>
+
+  <update id="customerConfirmContract">
+  
+  	UPDATE ch_orders o LEFT JOIN ch_contract c ON o.id = c.orderId SET c.confirmedAt = #{sysTime,jdbcType=TIMESTAMP}, o.confirmStatus = 2 WHERE o.orderCode = #{orderNo};
+  
+  </update>
+  
+  <update id="updateOnlineStatusByDealMaker" >
+  
+  	update ch_users set online = #{online} , offTime= #{sysTime,jdbcType=TIMESTAMP} where id=#{dealMakerId};
+  
+  </update>
+  
+  <select id="getUserForGenerateOrder" parameterType="int" resultType="com.smm.cuohe.domain.User">
+  
+  	select * from ch_users where id = (select employeeId from ch_chats where id = #{chatId});
+  
+  </select>
+  
+  <select id="getItemById" parameterType="int" resultType="com.smm.cuohe.domain.Items">
+  
+  	select * from ch_items where id = #{itemId};
+  
+  </select>
+  
+  <select id ="hasCustomerByAccount" resultType="java.util.Map">
+  
+  	select id,account, companyName, companyPhone, createdAt from ch_customs where  account = #{account} and itemId = #{itemId} and companyName = #{companyName} ;
+  
+  </select>
+  
+  <update id="updateChatWhenSellIdChange">
+  
+  	update ch_chats set sellId = #{sellId}, url = #{url}, urlName = #{urlName},updatedAt=#{sysTime,jdbcType=TIMESTAMP},onlineTime=#{sysTime,jdbcType=TIMESTAMP}  where token = #{token};
+  
+  </update>
+  
+  <update id="changeChatOrderStatusToFinish" parameterType="java.lang.String">
+  
+  	update ch_chats set status = 1 where orderId = (select id from ch_orders where orderCode = #{orderno})
+  
+  </update>
+  <update id="updateSellPoolToClose" parameterType="java.lang.String">
+	
+	update ch_sell_pool set isClose = 1 where id = (select source_id from ch_orders where orderCode = #{orderNo});
+	
+  </update>
+  
+</mapper>

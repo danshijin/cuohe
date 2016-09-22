@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!-- 模态窗口编辑模板 -->
+<form action="" id="myform" class="form-horizontal form-bordered" novalidate="novalidate" method="post">
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;">订单编号:${(order.orderCode)!''}</h4>
+</div>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body">
+	<div class="portlet-body form">
+		<form role="form" class="form-horizontal" id="myForm">
+		<input type="hidden" id="ispledge" value="${order.ispledge}">
+		<input type="hidden" id="pledgeprice" value="${order.pledgeprice}">
+		<input type="hidden" id="serviceprice" value="${order.serviceprice}">
+			<div class="form-body">
+				<div class="form-group form-md-radios">
+					<div>
+						<div style="margin-left: 20px;">
+						<b>卖方</b>
+						<table class="ttTblNoBorder" style="width:100%;">
+							<tr>
+								<td style="width:100px;">企业名称:</td>
+								<td>${(sell.com_name)!''}</td>
+							</tr>
+							<tr>
+								<td>&nbsp;&nbsp;&nbsp;联系人:</td>
+								<td>${(sell.con_name)!''}</td>
+							</tr>
+							<tr>
+								<td>联系电话:</td>
+								<td>${(sell.mobilePhone)!''}</td>
+							</tr>
+							<tr>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;地址:</td>
+								<td>${(sell.address)!''}</td>
+							</tr>
+						</table>
+						<br />
+						<b>买方</b>
+						<table class="ttTblNoBorder" style="width:100%;">
+							
+							<tr>
+								<td style="width:100px;">企业名称:</td>
+								<td>${(buy.com_name)!''}</td>
+							</tr>
+							<tr>
+								<td>&nbsp;&nbsp;&nbsp;联系人:</td>
+								<td>${(buy.con_name)!''}</td>
+							</tr>
+							<tr>
+								<td>联系电话:</td>
+								<td>${(buy.mobilePhone)!''}</td>
+							</tr>
+							<tr>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;地址:</td>
+								<td>${(buy.address)!''}</td>
+							</tr>
+						</table>
+						</div>
+						<br>
+						<table class="ttTbl" cellspacing="1" border="1" id="tb_order_detail" style="text-align:center;">
+							<thead id="ttHead">
+
+							</thead>
+							<tbody class="ttTbody">
+							</tbody>
+						</table>
+						<div style="text-align:right; width:100%;">总计金额 ： <span style="color:red;font-size:20px;" id="totalPrice"></span>&nbsp;元</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer">
+	<#if ifExistContract gte 1><button type="button" onclick="viewContract()" id="viewContract" class="btn green fa">查看合同</button></#if>
+	<#if order.confirmStatus == 1 && order.orderStatus == 0><button type="button" onclick="cancelOrder(0)" id="cancelOrderBtn" class="btn green  fa fa-check"> 撤单</button></#if>
+	<button type="button" id="ttClose" class="btn default fa fa-times" data-dismiss="modal"> 关闭</button>
+</div>
+<!-- 结束 -->
+</form>
+<!-- 业务处理开始 -->
+<script src="${request.getContextPath()}/Public/js/customerDetail/jQuery.formatMoney.js" type="text/javascript"></script>
+<script>
+	var orderId = '${(order.id)!''}';
+	function viewContract(){
+		window.location.href= BASE_URL + "/contract/generateContractByTemplate.do?orderId=" + orderId;
+	}
+	
+	function cancelOrder(flag){
+		if(flag==0){
+			CommonUtils.confirm("确认","您确定要撤消该笔订单么？", "cancelOrder(1)");
+			return;
+		}else if(flag==1){
+			if(orderId){
+				$.ajax({
+					type : "POST",
+					url : BASE_URL + "/customerDetail/orderRecord/cancelOrder.do?orderId="+orderId,
+					dataType : "json",
+					success : function(res) {
+						
+						if(res.code==1){
+							$("#static").modal('hide');
+	        				$("#static").empty();
+	        				$(".editModal").modal('hide');
+	        				$(".editModal").empty();
+	        				var goUrl=window.location.href;
+							CommonUtils.succModal2("系统提示","撤单成功",goUrl);
+						}else{
+							$("#static").modal('hide');
+	        				$("#static").empty();
+							CommonUtils.succModal("系统提示","撤单失败");
+						}
+					}
+				});
+			}
+		}
+	}
+	
+	function getUnit(unit){
+		if(unit==0){
+			return '吨';
+		}else if(unit==1){
+			return '千克';
+		}
+		return '';
+	}
+	
+	function getAmount(quantity,price){
+		if(quantity>0&&price>0){
+			return quantity*price;
+		}
+		return 0;
+	}
+	
+	$(function(){
+		
+		
+		var datas = $.parseJSON('${(list)!'[]'}');
+		var sum = 0;
+		var amount = 0;
+		
+		var headHtml = '';
+		headHtml += '<tr >';
+		headHtml += '<th>产品名称</th>';
+		var attrArr = getAllExpendAttribute(datas);
+		for(var i = 0; i < attrArr.length; i++){
+			headHtml += '<th>'+attrArr[i]+'</th>';
+		}
+		headHtml += '<th>计量单位</td>';
+		headHtml += '<th>数量</td>';
+		headHtml += '<th>单位/元</td>';
+		headHtml += '<th>总金额/元</td>';
+		if ($("#ispledge").val() == 1) {
+			headHtml += '<th>质押款/元</td>';
+			headHtml += '<th>服务费/元</td>';
+		}
+		headHtml += '</tr>';
+		$("#ttHead").empty().html(headHtml);
+		var html = '';
+		for(var i=0;i<datas.length;i++){
+			var obj = datas[i];
+
+			amount = getAmount(obj.quantity,obj.price);
+			html += '<tr>';
+			html += '<td class="">'+ (obj.name||'') +'</td>';
+			
+			for(var j = 0; j < attrArr.length; j++){
+				html += '<td class="">'+ getAttrValueByAttrName(obj.commodityAttrList, attrArr[j]) +'</td>';
+			}
+			
+			html += '<td>'+ (getUnit(obj.unit)) +'</td>';
+			html += '<td>'+ (obj.quantity||'') +'</td>';
+			html += '<td>'+ (obj.price||'') +'</td>';
+			html += '<td>'+ $.formatMoney(amount)+'</td>';
+			if ($("#ispledge").val() == 1) {
+				html += '<td>'+ $.formatMoney($("#pledgeprice").val())+'</td>';
+				html += '<td>'+ $.formatMoney($("#serviceprice").val())+'</td>';
+			}
+			html += '</tr>';
+			sum += amount;
+			/* if ($("#ispledge").val() == 1) {
+				sum += Number($("#pledgeprice").val());
+				sum += Number($("#serviceprice").val());
+			} */
+			
+		}
+		$('.ttTbody').html(html);
+		$("#totalPrice").text("￥" + $.formatMoney(sum));
+	});
+	function getAllExpendAttribute(data){
+		var rlt = [];
+		var hash = {};  //用以存放可能存在的对象属性，用法是对象属性不会重复，将数组中的所有元素使用对象属性进行排重
+		for(var i = 0; i < data.length; i++){
+			if((typeof data[i].commodityAttrList != "undefined")){
+				for(var j = 0; j< data[i].commodityAttrList.length; j++){
+					var ele = data[i].commodityAttrList[j]["attrName"];
+					if(!hash[ele]){
+						rlt.push(ele);
+						hash[ele] = true;
+					}
+				}
+			}
+		}
+		return rlt;
+	}
+	function getAttrValueByAttrName(commodityAttrList, attrName){
+		if(commodityAttrList == "undefined") return "";
+		for(var i =0; i < commodityAttrList.length; i++){
+			
+			if(commodityAttrList[i]["attrName"] == attrName){
+				return commodityAttrList[i]["attrValue"];
+			}
+		}
+		return "";
+	}
+	
+</script>

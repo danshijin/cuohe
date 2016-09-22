@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.IBusinessDAO">
+	
+	<resultMap type="com.smm.cuohe.domain.CommodityAttr" id="buyingAttr">
+	
+		<id property="id" column="id" jdbcType="INTEGER"/>
+		
+		<result property="attrId" column="attr_id" jdbcType="INTEGER" />
+		
+		<result property="attrValue" column="attr_value" jdbcType="VARCHAR" />
+		
+		<result property="attrName" column="attr_name" jdbcType="VARCHAR" />
+		
+		<result property="commodityName" column="pro_name" jdbcType="VARCHAR" />
+		
+		<result property="createTime" column="create_time" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+	<resultMap type="com.smm.cuohe.domain.BusinessOffer" id="BuyBusinessOfferView">
+	
+		<result property="id" column="id" />
+		
+		<collection property="attr" column="id" select="getBuyPoolAttr" />
+		
+		<collection property="contacters" column="customerId" select="getContactersForBusiness" />
+		
+	</resultMap>
+	
+	<resultMap type="com.smm.cuohe.domain.BusinessOffer" id="SellBusinessOfferView">
+	
+		<result property="id" column="id" />
+		
+		<collection property="attr" column="commodity_id" select="com.smm.cuohe.dao.ICommodityAttrDAO.getCommidtyAttrByCommodityId" />
+		
+		<collection property="contacters" column="customerId" select="getContactersForBusiness" />
+		
+	</resultMap>
+	
+	<select id="getContactersForBusiness" parameterType="int" resultType="com.smm.cuohe.domain.Contacter">
+	
+		select id, name, mobilePhone, email from ch_contacter where customerId = #{customerId};
+	
+	</select>
+	
+	
+	<select id="getBuyPoolAttr" parameterType="int" resultMap="buyingAttr">
+	
+		select id, attr_id, attr_value, attr_name, pro_name, create_time
+		from ch_buying_attrs where buying_id = #{id};
+		
+	</select>
+	
+	<select id="getBuyPoolBusiness" resultMap="BuyBusinessOfferView">
+	
+		select f.id,
+			   2 as poolType,
+			   '采购' as poolTypeText,
+			   customerId,
+			   getCompanyNameById(customerId) as companyName,
+			   priceType,
+			   price,
+			   f.createSource as createSource,
+			   CONCAT(CASE priceType WHEN 1 THEN '升贴水' WHEN 2 THEN '贴' ELSE '实价' END, ' ', CONVERT(price, char)) as priceText,
+			   (select count(1) from ch_pool_price where poolId = f.id  <if test="sp.type==null or sp.type!=3 ">
+		   		 and status = 0 
+		 		</if>
+		 		<if test="sp.type==3 ">
+		   		and status = 1 
+		 		</if> and poolType = 2) as counterNum,
+			   ware_name as wareName,
+			   f.createdAt as publishTime,
+			   lastPriceType,
+			   lastPrice,
+			   CONCAT(CASE priceType WHEN 1 THEN '升贴水' WHEN 2 THEN '贴' ELSE '实价' END, ' ', CONVERT(lastPrice, char)) as lastPriceText,
+			   lastCustomerId,
+			   h.companyName as lastCustomerName,
+			   lastTime,
+			   isConfirm,
+			   orId as orderId,
+			   quantity,
+			   isClose,
+			   f.status
+		 from ch_buy_pool  f
+		 LEFT JOIN ch_customs c on  c.id = f.customerId  
+		 LEFT JOIN (SELECT id orId, source_id  FROM ch_orders WHERE source = 1 GROUP BY source_id) tt ON f.id = tt.source_id   <!-- 订单来源：0：从卖盘生成，1:从买盘生成，2:从供应商客户生成，3:从采购商客户生成 4:从客户端生成 -->
+		
+		 LEFT JOIN ch_customs h on  f.lastCustomerId = h.id	
+		
+		
+		<!-- 买盘的来源0：买卖盘新建 买卖盘提交订单新建 1：撮合交易管理新建，商城用户自己新建，客户端提交订单新建 ； -->
+		 where f.itemsId = #{itemId} and f.createSource in(1,2)
+			<if test="sp.attribute==null or  sp.attribute=='' or sp.content==null or  sp.content=='' ">
+		 	 and to_days(f.createdAt) = to_days(now())	
+		   </if>
+		  <if test="sp.type!=3 ">
+		   		and f.Status = 0
+		    <!-- 报盘谁创建的：0 全部，1 本人创建，2 部门创建，全部 -->
+		    <if test="sp.type==1">
+		    	and f.createdBy = #{sp.userId}
+		    </if>
+		  </if>
+		  <if test="sp.type == 3 ">
+		   and f.Status = 1
+		  </if>
+		<!--  <include refid="queryView"></include> -->
+		<include refid="contacterQueryConditions" />
+		<!-- <include refid="mysqlPageSearchFoot" /> -->
+		
+		order by f.createdAt desc
+	</select>
+	
+	<select id="getSellPoolBusiness" resultMap="SellBusinessOfferView">
+	
+		select f.id,
+			   1 as poolType,
+			   '销售' as poolTypeText,
+			   customerId,
+			   getCompanyNameById(customerId) as companyName,
+			   priceType,
+			   price,
+			   f.status,
+			   f.createSource as createSource,
+			   CONCAT(CASE priceType WHEN 1 THEN '升贴水' WHEN 2 THEN '贴' ELSE '实价' END, ' ', CONVERT(price, char)) as priceText,
+			   (select count(1) from ch_pool_price where poolId = f.id 
+			    <if test="sp.type==null or sp.type!=3 ">
+		   		and status = 0 
+		 		</if>
+		 		<if test="sp.type==3 ">
+		   		and status = 1 
+		 		</if>
+			   and poolType = 1) as counterNum,
+			   ware_name as wareName,
+			   f.createdAt as publishTime,
+			   lastPriceType,
+			   lastPrice,
+			   CONCAT(CASE priceType WHEN 1 THEN '升贴水' WHEN 2 THEN '贴' ELSE '实价' END, ' ', CONVERT(lastPrice, char)) as lastPriceText,
+			   lastCustomerId,
+			   h.companyName as lastCustomerName,
+			   lastTime,
+			   isConfirm,
+			   orId orderId,
+			   commodity_id,
+			   quantity,
+			   isClose
+		 from ch_sell_pool f
+		 LEFT JOIN ch_customs c on  c.id = f.customerId 
+		 LEFT JOIN (SELECT id orId, source_id  FROM ch_orders WHERE source = 0 GROUP BY source_id) tt ON f.id = tt.source_id
+		 
+		 LEFT JOIN ch_customs h on  f.lastCustomerId = h.id	
+		 
+		 <!-- 卖盘的来源0：买卖盘新建 买卖盘提交订单新建 1：撮合交易管理新建，商城用户自己新建，客户端提交订单新建 ；2 -->
+		 where f.itemsId = #{itemId} and source = 0  and f.createSource in(1,2)
+			<if test="sp.attribute==null or  sp.attribute=='' or sp.content==null or  sp.content=='' ">
+		 	 and to_days(f.createdAt) = to_days(now())	
+		   </if>
+		  <if test="sp.type!=3 ">
+			   and f.status = 0 
+			    <!-- 报盘谁创建的：0 全部，1 本人创建，2 部门创建，全部 -->
+		    <if test="sp.type==1">
+		    	and f.createdBy = #{sp.userId}
+		    </if>
+		   
+		  </if>
+		  <if test="sp.type == 3 ">
+		   		and f.status = 1
+		  </if>
+		 <!-- <include refid="queryView"></include> -->
+		<include refid="contacterQueryConditions" />
+		
+		order by f.createdAt desc
+	</select>
+	
+	<update id="closeOffer">
+		UPDATE 
+		<if test="poolType == 1"> <!-- 卖盘 -->
+			ch_sell_pool 
+		</if>
+		<if test="poolType == 2"> <!-- 卖盘 -->
+			ch_buy_pool 
+		</if>
+		pool, ch_pool_price pp SET pool.status = 1, pp.status = 1 WHERE pool.id = #{poolId} AND pp.poolId = #{poolId};
+	</update>
+	
+	<update id="closeOfferNoCounter">
+	
+		UPDATE 
+		<if test="poolType == 1"> <!-- 卖盘 -->
+			ch_sell_pool 
+		</if>
+		<if test="poolType == 2"> <!-- 卖盘 -->
+			ch_buy_pool 
+		</if>
+		SET status = 1 WHERE id = #{poolId};
+	
+	</update>
+	
+	<update id="restoreOffer">
+		UPDATE 
+		<if test="poolType == 1"> <!-- 卖盘 -->
+			ch_sell_pool 
+		</if>
+		<if test="poolType == 2"> <!-- 卖盘 -->
+			ch_buy_pool 
+		</if>
+		pool set pool.status = 0 WHERE pool.id = #{poolId} 
+	</update>
+	
+	<update id="restoreOfferPoolPrice">
+		UPDATE  ch_pool_price   set status = 0 WHERE  poolId = #{poolId}
+	</update>
+	
+	<update id="restoreOfferNoCounter">
+	
+		UPDATE 
+		<if test="poolType == 1"> <!-- 卖盘 -->
+			ch_sell_pool 
+		</if>
+		<if test="poolType == 2"> <!-- 卖盘 -->
+			ch_buy_pool 
+		</if>
+		SET status = 0 WHERE id = #{poolId};
+	
+	</update>
+	
+	
+	<insert id="addItemPrice" parameterType="com.smm.cuohe.domain.ItemPrice">
+	
+		INSERT INTO ch_item_price(itemId, itemName, recommendType, recommend, highType, high, lowType, low, createdBy)
+		VALUES(#{itemId}, #{itemName}, #{recommendType}, #{recommend}, #{highType}, #{high}, #{lowType}, #{low}, #{createdBy})
+	
+	</insert>
+	
+	<!-- 獲取每天的交易指導價格 -->
+	<select id="getItemPrice" parameterType="java.util.HashMap" resultType="com.smm.cuohe.domain.ItemPrice" >
+	
+		SELECT * from ch_item_price 
+		
+		WHERE itemId =#{itemId}
+		
+		<if test=" dayStart != null">
+  			and cretedAt &gt;= #{dayStart}
+  		</if>
+  	
+	  	<if test="dayEnd != null">
+	  		and cretedAt &lt;= #{dayEnd}
+	  	</if>
+		
+		 GROUP BY cretedAt DESC 
+		 
+		 LIMIT 0,1
+		
+		
+	</select>
+	
+	<select id="addCounter" resultType="java.util.Map">
+	
+		call addCounter(#{counter.poolId}, #{counter.poolType}, #{counter.price}, #{counter.priceType}, #{counter.customerId}, #{counter.account}, #{itemId});
+
+	</select>
+	
+	<!--begin 修改修改报盘价格时，实价、升、贴价的校验  2015年12月11日上午10:26:02  @author zhangnan/张楠-->
+	
+		<!-- 获取还盘信息，用于修改还盘的校验 -->
+		<select id="getPoolList" parameterType="java.util.HashMap" resultType="com.smm.cuohe.domain.PoolPrice">
+			
+			SELECT * FROM ch_pool_price 
+			
+			WHERE poolId = #{poolId} and poolType = #{poolType} and status = 0
+			
+		</select>
+		
+		<!-- 符合条件后，修改还盘价格 -->
+		<update id="updPoolPrice" parameterType="java.util.HashMap">
+			
+			update ch_pool_price set price = #{price},updatedAt = NOW()
+			
+			WHERE id = #{poolPriceId}
+			
+		</update>
+		
+		<select id="getAccount" parameterType="java.util.HashMap" resultType="String">
+		
+			SELECT account FROM ch_customs where id = #{customerId};
+		
+		</select>
+		
+		<insert id="addCounterNew" parameterType="java.util.HashMap">
+		
+			INSERT INTO ch_pool_price
+			
+			(poolId, poolType, price, priceType, customerId, account, STATUS, createdAt, updatedAt)
+			
+			VALUES(#{poolId},#{poolType},#{price},#{priceType},#{customerId}, #{account}, 0, NOW(), NOW());
+		
+		</insert>
+		
+		<!-- 卖盘，每次还盘成功都要修改买卖盘的最后一次报价-->
+		<update id="updateSellLastPrice" parameterType="java.util.HashMap">
+			
+			update ch_sell_pool set id = #{poolId}
+			
+			<if test="price != null">
+			
+				,lastPrice=#{price}
+			
+			</if>
+			
+			<if test="isConfirm != null">
+			
+				,isConfirm=#{isConfirm}
+			
+			</if>
+			
+			<if test="customerId != null">
+			
+				,lastCustomerId=#{customerId}
+			
+			</if>
+			
+			<if test="lastCustomerName != null">
+			
+				,lastCustomerName=#{lastCustomerName}
+			
+			</if>
+			
+			<if test="lastMallAccount != null">
+			
+				,lastMallAccount=#{lastMallAccount}
+		
+			</if>
+			
+			<if test="priceType != null">
+				
+				,lastPriceType=#{priceType}
+			
+			</if>
+			
+			<if test="priceType != null">
+			
+				,priceType =#{priceType}
+			
+			</if>
+			
+			<if test="isClose != null">
+			
+				,isClose =#{isClose}
+			
+			</if>
+			
+			,lastTime = NOW()
+			
+			WHERE id = #{poolId}
+			
+		</update>
+		
+		<!-- 买盘，每次还盘成功都要修改买卖盘的最后一次报价-->
+		<update id="updateBuyLastPrice" parameterType="java.util.HashMap">
+		
+			update ch_buy_pool set id = #{poolId}
+			
+			<if test="price != null">
+			
+				,lastPrice=#{price}
+			
+			</if>
+			
+			<if test="priceType != null">
+			
+				,lastPriceType=#{priceType}
+			
+			</if>
+			
+			<if test="priceType != null">
+			
+				,priceType =#{priceType}
+			
+			</if>
+			
+			<if test="isConfirm != null">
+			
+				,isConfirm = #{isConfirm}
+			
+			</if>
+			
+			<if test="customerId != null">
+			
+				,lastCustomerId=#{customerId}
+			
+			</if>
+			
+			<if test="lastCustomerName != null">
+			
+				,lastCustomerName=#{lastCustomerName}
+			
+			</if>
+			
+			<if test="lastMallAccount != null">
+			
+				,lastMallAccount=#{lastMallAccount}
+			
+			</if>
+			
+			,lastTime = NOW()
+			
+			WHERE id = #{poolId}
+			
+		</update>
+		
+		<select id="getSellPoolPrice" parameterType="java.util.HashMap" resultType="com.smm.cuohe.domain.ChSellPool">
+		
+			SELECT * FROM ch_sell_pool where id = #{poolId};
+		
+		</select>
+		
+		<select id="getBuyPoolPrice" parameterType="java.util.HashMap" resultType="com.smm.cuohe.domain.ChBuyPool">
+		
+			SELECT * FROM ch_buy_pool where id = #{poolId};
+		
+		</select>
+		
+	<!--end 修改修改报盘价格时，实价、升、贴价的校验 -->
+	
+	<sql id="contacterQueryConditions">
+		<if test="sp.attribute != null and sp.attribute !=''">
+			and
+			${sp.attribute}
+			<if test="sp.operator == 1">
+				like '%${sp.content}%'
+			</if>
+			<if test="sp.operator == 2">
+				not like '%${sp.content}%'
+			</if>
+			<if test="sp.operator == 3">
+				= '${sp.content}'
+			</if>
+			<if test="sp.operator == 4">
+				!= '${sp.content}'
+			</if>
+			<if test="sp.operator == 5">
+				like '${sp.content}%'
+			</if>
+			<if test="sp.operator == 6">
+				like '%${sp.content}'
+			</if>
+			<if test="sp.operator == 7">
+				is null or ${sp.attribute} =''
+			</if>
+			<if test="sp.operator == 8">
+				is not null and ${sp.attribute} !=''
+			</if>
+		</if>
+	</sql>
+	
+	<sql id="mysqlPageSearchFoot">
+		<if test="sp._orderby != null">
+			ORDER BY ${sp._orderby} ${sp._order}
+		</if>
+		<if test="sp._start != null and sp._size != null">
+			LIMIT #{sp._start} ,
+			#{sp._size}
+		</if>
+	</sql>
+	
+	<sql id="queryView">
+	    <if test="sp.type==1">
+	      and  c.PIC=#{sp.userId} 
+	    </if>
+	</sql>
+	
+	<!-- 新增需求 商城交易、还盘、报盘的系统通知   -->
+		<!-- 查询某条报盘的还盘信息  -->
+		<select id="queryCurrentMaxPoolPrice" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.PoolPrice">
+				SELECT id,poolId,account,price,updatedAt FROM ch_pool_price where poolId = #{poolId} and status = 0 ORDER BY updatedAt DESC;
+		</select>
+		<!-- 查询商品 -->
+		<select id="queryChCommodityEntity" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.base.ChCommodityEntity">
+			SELECT a.id,a.name FROM ch_commodity  a
+
+			INNER JOIN  ch_sell_pool  b ON a.id = b.commodity_id
+			
+			WHERE b.id = #{poolId}
+		</select>
+		
+		<select id="queryChCommodityEntity_BuyPool"  parameterType="java.util.Map" resultType="com.smm.cuohe.domain.base.ChCommodityEntity">
+			SELECT a.pro_name as name FROM `ch_buying_attrs` a
+
+			INNER JOIN ch_buy_pool  b ON a.buying_id = b.id
+			
+			WHERE b.id = #{poolId} GROUP BY a.pro_name
+		
+		</select>
+		
+		<!-- 查询一家公司是否已经对某一还盘还盘  -->
+		<select id="getPoolListThisCompany" parameterType="java.util.HashMap" resultType="com.smm.cuohe.domain.PoolPrice">
+			
+			SELECT * FROM ch_pool_price 
+			
+			WHERE poolId = #{poolId} and poolType = #{poolType} and customerId = #{customerId} 
+			
+			and status = 0
+			
+		</select>
+		
+		<update id="updCounter" parameterType="java.util.HashMap">
+			
+			UPDATE ch_pool_price SET price = #{price},updatedAt =NOW() 
+			
+			where poolId = #{poolId} and poolType = #{poolType} and customerId = #{customerId}
+			
+			and status = 0
+		
+		</update>
+		
+		
+		<!-- 撮合交易管理选择单个报盘生成订单入口：“撮合订单”方式；生成订单后，报盘要关闭。2016年1月11日下午4:13:19 -->
+		
+		<update id="closeSellPool" parameterType="java.util.HashMap">
+		
+			UPDATE ch_sell_pool set isClose = #{isClose} where id = #{poolId}
+		
+		</update>
+		
+		
+		<update id="closeBuyPool" parameterType="java.util.HashMap">
+		
+			UPDATE ch_buy_pool set isClose = #{isClose} where id = #{poolId}
+		
+		</update>
+		
+		
+		<!-- 通过特殊方式"撮合订单"按钮 生成的订单，买盘什么都不修改，直接关闭(isClose)-->
+		<update id="updateBuyLastPrice_buyer" parameterType="java.util.HashMap">
+		
+			update ch_buy_pool set id = #{poolId_buyer}
+			
+			
+			<if test="isClose != null">
+			
+				,isClose =#{isClose}
+			
+			</if>
+			
+			WHERE id = #{poolId_buyer}
+			
+		</update>
+	
+</mapper>

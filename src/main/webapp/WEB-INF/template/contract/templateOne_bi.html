@@ -1,0 +1,100 @@
+<p style="text-align:center;"><strong><span style="font-size:24px;">精铋买卖合同</span></strong></p>
+<table id="ckTblNoBorder" >
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<tr>合同编号：${orderCode!''}</tr>
+	<tr>
+		<td>卖方： ${(contract.sell.companyName)!}</td>
+		<td>签订地点：${(contract.signMarket)!}</td>
+	</tr>
+	<tr>
+		<td>买方： <span id='saler'>${(contract.buy.companyName)!}</span></td>
+		<td>签订日期： <span id='buyer'>${nowDate?substring(0,4)}年${nowDate?substring(4,6)}月${nowDate?substring(6,8)}日</span></td>
+	</tr>
+</table>
+<br />
+<p>根据《中华人民共和国合同法》等法律规定，经供需双方友好协商，就卖方销售以下货物给买方，达成以下合约。</p>
+<p>一、产品名称、计价元素、计价模式、品质要求、单价等.</p>
+<!--SubOrderBegin-->
+<table id="ckTblBorderOne" style="">
+	<tr>
+		<td>产品名称</td>
+		<#if contract.extAttrOneTitle??>
+			<td>${contract.extAttrOneTitle}</td>
+		</#if>
+		<td>计量单位</td>
+		<td>数量</td>
+		<td>单价（元）</td>
+		<td>总金额（元）</td>
+		<td>备注</td>
+	</tr>
+	<#list contract.commodity as commodity>
+		<tr>
+			<td>${(commodity.name)!}</td>
+			<#if contract.extAttrOneTitle??>
+				<td>${(commodity.extAttrOne)!}</td>
+			</#if>
+			<td>${(commodity.unit)!}</td>
+			<td>${(commodity.quantity)!}</td>
+			<td>${(commodity.price)!}</td>
+			<td>${(commodity.totalPrice)!?string("#.##")}</td>
+			<td></td>
+		</tr>
+	</#list>
+</table>
+<!--SubOrderEnd-->
+<!--totalPriceBegin <p style="text-align:right;width:900px;">总计金额：<span style="color: red;">￥${(contract.sumPrice)!?string.number}</span> 元</p> totalPriceEnd-->
+<!-- 
+< br />
+<p>合计人民币金额(大写)：${(contract.sumPrice)!?string.number} （${(contract.sumPriceChs)!}） ，${(contract.deliveryTxt)!}。</p>
+<p>乙方应当于<u></u>前将全部合同价款支付于甲方。</p>
+<br /> 
+ -->
+<p>二、供货数量：<u>${allQuantity!''}</u>。</p>
+<!-- '付款方式 1款到发货 2货到付款', -->
+<p>三、交(提)货地点、交货方式：<u>${ware_Province!''}${(contract.ware_name)!}、<#if delivery ==1 >卖方送货<#else>买方自提</#if></u>。 </p>
+<p>四、交货日期：<u>${deliveryDate?substring(0,4)}年${deliveryDate?substring(4,6)}月${deliveryDate?substring(6,8)}日</u>。</p>
+<p>五、验收标准、符合精铋国际标准：在供方指定仓库共同取样，一式二份，双方各持一份，并封存公送样于销方，如有异议，购方将在收货后十日内书面提出，公样仲裁。</p>
+<!-- '结算方式 1:现款现汇，2,银行承兑，3有色网代收代付', -->
+<p>六、结算方式：<u><#if payment ==1 >现款现汇<#elseif payment ==2>银行承兑<#else>安全支付</#if></u>。 </p>
+<p>七、其它未尽事宜，双方友好协商解决，如需对合同进行修改和补充，只有通过双方授权代表签署的书面文件才能发生法律效力。</p>
+<p>八、违约责任：按照《合同法》和相关条款执行；买卖双方因合同发生争执，应协商解决，协商不成向需方所在地人民法院提起诉讼。</p>
+<p>九、解决合同争议的方式：卖方所在地人民法院诉讼。</p>
+<p>十、不可抗力：因不可抗力事件按本合同履行全部或部分义务的，免除违约方的全部或部分责任，但应在合同期内不可抗力发生后七日内通知对方，并立即提供有关机构出具的发生不可抗力的证明。</p>
+<p>十一、本合同双方签字盖章生效，一式二份，各执一份。传真件与原件同时具有法律效力。</p>
+
+<br />
+<table id="ckTblNoBorder" >
+	<tr>
+		<td>卖方</td>
+		<td>买方</td>
+	</tr>
+	<tr>
+		<td >单位名称（章）：<span id="saler1">${(contract.sell.companyName)!}</span> </td>
+		<td >单位名称（章）：<span id="buyer1">${(contract.buy.companyName)!}</span> </td>
+	</tr>
+	<tr>
+		<td >地址:<span id="address1">${(contract.sell.address)!}</span> </td>
+		<td>地址: ${(contract.buy.address)!}</td>
+	</tr>
+	<tr>
+		<td >法定代表人:<span id="legalperson1">${(contract.sell.corporate)!}</span></td>
+		<td>法定代表人:${(contract.buy.corporate)!}</td>
+	</tr>
+	<tr>
+		<td >委托代理人：<span id="agent1"></span>  </td>
+		<td>委托代理人：</td>
+	</tr>
+	<tr>
+		<td >电话：<span id="tel1">${(contract.sell.companyPhone)!}</span></td>
+		<td>电话：${(contract.buy.companyPhone)!}</td>
+	</tr>
+	<tr>
+		<td >传真：<span id="fax1"></span></td>
+		<td>传真：</td>
+	</tr>
+	<tr>
+		<td >账号：<span id="bankAccount1">${(contract.sell.bankAccount)!}</span></td>
+		<td>账号：${(contract.buy.bankAccount)!}</td>
+	</tr>
+</table>

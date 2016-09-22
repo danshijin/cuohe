@@ -1,0 +1,118 @@
+<p style="text-align:center;"><strong><span style="font-size:24px;">${contract.itemName}</span></strong></p>
+<table id="ckTblNoBorder" >
+	<tr>
+		<td>签订时间：${nowDate?substring(0,4)}年${nowDate?substring(4,6)}月${nowDate?substring(6,8)}日</td>
+		<td>签订地点：${(contract.signMarket)!}</td>
+	</tr>
+	<tr>
+		<td>甲方： <span id='saler'>${(contract.sell.companyName)!}</span></td>
+		<td>乙方： <span id='buyer'>	${(contract.buy.companyName)!}</span></td>
+	</tr>
+	<tr>
+		<td>电话： <span id="tel">${(contract.sell.companyPhone)!}</span></td>
+		<td>电话：   ${(contract.buy.companyPhone)!}</td>
+	</tr>
+	<tr>
+		<td>传真：<span id="fax" ></span> </td>
+		<td>传真：</td>
+	</tr>
+	<tr>
+		<td>地址：  <span id="address" > ${(contract.sell.address)!}</span></td>
+		<td>地址：   ${(contract.buy.address)!}</td>
+	</tr>
+</table>
+<br />
+<p>根据《中华人民共和国合同法》及相关法律法规的规定，甲、乙双方经过友好协商，就甲方向乙方销售产品事宜达成下列条款，特签订本合同，以资双方共同遵守履行。</p>
+<p>一、产品名称、规格、供货时间及数量 、付款方式：</p>
+<!--SubOrderBegin-->
+<table id="ckTblBorderOne" style="">
+	<tr>
+		<td>产品名称</td>
+		<#if contract.extAttrOneTitle??>
+			<td>${contract.extAttrOneTitle}</td>
+		</#if>
+		<td>计量单位</td>
+		<td>数量</td>
+		<td>单位/元</td>
+		<td>总金额/元</td>
+	</tr>
+	<#list contract.commodity as commodity>
+		<tr>
+			<td>${(commodity.name)!}</td>
+			<#if contract.extAttrOneTitle??>
+				<td>${(commodity.extAttrOne)!}</td>
+			</#if>
+			<td>${(commodity.unit)!}</td>
+			<td>${(commodity.quantity)!}</td>
+			<td>${(commodity.price)!}</td>
+			<td>${(commodity.totalPrice)!?string("#.##")}</td>
+		</tr>
+	</#list>
+</table>
+<!--SubOrderEnd-->
+<!--totalPriceBegin <p style="text-align:right;width:900px;">总计金额：<span style="color: red;">￥${(contract.sumPrice)!?string.number}</span> 元</p> totalPriceEnd-->
+
+<br />
+<p>合计人民币金额(大写)：${(contract.sumPrice)!?string.number} （${(contract.sumPriceChs)!}），<#if receipttype ==1 >款到发货<#else>货到付款</#if>。</p>
+<p>乙方应当于<u></u>前将全部合同价款支付于甲方。</p>
+<br />
+<p>二、质量要求技术标准、供方对质量负责的条件和期限:按国标执行，若对质量有任何异议，请在收货后 3 日内电告供方。</p>
+<p>三、交(提)货地点、方式：供方 <u>${(contract.ware_name)!}</u> 仓库，需方应付满全部货款后当日到指定地点，<u><#if delivery ==1 >卖方送货<#else>买方自提</#if></u>。</p>
+<p>四、运输方式及到达站港和费用负担:出库费，吊装费由需方自付。</p>
+<p>五、合理损耗及计算方法:按仓库出具磅码单数量计算，合理磅差 <u>${(contract.poundDiff)!}</u> ‰以内。</p>
+<p>六、包装标准、包装物的供应与回收: 钢带井字形捆扎，捆扎应坚固。</p>
+<p>七、验收标准、方法及提出异议期限:</p>
+<p>7.1甲方向乙方提供的商品应当符合标准。乙方凭仓库出具的码单验收。</p>
+<p>7.2乙方如有质量异议，必须先封存全部产品保证其不受损害，在产品到达指定地点 <u>3</u> 日内通知甲方，并由双方协商处理。乙方未在指定时间通知甲方的，视为对产品质量无异议。</p>
+<p>7.3如双方对产品质量存在争议，需要检验的，应委托双方认可的独立第三方检验机构检验，并以该检验机构的检验报告为最终依据处理双方质量争议，检验费用由责任方承担。</p>
+<p>八、结算方式及期限: <u>${(contract.paymentTxt)!}</u> </p>
+<p>九、违约责任：如乙方违反了在本合同执行完毕前双方签订的其它任何合同、协议而对甲方负有债务，而该等债务在本合同履行之前应予履行而未能履行的，甲方有权延期或解除与乙方签署的所有合同而不构成违约。该延期或解除合同的通知自发出之日起生效。</p>
+<p>十、解决合同纠纷方式:供需双方友好协商解决，协商不成在供方所在地法院仲裁。</p>
+<p>十一、其他约定事项:本合同涂改无效;其他未尽事宜,供需双方协商解决。</p>
+<br />
+<table id="ckTblNoBorder" >
+	<tr>
+		<td>甲方</td>
+		<td>乙方</td>
+	</tr>
+	<tr>
+		<td >单位名称：<span id="saler1">${(contract.sell.companyName)!}</span> </td>
+		<td >单位名称：<span id="buyer1">${(contract.buy.companyName)!}</span> </td>
+	</tr>
+	<tr>
+		<td >单位地址:<span id="address1">${(contract.sell.address)!}</span> </td>
+		<td>单位地址: ${(contract.buy.address)!}</td>
+	</tr>
+	<tr>
+		<td >法定代表人:<span id="legalperson1">${(contract.sell.corporate)!}</span></td>
+		<td>法定代表人:${(contract.buy.corporate)!}</td>
+	</tr>
+	<tr>
+		<td >委托代理人：<span id="agent1"></span>  </td>
+		<td>委托代理人：</td>
+	</tr>
+	<tr>
+		<td >电话：<span id="tel1">${(contract.sell.companyPhone)!}</span></td>
+		<td>电话：${(contract.buy.companyPhone)!}</td>
+	</tr>
+	<tr>
+		<td >传真：<span id="fax1"></span></td>
+		<td>传真：</td>
+	</tr>
+	<tr>
+		<td >开户银行：<span id="bank1">${(contract.sell.bank)!}</span></td>
+		<td>开户银行：${(contract.buy.bank)!}</td>
+	</tr>
+	<tr>
+		<td >账号：<span id="bankAccount1">${(contract.sell.bankAccount)!}</span></td>
+		<td>账号：${(contract.buy.bankAccount)!}</td>
+	</tr>
+	<tr>
+		<td >税务登记号:<span id="taxNo1">${(contract.sell.taxNo)!}</span></td>
+		<td>税务登记号:${(contract.buy.taxNo)!}</td>
+	</tr>
+	<tr>
+		<td >邮政编码:<span id="postalCode1"></span></td>
+		<td>邮政编码:</td>
+	</tr>
+</table>

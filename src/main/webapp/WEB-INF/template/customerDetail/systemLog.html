@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>系统日志</title>
+<LINK href="${request.getContextPath()}/Public/css/mainWin.css" type=text/css  media=screen rel=stylesheet>
+<LINK href="${request.getContextPath()}/Public/css/query.css" type=text/css  media=screen rel=stylesheet>
+<LINK href="resources/css/iFrame.css" type="text/css"  media="screen" rel="stylesheet">
+<LINK href="resources/css/forum.css" type="text/css"  media="screen" rel="stylesheet">
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="resources/scripts/Calendar.js" language="javascript"></script>
+</head>
+  <body> 
+      <form action="SystemLog.jsp" method="get" name="form1">
+          <input type="hidden" id="start" name="start"></input>
+  <div style="padding:5px;">
+		
+<div id="Title_bar">
+	<div id="Title_bar_Head">
+		<div id="Title_Head">
+		</div>
+		<div id="Title">
+			<img border="0" width="13" height="13" src="images/title_arrow.gif" />
+			系统日志
+		</div>
+		<div id="Title_End">
+		</div>
+	</div>
+</div>
+<table class='ttTbl' style='width:60%;margin:0 auto;'>
+	<thead>
+		<tr>
+			<td  style="border-width:0px;text-align:right;vertical-align:middle">起始时间:</td>
+			<td  style="border-width:0px; vertical-align: top">
+				<input type="text" style="width:157px" name="theStartDate"  id="theStartDate" onclick="var o=document.getElementById('theStartDate');SelectDate(o);" value="<%=request.getParameter("theStartDate")==null?"":request.getParameter("theStartDate")%>" />
+			</td>
+			<td  style="border-width:0px;text-align:right;vertical-align:middle">终止时间:</td>
+			<td  style="border-width:0px; vertical-align: top">
+				<input type="text" style="width:157px;" name="theEndDate"  onclick="var o=document.getElementById('theEndDate');SelectDate(o);"   id="theEndDate"  value="<%=request.getParameter("theEndDate")==null?"":request.getParameter("theEndDate")%>" />
+			</td>
+			<td  style="border-width:0px;   " align="center"><input type="button" class="btn_red50" value="查 询" onclick="form1.submit()"/></td>
+		</tr>
+	</thead>
+</table>
+		  <div class='MainArea'>
+		  <table class='ttTbl'>
+		  <thead>
+			<tr id="title2" height="30">
+			  <td width="6%">序号                          </td>
+			  <td width="14%" align="center">操作者</td>
+			  <td width="10%" align="center">操作时间</td>
+			   <td width="10%" align="center">日志类型</td>
+			  <td width="10%" align="center">日志内容</td>
+			</tr>
+			</thead>
+			<tbody>
+			 
+			<tr>
+			  <td>                             </td>
+			  <td  >     </td>
+			  <td > </td>
+			  <td  >     </td>
+			  <td > </td>
+			</tr>
+ 
+			 </tbody>
+		  </table>
+		  </div> 
+		<div class="table_bottom">
+			<table width="667" style="border-width:0px">
+				<tr>
+					<td style="border-width:0px" id="CPofAP" width="140"></td>
+					<td style="border-width:0px" width="104">每页10条</td>
+					<td style="border-width:0px" id="DataCount" width="120"></td>
+					<td width="201" style="border-width:0px">
+						<label style="color:<%=Prev%>; cursor:pointer;" id="prePageBtn" onclick="prePage()">上一页</label>&nbsp;&nbsp;&nbsp;&nbsp;
+						<label style="color:<%=Next%>; cursor:pointer;" id="nextPageBtn" onclick="nextPage()">下一页</label>
+					</td>
+					<td width="198" style="border-width:0px">转到：
+					<select id="toPageNum"></select>页<input type="button" value="跳转" onClick="toPage()"></td>
+				</tr>
+			</table>
+		</div>
+  </div>
+ 
+</div>
+</form>
+</body>
+</html>
+

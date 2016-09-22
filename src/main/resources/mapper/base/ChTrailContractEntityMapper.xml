@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChTrailContractEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChTrailContractEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="trailId" property="trailid" jdbcType="INTEGER" />
+    <result column="positions" property="positions" jdbcType="VARCHAR" />
+    <result column="contactName" property="contactname" jdbcType="VARCHAR" />
+    <result column="mobilePhone" property="mobilephone" jdbcType="VARCHAR" />
+    <result column="qqNum" property="qqnum" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="keycon" property="keycon" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, trailId, positions, contactName, mobilePhone, qqNum, email, status, keycon, sex
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_trail_contract
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_trail_contract
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChTrailContractEntity" >
+    insert into ch_trail_contract (id, trailId, positions, 
+      contactName, mobilePhone, qqNum, 
+      email, status, keycon, 
+      sex)
+    values (#{id,jdbcType=INTEGER}, #{trailid,jdbcType=INTEGER}, #{positions,jdbcType=VARCHAR}, 
+      #{contactname,jdbcType=VARCHAR}, #{mobilephone,jdbcType=VARCHAR}, #{qqnum,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{keycon,jdbcType=INTEGER}, 
+      #{sex,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChTrailContractEntity" >
+    insert into ch_trail_contract
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="trailid != null" >
+        trailId,
+      </if>
+      <if test="positions != null" >
+        positions,
+      </if>
+      <if test="contactname != null" >
+        contactName,
+      </if>
+      <if test="mobilephone != null" >
+        mobilePhone,
+      </if>
+      <if test="qqnum != null" >
+        qqNum,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="keycon != null" >
+        keycon,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="trailid != null" >
+        #{trailid,jdbcType=INTEGER},
+      </if>
+      <if test="positions != null" >
+        #{positions,jdbcType=VARCHAR},
+      </if>
+      <if test="contactname != null" >
+        #{contactname,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilephone != null" >
+        #{mobilephone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqnum != null" >
+        #{qqnum,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="keycon != null" >
+        #{keycon,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChTrailContractEntity" >
+    update ch_trail_contract
+    <set >
+      <if test="trailid != null" >
+        trailId = #{trailid,jdbcType=INTEGER},
+      </if>
+      <if test="positions != null" >
+        positions = #{positions,jdbcType=VARCHAR},
+      </if>
+      <if test="contactname != null" >
+        contactName = #{contactname,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilephone != null" >
+        mobilePhone = #{mobilephone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqnum != null" >
+        qqNum = #{qqnum,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="keycon != null" >
+        keycon = #{keycon,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChTrailContractEntity" >
+    update ch_trail_contract
+    set trailId = #{trailid,jdbcType=INTEGER},
+      positions = #{positions,jdbcType=VARCHAR},
+      contactName = #{contactname,jdbcType=VARCHAR},
+      mobilePhone = #{mobilephone,jdbcType=VARCHAR},
+      qqNum = #{qqnum,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      keycon = #{keycon,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

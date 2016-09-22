@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.counts.Coutsdao">
+	
+    	<select id="querymodel" parameterType="java.lang.String" resultType="com.smm.cuohe.domain.PubQueryEntity">
+    
+   	 SELECT id ,NAME  FROM ch_category WHERE modid IN ( SELECT  ID  FROM ch_modules WHERE NAME LIKE '%${value}%')
+    
+   	 </select>
+    
+
+	  <select id="queryCategary" parameterType="com.smm.cuohe.domain.PubQueryEntity" resultType="com.smm.cuohe.domain.PubQueryEntity">
+    
+    	SELECT * FROM       ch_category WHERE  id=${listid}
+
+    
+    	</select>
+    
+    
+
+    	 <select id="querytrail"  parameterType="java.lang.Integer" resultType="com.smm.cuohe.domain.counts.TrailEntity">
+    
+    		SELECT * FROM ch_trail_pool WHERE id=${value}
+    
+   	 	</select>
+
+
+
+			<select id="contacterCompanyID"  parameterType="java.lang.Integer" resultType="com.smm.cuohe.domain.Contacter">
+		    
+			SELECT  id ,NAME ,sex ,POSITION as position ,MobilePhone,qq,Telephone,Email  as email  ,KeyPerson ,tidentity  FROM  ch_contacter WHERE  CompanyId=${value}
+		    
+		    </select>
+		    
+		   <select id="countKeyPerson" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		   
+		   			SELECT count(*)  FROM  ch_contacter WHERE  CompanyId=${value} and KeyPerson=1
+		   
+		   </select>
+		   
+		   <update id="deltrail" parameterType="java.util.Map">
+		   
+	 		   UPDATE ch_trail_pool SET STATUS=2,updatedAt=NOW(),updatedBy=${userId} WHERE id =${trailId}
+		   </update>
+		   
+		   
+		   <update id="updatecompany" parameterType="com.smm.cuohe.domain.Company">
+		   
+					   UPDATE ch_company 
+				SET
+				NAME = #{name} , 
+				account = #{account} , 
+				areaID = #{areaId} , 
+				address = #{address} , 
+				entTypes = #{entTypes} , 
+				LEVEL = #{level} , 
+				salesvolume = #{salesVolumes} , 
+				buyproducts = #{buyProducts} , 
+				buybrand = #{buyBrand} , 
+				buyvolume = #{buyVolume} , 
+				salesproducts = #{salesProducts} , 
+				categoryemployee = #{categoryEmployee} , 
+				categoryfreq = #{categoryFreq}, 
+				categorybusiness = #{categoryBusiness} , 
+				Corporate = #{corporate} , 
+				RegisterDate = #{registerDate} , 
+				Companyphone = #{companyPhone} , 
+				Companyproperty = #{companyProperty} , 
+				Companysite = #{companySite} , 
+				TaxNo = #{taxNo} , 
+				Bank = #{bank} , 
+				BankAccount = #{bankAccount} , 
+				categoryCredit = #{credit} , 
+				CompanyAss = #{companyAss} , 
+				BusinessLicense = #{businessLicense} , 
+				ExpiryTime = #{expiryTime} , 
+				Commands = #{commands} ,  
+				UpdatedAt = #{updatedAt} , 
+				UpdatedBy = #{updatedBy},
+				account=#{account}
+				WHERE
+				id = #{id} ;
+		   
+		   </update>
+
+		   
+		   <select id="queryzhcustoms" parameterType="java.util.Map" resultType="java.lang.Integer">
+		   
+		   	SELECT COUNT(*) FROM  ch_customs WHERE companyID=${companyId} AND itemID=${itemId}
+		   
+		   
+		   </select>
+
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+
+</mapper>

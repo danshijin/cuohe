@@ -1,0 +1,123 @@
+
+<!-- 模态窗口编辑模板 -->
+	<!-- 数字小数点后两位工具类 -->
+<script type="text/javascript" src="${request.getContextPath()}/Public/js/common/util.js"></script>
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;">修改还盘信息</h4>
+</div>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body" >
+	<div class="portlet-body form">
+		<div class="form-body">
+			<div class="form-group form-md-radios" >
+				<form class="form-horizontal" id="dataForm">
+					  <input type="hidden" id="ids" name="id" value="${poolPrice.id}">
+					  <input type="hidden" id="poolIds" name="poolId" value="${poolPrice.poolId}">
+					  <input type="hidden" id="poolTypes" name="poolType" value="${poolPrice.poolType}">
+					  <input type="hidden" id="customerIds" name="customerId" value="${poolPrice.customerId}">
+					  <input type="hidden" id="bigAmt" name="bigAmt" value="${bigAmt}">
+					  <div class="form-group">
+					    <label  class="col-sm-2 control-label">类型 ：</label>
+					    <div class="col-sm-1"> 
+						    <input type="hidden" id="priceType_a" value="${poolPrice.priceType}"> 
+						    <input type="hidden" name="priceType"  id="priceType" value="${poolPrice.priceType}">
+				     	 	<select class="form-control" style="width: 235px;height: 34px;" disabled>
+					    		 <option value="0" <#if poolPrice.priceType == 0>selected</#if>> 实价 </option>
+							     <option value="1" <#if poolPrice.priceType == 1>selected</#if>> 升贴水  </option>
+							</select>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label  class="col-sm-2 control-label">价格：</label>
+					    <div class="col-sm-4">
+					      <input type="text" class="form-control" id="price" name="price" value="${poolPrice.price}" style="width: 235px;height: 34px;"/>
+					      <span id="s2" style="color: red"></span>
+					    </div>
+					  </div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer" style="text-align: center;">
+	<button type="button" class="btn default fa fa-times" id="chooseCompanyClose" data-dismiss="modal">返回</button>
+	<button type="button" onclick="savetButton()" class="btn green  fa fa-check">提交</button>
+</div>
+
+<script>
+	$(function(){
+		var priceType_a = $("#priceType_a").val();
+		var priceType = document.getElementById("priceType");
+		for (var i = 0; i < priceType.length; i++) {
+			if (priceType.options[i].value == priceType_a) {
+				priceType.options[i].selected = 'selected';
+			}
+		}
+		//小数点后两位check
+		checkNum_2($('#price'));
+
+	});
+	
+	function savetButton(){
+		var num=/^[0-9]+([.]{1}[0-9]+){0,1}$/;
+		var id=$("#ids").val();
+		var price=$("#price").val();
+		var poolId=$("#poolIds").val();
+		var poolType=$("#poolTypes").val(); 
+		var priceType=$("#priceType").val(); 
+		var bigAmt=$("#bigAmt").val();
+		var customerId = $("#customerIds").val();
+	/* 	if(  !num.test(price) || price<=0 ){
+			$("#s2").html("价格必须大于0的数字");
+			return ;
+		} */
+		/* if(price.length>8){
+			alert("金额位数不能超过8位!!!");
+			return ;
+		}  */
+		if(poolType==1 && priceType == 0){
+			if(price<bigAmt){
+				$("#s2").html("卖盘金额必须大于最新的还盘金额");
+				return ;
+			}
+		}else if(poolType==2  && priceType == 0){
+			if(price>bigAmt){
+				$("#s2").html("买盘金额必须小于最新的还盘金额");
+				return ;
+			}
+		}
+		$.ajax({
+			//url : "${request.getContextPath()}/poolprice/updatePool.do",
+			url : "${request.getContextPath()}/poolprice/updatePoolBlur.do",
+			type : "post",
+			dataType:"json",
+			async: false,
+			//data: "id=" + id + "&price=" + price + "&priceType=" + priceType,
+			//有时间再改
+			data: "id=" + id + "&price=" + price + "&priceType="+ priceType+"&poolId="+poolId+"&poolType="+poolType+"&customerId="+customerId,
+			success : function(result) {
+				if(result == "OK"){
+					if(priceType == 0){
+						alert("还盘实价修改成功");
+					}
+					if(priceType == 1){
+						alert("还盘升价修改成功");
+					}
+					if(priceType == 2){
+						alert("还盘贴价修改成功");
+					}
+					
+					window.location.href="${request.getContextPath()}/poolprice/getPoolPrice.do?poolType="+poolType+"&poolId="+poolId;
+				}else{
+					alert(result);
+			      	//window.location.href="${request.getContextPath()}/poolprice/getPoolPrice.do?poolType="+poolType+" &poolId="+poolId;
+				}
+			  }
+		});
+	};
+</script>

@@ -1,0 +1,215 @@
+@CHARSET "UTF-8";
+
+#ciBtn.green{
+	padding:.3em 1.5em;
+}
+.ttTblNoBorder tr th{
+	border:0px;
+	padding:.5em;
+}
+.ttTblNoBorder tr td{
+	border:0px;
+	padding:.5em;
+}
+.ttTbl{
+	width:100%;
+	border-collapse:collapse;
+	cursor:default;
+}
+.ttTbl thead tr{
+	vertical-align:middle;
+}
+.ttTbl thead tr th {
+	text-align:center;
+	border: 1px solid #d2d2d2;
+	padding:.5em .2em;
+	empty-cells:show;
+	height:22px;
+	white-space: nowrap;
+	overflow: hidden;
+	background-color: rgba(239, 239, 239, 1);
+	font-weight:400;
+}
+.ttTbl tbody tr {
+	background-color: #ffffff;
+	vertical-align:middle;
+}
+.ttTbl tbody tr td {
+	vertical-align: middle;
+	border: 1px solid #d2d2d2;
+	padding:1em .2em;
+	empty-cells:show;
+	height:30px;
+	text-align:center;
+}
+.ttTbl tbody td.audit_Opinion{text-align:left;}
+.ttTbl tbody tr.TableDetail1 {
+	background-color: #ffffff;
+	vertical-align: bottom;
+	height: 22px;
+}
+
+.ttTbl tbody tr.TableDetail2 {
+	background-color: #ffffff;
+	height: 22px;
+}
+
+.ttTbl tbody tr.selectLine {
+	background-color: #deecf7;
+	height: 22px;
+}
+.ttTbl tbody td a {
+	color:#0090ff;
+}
+.ttTbl tbody td a:hover {
+	color:#007bd9;
+}
+.ttColumn{
+	border-collapse: collapse;
+	border: solid #999;
+	border-width: 1px 0 0 1px;
+	overflow-x: scroll;
+	border-spacing: 2px;
+}
+.ttColumn td{
+	border: solid #999;
+	border-width: 0 1px 1px 0;
+	padding: 3px 3px 3px 3px;
+	color: #4f6b72;
+	text-align: left;
+}
+#ttTurnPageTbl{
+	border-width:0;
+}
+#ttTurnPageTbl td{
+	border-width:0;
+	white-space:nowrap;
+	padding:0 5px;
+}
+.ttTblTitle{
+	margin: 0px;
+	font-size: 14px;
+	font-family: 微软雅黑;
+	color: #004a7d;
+	font-weight: bold;
+	text-align: left;
+	width: 95%;
+	padding-top: 10px;
+	padding-left: 5px;
+	height: 31px;
+}
+.ttTblMargin{
+	margin:0 10px;
+}
+
+#dataDIV{
+	width:100%;
+	overflow:auto;
+	height:390px;
+}
+a.tidentity{
+	cursor:text;
+	text-decoration:none;
+	padding: 10px 30px;
+}
+a.tidentity:hover{
+	text-decoration:none;
+}
+a.cdPurchase{
+	color:#ff8c00;
+	background:url(../images/cdPurchase.png) no-repeat center;
+}
+a.cdSell{
+	color:#1968a0;
+	background:url(../images/cdSell.png) no-repeat center;
+}
+a.blueBorder{
+	color:#008733;
+	text-decoration:none;
+	width:140px;
+	height:40px;
+	line-height:40px;
+	display:inline-block;
+	text-align:center;
+	background:url(../images/blueBorder.png) no-repeat center;
+}
+a.blueBorder:hover{
+	color:#000;
+	cursor:pointer;
+	text-decoration:none;
+}
+a.blueBack{
+	color:#fff;
+	text-decoration:none;
+	width:140px;
+	height:40px;
+	line-height:40px;
+	display:inline-block;
+	text-align:center;
+	background:url(../images/blueBack.png) no-repeat center;
+}
+a.blueBack:hover{
+	color:#000;
+	cursor:pointer;
+	text-decoration:none;
+}
+.loadingAjax{
+	background:url(../images/ajax-loading.gif) no-repeat center;
+	width:100%;
+	height:300px;
+	background-color:#d2d2d2;
+	opacity: 0.3;
+}
+.noAjaxData{
+	text-align:center;
+}
+#prePageBtn{
+	border: 1px solid;
+    border-radius: 3px;
+    padding: 3px 10px;
+    cursor:pointer;
+}
+
+#nextPageBtn{
+	border: 1px solid;
+    border-radius: 3px;
+    padding: 3px 10px;
+    cursor:pointer;
+}
+label.error{
+	color:red;
+	font:12px/16px arial,"微软雅黑";
+	margin-left:5px;
+}
+#ulContract{
+	display: inline-block;
+    list-style-type: none;
+    float: left;
+    padding:0;
+}
+.whiteBackContract{
+	color:#000;
+	text-decoration:none;
+	width:140px;
+	height:40px;
+	line-height:40px;
+	display:inline-block;
+	text-align:center;
+	background-color:#fff;
+}
+a.whiteBackContract:hover{
+	color:#aaa;
+	cursor:pointer;
+	text-decoration:none;
+}
+.clear {clear: both;height:1px;margin-top:-1px;overflow:hidden;}
+tr.companyClickColor{
+	background-color: #95D0CA !important;
+}
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	visibility:hidden;
+	clear:both;
+}

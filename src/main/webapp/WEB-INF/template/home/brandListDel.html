@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<style>
+	#tab tr td{
+		text-align:left;
+		padding:0;
+	}
+	#tab tr td label{
+		text-align:left;
+		width:100%;
+		height:100%;
+		padding:.2em;
+		padding-left:15px;
+	}
+</style>
+<!-- 模态窗口编辑模板 -->
+<form action="" id="myform" class="form-horizontal form-bordered" novalidate="novalidate" method="post">
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;"></h4>
+</div>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body" id="div'">
+	<div align="left">
+	<input type="hidden" id ="typeId" value="${typeId}">
+	<table id="tab" class="ttTbl">
+	<#if branlit??>
+		<#list branlit as bran >
+		<#if bran_index==0>	
+		<tr>
+		</#if>
+		<td>
+	
+	
+	
+		
+		<label><input type="checkbox" name="bran"  
+		<#list valuelist as val>
+		<#if val==bran.catname>
+		checked 
+		</#if>
+		</#list>
+		value="${bran.catname}">${bran.catname} </label> </td>
+		
+		
+		
+		<#if bran_index%2==1>
+		</tr><tr>
+	
+		
+		</#if>
+		</#list>
+		</#if>
+		</table>
+	</div>
+	
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer">
+	<button type="button" class="btn default fa fa-times" data-dismiss="modal"> 取消</button>
+	<button type="button" onclick="changeParent()" class="btn green  fa fa-check"> 确定</button>
+</div>
+<!-- 结束 -->
+</form>
+<!-- 业务处理开始 -->
+<script>
+
+
+	function changeParent(){
+		
+		  var branlist=document.getElementsByName("bran");
+			
+			var name="";
+			for(var a=0 ; a<branlist.length;a++){
+				var ch=branlist[a].checked;
+			
+				if(ch){
+					name+=branlist[a].value;
+					if(a!=branlist.length){
+						name+=",";
+					}
+				
+				}
+				
+				branlist[a].checked=false;
+				
+			}
+			if(name!=null&&name!=""&&name.length>0&&name.substring(name.length-1)==","){
+				
+				name=name.substring(0,name.length-1)
+				}
+			document.getElementById(document.getElementById("typeId").value).value="";
+			document.getElementById(document.getElementById("typeId").value).value=name;
+			name="";
+			document.getElementById("typeId").id="";
+		
+		$(".close").click();
+		
+	}
+	
+</script>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChCustomsBlackListEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChCustomsBlackListEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="customerID" property="customerid" jdbcType="INTEGER" />
+    <result column="blackCustomerID" property="blackcustomerid" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updatedBy" property="updatedby" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, customerID, blackCustomerID, updatedAt, createdAt, status, createdBy, updatedBy
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_customs_blacklist
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_customs_blacklist
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChCustomsBlackListEntity" >
+    insert into ch_customs_blacklist (id, customerID, blackCustomerID, 
+      updatedAt, createdAt, status, 
+      createdBy, updatedBy)
+    values (#{id,jdbcType=INTEGER}, #{customerid,jdbcType=INTEGER}, #{blackcustomerid,jdbcType=INTEGER}, 
+      #{updatedat,jdbcType=TIMESTAMP}, #{createdat,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{createdby,jdbcType=INTEGER}, #{updatedby,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChCustomsBlackListEntity" >
+    insert into ch_customs_blacklist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="customerid != null" >
+        customerID,
+      </if>
+      <if test="blackcustomerid != null" >
+        blackCustomerID,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="updatedby != null" >
+        updatedBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="customerid != null" >
+        #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="blackcustomerid != null" >
+        #{blackcustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedby != null" >
+        #{updatedby,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChCustomsBlackListEntity" >
+    update ch_customs_blacklist
+    <set >
+      <if test="customerid != null" >
+        customerID = #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="blackcustomerid != null" >
+        blackCustomerID = #{blackcustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedby != null" >
+        updatedBy = #{updatedby,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChCustomsBlackListEntity" >
+    update ch_customs_blacklist
+    set customerID = #{customerid,jdbcType=INTEGER},
+      blackCustomerID = #{blackcustomerid,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updatedBy = #{updatedby,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

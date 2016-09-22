@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.users.WebPartsPDAO">
+    
+     <!-- 查询所有组件 -->
+	<select id="getWebPartsPList" resultType="WebPartsPOJO" parameterType="int">
+		SELECT w.id,w.name,w.status,w.listOrder 
+		FROM ch_web_parts w,ch_item_web_parts p
+		WHERE w.id=p.webPartsId
+		AND w.status=0
+		AND p.status=0
+		AND p.userId=#{userId}
+    </select>
+    <update id="addOrDelWpById" parameterType="java.util.Map">
+    	UPDATE ch_item_web_parts w 
+    	SET w.status=#{status},w.updatedAt=#{updatedAt},w.updatedBy=#{userID} 
+    	WHERE w.webPartsId=#{wpartsId} 
+    	AND w.userID=#{userID}
+    </update>
+    <select id="getWpById" resultType="WebPartsPOJO" parameterType="java.util.Map">
+		SELECT w.id,w.name,w.status,w.listOrder 
+		FROM ch_web_parts w,ch_item_web_parts p
+		WHERE w.id=p.webPartsId
+		AND p.userID=#{userID} 
+		AND p.webPartsId=${wpartsId}
+		LIMIT 1
+    </select>
+    <insert id="insertWp" parameterType="java.util.Map">
+    	INSERT INTO ch_item_web_parts 
+		(webPartsId,itemID,STATUS,listOrder,createdAt,createdBy,updatedAt,updatedBy,userId)
+	VALUES(${wpartsId}, ${itemid},0,${wpartsId},NOW(),#{userID},NOW(),#{userID},#{userID})
+    </insert>
+</mapper>

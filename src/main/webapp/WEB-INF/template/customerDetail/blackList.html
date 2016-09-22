@@ -1,0 +1,187 @@
+<meta http-equiv="content-type" content=”text/html; charset=UTF-8" />
+<div class="col-md-12">
+	<div class="portlet light bordered" style="padding-bottom:25px;">
+		<div class="portlet-body" style="height: 13px;padding-top: 0px">
+				<div style="float: left;margin-top:3px;">
+					<span style="font-size:18px;">企业黑名单</span>
+				</div>
+				<div style="float: right; margin-bottom:5px;">
+					<button class="btn green" id="addRecord">添加</button>
+				</div>
+		</div>
+	</div>    
+</div>
+<div class="col-md-12">
+	<div class="portlet light bordered">
+		<div class="portlet-body" id="ctBody">
+			
+		</div>
+			
+	</div>
+</div>
+<!-- 隐藏域start -->
+<inoput type="hidden" id="companyinputhi"/>
+<inoput type="hidden" id="companyinput"/>
+<!-- 隐藏域end -->
+<script>
+	var contacter = ${contactersJson};
+	var customerId = ${customerId};
+	var contextPath = "${request.getContextPath()}";
+	var compayments = new Array()
+	
+	
+	
+	$(function(){
+		var html ="";
+		for(var i =0; i < contacter.length; i++){
+			html += '<div id='+contacter[i].id+'>'
+			html += '<table class="tb" cellspacing="1" border="1">';
+			html += '<tr>';
+			html += '<td class="tdTitle">公司名称</td>';
+			html += '<td class="tdContent">'+(contacter[i].blackCompanyName == null ? "" : contacter[i].blackCompanyName)+'</td>';
+			html += '<td class="tdTitle">企业类型</td>';
+			html += '<td class="tdContent">'+(contacter[i].entTypes == null ? "" : contacter[i].entTypes)+'</td>';
+			html += '</tr>';
+			html += '<tr>';
+			html += '<td class="tdTitle">年销售额</td>';
+			html += '<td class="tdContent">0-'+(contacter[i].salesVolume == null ? "0" : contacter[i].salesVolume)+'万</td>';
+			html += '<td class="tdTitle">采购品牌</td>';
+			html += '<td class="tdContent">'+(contacter[i].buybrand == null ? "" : contacter[i].buybrand)+'</td>';
+			html += '</tr>';
+			html += '<tr>';
+			html += '<td class="tdTitle">联系人</td>';
+			html += '<td class="tdContent">'+(contacter[i].contacterName == null ? "" : contacter[i].contacterName)+'</td>';
+			html += '<td class="tdTitle">联系人电话</td>';
+			html += '<td class="tdContent">'+(contacter[i].contacterPhone == null ? "" : contacter[i].contacterPhone)+'</td>';
+	
+			html += '</table>';
+			html += '<div class="entrust">';
+			html += '<em>';
+			html += '<a href="javascript:;" class="btn btn-xs green ctDel" ctId='+contacter[i].id+'>';
+			html += '<i class="fa fa-trash-o"></i> 删除';
+			html += '</a> &nbsp;';
+			html += '<i class="fa fa-user"></i>'+contacter[i].createName+'  &nbsp;';
+			html += '<i class="fa fa-clock-o"></i>'+new Date(contacter[i].createTime).format("yyyy-MM-dd hh:mm:ss")+'';
+			html += '</em>';
+			html += '</div>';
+			html += '<br>';
+			html += '<br>';
+			html += '</div>'
+		}
+		$("#ctBody").html(html);
+		//检索数据
+		searchingData();
+		//确认删除
+		$(".ctDel").each(function(index, element){
+			$(element).click(function(){
+				var id = $(element).attr("ctId");
+				CommonUtils.confirm("确认","确认将该公司从黑名单中移除？", "delRecord("+id+")");
+			});
+		});
+		
+		$("#addRecord").click(function(){
+// 			document.location.href= contextPath + "/customerDetail/addBlackIndex.do?customerId="+id +"&companyName="+companyName;
+			showCustomerListView();
+			//解决异步问题
+			var exit = setInterval(function(){
+				var companyinputhi = $('#companyinputhi').val();
+				var companyinput = $('#companyinput').val();
+				if(companyinputhi !== null && companyinputhi !== undefined && companyinputhi !== ''&& companyinputhi.length != 0){
+					clearInterval(exit);  
+					addBlackList(customerId,companyinputhi);
+					//初始化
+					$('#companyinputhi').val('');
+					$('#companyinput').val('');
+				}
+				
+			}, 1000);  
+			
+		});
+	});
+	//删除操作
+	function delRecord(blackId){
+		$.get("delBlackList.do",{"blackId":blackId},function(data){
+			$('#'+blackId).remove();
+			searchingData();
+		});
+	}
+	function addBlackList(cuId,blackCustomerId){
+		var ind = checkData();
+		if(ind==0){
+			$('.noAjaxData').remove();
+		}
+		var url = "${request.getContextPath()}/customerDetail/addBlackList.do";
+		var param = {customerId:cuId,blackCustomerId:blackCustomerId}
+		$.post(url,param,function(data){
+			if(data.status=='true'){
+				var html = "";
+				html += '<div id='+data.data.id+'>'
+				html += '<table class="tb" cellspacing="1" border="1">';
+				html += '<tr>';
+				html += '<td class="tdTitle">公司名称</td>';
+				html += '<td class="tdContent">'+(data.data.blackCompanyName == null ? "" : data.data.blackCompanyName)+'</td>';
+				html += '<td class="tdTitle">企业类型</td>';
+				html += '<td class="tdContent">'+(data.data.entTypes == null ? "" : data.data.entTypes)+'</td>';
+				html += '</tr>';
+				html += '<tr>';
+				html += '<td class="tdTitle">年销售额</td>';
+				html += '<td class="tdContent">0-'+(data.data.salesVolume == null ? "0" : data.data.salesVolume)+'万</td>';
+				html += '<td class="tdTitle">采购品牌</td>';
+				html += '<td class="tdContent">'+(data.data.buybrand == null ? "" : data.data.buybrand)+'</td>';
+				html += '</tr>';
+				html += '<tr>';
+				html += '<td class="tdTitle">联系人</td>';
+				html += '<td class="tdContent">'+(data.data.contacterName == null ? "" : data.data.contacterName)+'</td>';
+				html += '<td class="tdTitle">联系人电话</td>';
+				html += '<td class="tdContent">'+(data.data.contacterPhone == null ? "" : data.data.contacterPhone)+'</td>';
+		
+				html += '</table>';
+				html += '<div class="entrust">';
+				html += '<em>';
+				html += '<a href="javascript:;" class="btn btn-xs green ctDel" ctId='+data.data.id+'>';
+				html += '<i class="fa fa-trash-o"></i> 删除';
+				html += '</a> &nbsp;';
+				html += '<i class="fa fa-user"></i>'+data.data.createName+'  &nbsp;';
+				html += '<i class="fa fa-clock-o"></i>'+new Date(data.data.createTime).format("yyyy-MM-dd hh:mm:ss")+'';
+				html += '</em>';
+				html += '</div>';
+				html += '<br>';
+				html += '<br>';
+				html += '</div>'
+				$("#ctBody").append(html);
+				//检索数据
+				searchingData();
+				//确认删除
+				$(".ctDel").each(function(index, element){
+					//先清空click时间
+					$(element).unbind('click');
+					$(element).click(function(){
+						var id = $(element).attr("ctId");
+						CommonUtils.confirm("确认","确认将该公司从黑名单中移除？", "delRecord("+id+")");
+					});
+				});
+				customerId = cuId;
+			}else{
+				CommonUtils.succModal("操作提示",data.msg);
+			}
+		});
+	}
+	//选择客户
+	function showCustomerListView(){
+		CommonUtils.editModal('${request.getContextPath()}/contacter/showAllCustomerDialog.do','800');
+	}
+	//没数据处理
+	function searchingData(){
+		var ind = checkData();
+		if(ind==0) $("#ctBody").html("<div class='noAjaxData'>没有数据</div>");
+	}
+	//判断是否有数据
+	function checkData(){
+		var ind = 0;
+		$(".ctDel").each(function(index, element){
+			ind++;
+		});
+		return ind;
+	}
+	
+</script>

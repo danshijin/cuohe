@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.users.UserInfoDAO">
+
+    <!--  根据用户名和密码匹配登录  -->
+    <select id="userLogin" resultType="User" parameterType="java.util.Map">
+        select id,account,name,email,pwd,itemId,status, image from ch_users  
+        	where account = #{account} and pwd=#{pwd}
+    </select>
+    
+    <!--  撮合客户端登录  -->
+    <select id="dealMakerLogin" resultType="java.util.Map" parameterType="java.lang.String">
+        select u.id, u.name, pwd, email,itemId,image, i.name AS itemName from ch_users u left join ch_items i on u.itemId = i.id
+        	where account = #{account}
+    </select>
+    
+    <!-- 获取可编辑信息 -->
+    <select id="getEditableInfo" parameterType="java.lang.String"  resultMap="userWithItem">
+    
+    	select id, account, name, email, itemId, online, image get from ch_users where account = #{account};
+    
+    </select>
+    
+    <resultMap type="com.smm.cuohe.domain.User" id="userWithItem">
+    
+    	<id column="id" property="id" />
+    	<association property="itemId" column="itemId" select="getItemForUser" />
+    
+    </resultMap>
+    
+    <select id="getItemForUser" parameterType="int" resultType="com.smm.cuohe.domain.Items">
+    
+    	select * from ch_items where id = #{id};
+    </select>
+    
+    
+    <!-- 查询所有 insert by dongmiaonan -->
+     <select id="getAccount" resultType="User">
+        select  id,account,name, itemId from ch_users where status=0
+    </select>
+    
+    <!-- 加载品目种类  -->
+    <select id="getItems" resultType="Items">
+        select id, name, listorder, status from ch_items
+    </select>
+    
+    <!--  修改品目  -->
+    <update  id="updateItem"  parameterType="string">
+        update ch_users set  itemid = #{0} where id = #{1}
+    </update >
+    
+    <!--  根据用户名和密码匹配登录  -->
+    <select id="getItemsById" resultType="Items" parameterType="java.lang.String">
+        select
+		  id,
+		  name,
+		  chartId,
+		  categoryId,
+		  SHFEType,
+		  listOrder,
+		  status
+		from ch_items where id=#{0}
+    </select>
+    
+    <!--  洽谈请求提醒 -->
+    <select id="queryChatsRemind" resultType="Chats" parameterType="java.util.Map">
+        SELECT id,
+			  itemId,
+			  customerId,
+			  employeeId,
+			  inPool,
+			  area,
+			  sourceType,
+			  sourceID,
+			  ip,
+			  orderStatus,
+			  status,
+			  createdAt,
+			  createdBy,
+			  updatedAt,
+			  updatedBy
+			FROM ch_chats WHERE itemID=#{itemId} and OrderStatus=#{orderStatus}
+    </select>
+    <!--   修改用户登录状态  -->
+    <update  id="updateOnline"  parameterType="java.util.Map">
+        update ch_users set  online = #{0} where id = #{1}
+    </update >
+    
+    <!-- 更新用户信息 -->
+    <select id="updateUserInfo" resultType="int">
+    
+    	call updateUserInfo(#{id}, #{name}, #{email}, #{image}, #{oldPass}, #{newPass});
+    	
+    </select>
+    
+    <select id="countUserByAccountAndName" parameterType="com.smm.cuohe.domain.User" resultType="int">
+    	select count(1) from ch_users where account=#{account} or name =#{name};
+    </select>
+    
+    <insert id="insertDefaultUser">
+    
+		insert into ch_users (account, name, email, pwd, itemId, image)
+		VALUES(#{account}, #{name}, #{email}, md5('123456'), 26276, '/Public/images/user/defaultHead.jpg');
+
+    </insert>
+    
+    <select id="generateUsers" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM ch_customs WHERE createdBy = #{empId}
+     <if test="startDate!=null">
+	     AND createdAt>DATE(#{startDate,jdbcType=TIMESTAMP})
+	    </if>
+	    <if test="endDate!=null">
+	    AND createdAt &lt; date_add(DATE(#{endDate,jdbcType=TIMESTAMP}), INTERVAL 1 day)
+	    </if>
+    </select>
+    
+   
+   
+    
+</mapper>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.ICompanyDAO">
+	<sql id="companyViewItems">
+			cs.id,
+			cs.areaId,
+			cs.corporate,
+			cs.companyName,
+			cs.account,
+			cs.status,
+			CONCAT(CASE WHEN ap.name IS NULL THEN '' ELSE ap.name END,' ',ar.name)  province,
+			cs.address,
+			cs.entTypes, 
+	        cs.salesVolume,
+	        getCategoryNameById(case cs.salesVolume when "" then null end) AS salesVolumeName,
+	        cs.buyProducts,
+	        cs.buyVolume,
+	        cs.salesProducts,
+	        cs.BuyBrand,
+			cs.categoryEmployee,
+			getCategoryNameById(cs.categoryEmployee) AS employee,
+			cs.categoryFreq,
+			getCategoryNameById(cs.categoryFreq) AS freq,
+			cs.categoryBusiness,
+			getCategoryNameById(cs.categoryBusiness) AS business,
+			cs.corporate,
+			cs.registerDate,
+			cs.companyPhone,
+			cs.companyProperty,
+			getCategoryNameById(cs.companyProperty) AS property,
+			cs.Companysite as companySite,
+			cs.taxNo,
+			cs.bank,
+			cs.bankAccount,
+			cs.categoryCredit,
+			getCategoryNameById(cs.categoryCredit) AS credit,
+			cs.companyAss,
+			cs.businessLicense,
+			cs.expiryTime,
+			commands,
+			cs.createdAt,
+			getUserNameById(cs.createdBy) AS createdBy,
+			cs.updatedAt,
+			getUserNameById(cs.updatedBy) AS updatedBy,
+			cs.level,
+			getCategoryNameById(cs.level) AS levelName 
+		
+	</sql>
+	<resultMap type="com.smm.cuohe.domain.CompanyView" id="CompanyView">
+	
+		<id column="id" property="id" />
+		<association property="area" column="areaId" select="com.smm.cuohe.dao.IAreasDao.getAreaById"></association>
+	
+	</resultMap>
+    <!--查询一个公司-->
+    <select id="getCompanyViewByCustomId" parameterType="java.lang.Integer" resultMap ="CompanyView">
+         SELECT getUserNameById(cs.pic) as pic,
+         		cs.categorySource,
+				getCategoryNameById(cs.categorySource) AS source,
+				cs.level,
+				getCategoryNameById(cs.level) AS coo,
+				(SELECT createdat FROM ch_orders WHERE buyId = cs.id and orderStatus = 1 ORDER BY createdat DESC LIMIT 1) as lastPurchaseTime,
+			<include refid="companyViewItems"></include>
+		 FROM ch_customs as cs
+		 LEFT JOIN ch_areas AS ar ON cs.areaId = ar.id
+		 LEFT JOIN ch_areas AS ap on ar.parentId = ap.id
+		 WHERE cs.id = #{id}
+		 limit 1;
+    </select>
+    
+    <!-- 根据登录用户的itemid和企业id获取对应的客户id -->
+    <select id="getCustomerIdByItemIdAndCompanyId" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	select id AS id from ch_customs where itemId = #{itemId} and companyId = #{companyId}
+    </select>
+
+
+
+    <!-- 根据客户id查询公司的商城登录名 -->
+    <select id="getCompanyAccountByCustomerId" parameterType="int" resultType="java.lang.String">
+    	
+    	select account from ch_customs where id = #{customerId};
+    	
+    </select>
+    
+    <!--查询一个公司-->
+    <select id="getCompanyViewById" parameterType="java.lang.Integer" resultType ="com.smm.cuohe.domain.CompanyView">
+         SELECT <include refid="companyViewItems"></include>
+         FROM ch_customs as cs
+		 LEFT JOIN ch_areas AS ar ON cs.areaId = ar.id
+		 LEFT JOIN ch_areas AS ap on ar.parentId = ap.id
+		 WHERE cs.id = #{id}
+    </select>
+	<update id="updateCompanyView" parameterType="com.smm.cuohe.domain.CompanyView">
+		
+		update ch_customs
+		SET companyName = #{companyName, jdbcType=VARCHAR},
+			areaId = #{areaId, jdbcType=INTEGER},
+			address = #{address, jdbcType=VARCHAR},
+			entTypes = #{entTypes, jdbcType=VARCHAR},
+			salesVolume = #{salesVolume, jdbcType=INTEGER},
+			level = #{level, jdbcType=INTEGER},
+			buyProducts = #{buyProducts, jdbcType=VARCHAR},
+			salesProducts = #{salesProducts, jdbcType=VARCHAR},
+			categoryEmployee = #{categoryEmployee, jdbcType=VARCHAR},
+			categoryFreq = #{categoryFreq, jdbcType=INTEGER},
+			corporate = #{corporate, jdbcType=VARCHAR},
+			companyPhone = #{companyPhone, jdbcType=VARCHAR},
+			companyProperty = #{companyProperty, jdbcType=INTEGER},
+			companySite = #{companySite, jdbcType=VARCHAR},
+			companyAss = #{companyAss, jdbcType=INTEGER},
+			commands = #{commands, jdbcType=VARCHAR},
+			updatedAt = now(),
+			updatedBy = #{updatedBy, jdbcType=INTEGER}
+		WHERE id = #{id, jdbcType=INTEGER};
+	</update>
+	
+	<update id="deleteCompany">
+		update ch_customs
+		set status = 1, updatedAt = now(), updatedBy = #{userId}
+		where id = #{customerId}	
+	</update>
+	
+	<select id="getCompanyByParam" parameterType="java.util.Map" resultType ="com.smm.cuohe.domain.Company">
+       SELECT c.id,c.account, c.companyName name FROM ch_customs c  WHERE c.companyName like '%${name}%'  and c.itemID=${itemId}   and c.Status=0  and c.account is not null
+    </select>
+    
+    <select id="getCompanyByNameAndItem" resultType ="com.smm.cuohe.domain.Customer">
+       SELECT c.id,c.account, c.companyName, c.companyPhone, c.createdAt FROM ch_customs c  WHERE c.companyName like '%${companyName}%'  and c.itemID=${itemId}   and c.Status=0  and c.account is not null
+    </select>
+    
+    <select id="getCompanyByCompanyName"  resultType="com.smm.cuohe.domain.Company">
+    	select a.id,a.name from ch_company a where a.name = #{name} and status=0
+    </select>
+    
+     <select id="getCompanyById" resultType="com.smm.cuohe.domain.Company" parameterType="java.lang.Integer">
+     	select * from ch_company where id=#{id}
+     </select>
+    
+      <!--  新增 insert by dongmiaonan -->
+     <insert id="addCompanyToId"   parameterType="com.smm.cuohe.domain.Company" >
+	      insert into ch_company
+		(
+		 name              ,
+		 account           ,
+		 areaID			 ,
+		 address           ,
+		 entTypes          ,
+		 level             ,
+		 salesvolume       ,
+		 buyproducts        ,
+		 buybrand           ,
+		 buyvolume          ,
+		 salesproducts      ,
+		 categoryemployee   ,
+		 categoryfreq       ,
+		 categorybusiness   ,
+		 corporate          ,
+		 registerDate       ,
+		 companyphone		  ,
+		 companyproperty    ,
+		 companysite         ,
+		 taxNo              ,
+		 bank               ,
+		 bankAccount        ,
+		 categoryCredit     ,
+		 companyAss         ,
+		 businessLicense    ,
+		 expiryTime         ,
+		 commands           ,
+		 status             ,
+		 createdAt          ,
+		 createdBy          ,
+		 updatedAt          ,
+		 updatedBy                         
+	   )
+		VALUES
+		(
+		  #{name        }         ,
+		  #{ account    }         ,
+		  #{ areaId 	} 		  ,
+		  #{ address     }        ,
+		  #{ entTypes    }        ,
+		  #{ level       }        ,
+		  #{ salesVolume   }      ,
+		  #{ buyProducts   }      ,
+		  #{ buyBrand       }     ,
+		  #{ buyVolume      }     ,
+		  #{ salesProducts   }    ,
+		  #{ categoryEmployee }   ,
+		  #{ categoryFreq       } ,
+		  #{ categoryBusiness   } ,
+		  #{ corporate         }  ,
+		  #{ registerDate      }  ,
+		  #{companyPhone   }      ,
+		  #{ companyProperty   }  ,
+		  #{ companySite       }   ,
+		  #{ taxNo            }   ,
+		  #{ bank            }    ,
+		  #{ bankAccount     }    ,
+		  #{ credit   }           ,
+		  #{ companyAss       }   ,
+		  #{ businessLicense   }  ,
+		  #{ expiryTime        }  ,
+		  #{ commands         }   ,
+		  0   					  ,
+		  now()                   ,
+		  #{ createdBy    }       ,
+		  now()                   ,
+		  #{ updatedBy      }           
+		 ) 
+		<selectKey keyProperty="id"  resultType="java.lang.Integer">  
+		   <![CDATA[
+			SELECT LAST_INSERT_ID() as id
+			  ]]>
+		</selectKey> 
+    </insert> 
+    <update id="modifyCompany" parameterType="com.smm.cuohe.domain.Company">
+		
+		update ch_company
+		SET name = #{name, jdbcType=VARCHAR},
+		    account = #{account, jdbcType=VARCHAR},
+			areaID = #{areaId, jdbcType=INTEGER},
+			address = #{address, jdbcType=VARCHAR},
+			entTypes = #{entTypes, jdbcType=VARCHAR},
+			salesProducts = #{salesProducts, jdbcType=VARCHAR},
+			salesVolume = #{salesVolume, jdbcType=INTEGER},  
+			categoryEmployee = #{categoryEmployee, jdbcType=VARCHAR}, 
+			corporate = #{corporate, jdbcType=VARCHAR},
+			registerDate = #{registerDate},
+			companyPhone = #{companyPhone, jdbcType=VARCHAR},
+			companyProperty = #{companyProperty, jdbcType=INTEGER},
+			companysite = #{companySite, jdbcType=VARCHAR}, 
+			updatedAt = #{updatedAt, jdbcType=TIMESTAMP},
+			updatedBy = #{updatedBy, jdbcType=INTEGER}
+		WHERE id = #{id, jdbcType=INTEGER};
+	</update>
+    <!-- insert by dongmiaonan  -->
+    <select id="getCompanyByName" parameterType="java.util.Map" resultType ="com.smm.cuohe.domain.Company">
+         select b.id,b.name from ch_customs a left join ch_company b on  a.companyid=b.id where a.itemid=${itemId} and b.name='${name}' and a.status=0 and b.status=0 AND  b.account IS NOT NULL;
+    </select> 
+     <select id="getContacterByMobile" parameterType="com.smm.cuohe.domain.Contacter" resultType ="com.smm.cuohe.domain.Contacter">        
+        select a.id,a.mobilePhone from ch_contacter a where a.mobilePhone=#{mobilePhone} and a.companyID=#{company.id} and a.itemID=#{itemId} and status=0; 
+    </select>  
+	
+	<select id ="getCompanyNameByCustomerId" parameterType="int" resultType="java.lang.String">
+		select companyName from ch_customs where id = #{customerId};
+	</select>
+	<select id="countCompanyByName" parameterType="java.lang.String" resultType="int">
+	
+		select count(1) from ch_company where name = #{#companyName};
+	
+	</select>
+	
+</mapper>

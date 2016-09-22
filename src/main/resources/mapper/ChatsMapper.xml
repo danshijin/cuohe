@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--联系人  -->
+<mapper namespace="com.smm.cuohe.dao.IChatsDAO">
+
+	<!--根据ID获取浅谈信息  -->
+    <select id="getChatsById" resultType="java.util.Map" parameterType="java.util.Map">
+        	select  
+				a.id ,
+				a.companyName,
+				b.name,
+				employeeid,
+				a.ip,
+				a.isDel,
+				a.token,
+				a.url,
+				a.createdAt,
+				(select  k.createdAt   from    ch_discuss_chat_record k where k.id=(select max(id) from ch_discuss_chat_record d where d.chatId=a.id))  
+				updatedAt,
+				a.createdBy,
+				a.updatedBy,
+				a.customerName,
+				(case  
+					when  a.customId  is not null     THEN  (select count(*) from ch_chats b where b.customId=a.customId)    
+				END )     chatTimes ,
+							(case  
+								when  a.inPool   =0     THEN '是'    
+								when  a.inPool   =1     THEN '否' 
+							END )     inPool ,
+							(case  
+								when  a.status   =1     THEN '订单完成'    
+								when  a.status   =2     THEN '未接通' 
+								when  a.status   =3     THEN '订单未完成' 
+								when  a.status   =4    THEN '洽谈中' 
+								when  a.status   =5     THEN '等待洽谈' 
+							END )     status 
+				from ch_chats  a
+				left join ch_users b on a.employeeid=b.id
+				where  a.id=#{id}
+    </select>
+    
+    <!-- 根据id获取挂盘id -->
+    <select id="getSellIdById" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select sellId from ch_chats where id = #{id}
+    </select>
+	
+	<select id="countByMallAccount" parameterType="java.lang.String" resultType="int">
+	
+		select count(1) from ch_customs where account =#{account};
+		
+	</select>
+
+	<!-- 批量删除洽谈信息 -->
+	<update id="removeChats" parameterType="java.lang.String">
+		update ch_chats set isDel=1 where id 
+			in
+			<foreach item="idItem" collection="array" open="(" separator="," close=")">
+				#{idItem}
+			</foreach>
+	</update>
+
+	<!-- 批量删除洽谈信息 -->
+	<update id="delChats" parameterType="java.lang.String">
+		update ch_chats set isDel=1 where id 
+			in
+			<foreach item="idItem" collection="array" open="(" separator="," close=")">
+				#{idItem}
+			</foreach>
+	</update>
+
+
+    
+
+    <select id="getChatsCount" parameterType="java.util.Map" resultType="Integer">
+        					
+        					
+select count(*) from (
+				select  
+				a.id ,
+				a.companyName,
+				b.name,
+				employeeid,
+				a.ip,
+				a.createdAt,
+				a.updatedAt,
+				a.createdBy,
+				a.updatedBy,
+				a.isDel,
+				a.customerName,
+				(case  
+					when  a.customId  != null     THEN  (select count(*) from ch_chats b where b.customId=a.customId)    
+				END )     chatTimes ,
+							(case  
+								when  a.inPool   =0     THEN '是'    
+								when  a.inPool   =1     THEN '否' 
+							END )     inPool ,
+							(case  
+								when  a.status   =1     THEN '订单完成'    
+								when  a.status   =2     THEN '未接通' 
+								when  a.status   =3     THEN '订单未完成' 
+								when  a.status   =4    THEN '洽谈中' 
+								when  a.status   =5     THEN '等待洽谈' 
+							END )     status 
+				from ch_chats  a
+				left join ch_users b on a.employeeid=b.id
+				
+				where a.itemId=#{itemId}
+				<include refid="chatsViewType"/>
+				) a
+				where 1=1
+				<include refid="ChatsQueryConditions"/>
+    </select>
+
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   <!--分页查询-->
+    <select id="getChatsList" parameterType="java.util.Map" resultType="java.util.Map">
+    
+    	select * from (
+				select  
+				a.id ,
+				a.createdAt,
+				a.companyName,
+				b.name,
+				a.itemId,
+				a.employeeid,
+				a.ip,
+				a.isDel,
+					(select  k.createdAt   from    ch_discuss_chat_record k where k.id=(select max(id) from ch_discuss_chat_record d where d.chatId=a.id))  
+				updatedAt,
+				a.createdBy,
+				a.updatedBy,
+				(case 
+					when a.customerName is null  then  '' else a.customerName 
+				end) customerName,
+				(case  
+					when  a.customId  is not null     THEN  (select count(*) from ch_chats b where b.customId=a.customId)    
+				END )     chatTimes ,
+							(case  
+								when  a.inPool   =0     THEN '是'    
+								when  a.inPool   =1     THEN '否' 
+							END )     inPool ,
+							(case  
+								when  a.status   =1     THEN '订单完成'    
+								when  a.status   =2     THEN '未接通' 
+								when  a.status   =3     THEN '订单未完成' 
+								when  a.status   =4    THEN '洽谈中' 
+								when  a.status   =5     THEN '等待洽谈' 
+							END )     status 
+				from ch_chats  a 
+
+				left join ch_users b on a.employeeid=b.id
+				where a.itemId=#{itemId}
+				<include refid="chatsViewType"/>
+				) a
+				where 1=1
+			<include refid="ChatsQueryConditions"/>
+			
+			<if test="ids!=null and ids!=''">
+				and 	a.id in (${ids})
+
+			</if>
+			
+			<if test="viewType==4"  >
+					 order by a.updatedAt desc
+		 	</if>
+ 		 	<if test="viewType!=4"  >
+					 order by a.id desc
+		 	</if> 
+	 	
+		 <if test="_start != null and _size != null" >
+			LIMIT  #{_start} , #{_size}
+	  	 </if>
+    </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <update id="updateOrderStatus" parameterType="int">
+    
+    	update ch_chats set orderStatus = 2 where itemId = #{itemId} and orderStatus = 1;
+    
+    </update>
+       <sql id="ChatsQueryConditions" >
+			<if test="attribute != null">
+		         <if test="operator == 1 and content!='' ">
+		 		  	 and   ${attribute}    	like '%${content}%' 
+		   		 </if>  
+		   		<if test="operator == 2 and content!='' ">
+		 			 and   ${attribute}    not   like  '%${content}%' 
+		   		 </if>
+		   		<if test="operator == 3 and content!='' ">
+		 			 and   ${attribute}   =	'${content}' 
+		   		 </if>
+		   		<if test="operator == 4 and content!='' ">
+		 			 and   ${attribute}   !=	'${content}' 
+		   		 </if>
+		   		<if test="operator == 5 and content!='' ">
+		 			 and   ${attribute}   like	'${content}%' 
+		   		 </if>	   		 
+		   		<if test="operator == 6 and content!='' ">
+		 			 and   ${attribute}   like	'%${content}' 
+		   		 </if>	
+		   		<if test="operator == 7">
+		 			 and   ${attribute}   is 	null  
+		   		 </if>	
+		   		<if test="operator == 8">
+		 			 and   ${attribute}   is not null 
+		   		 </if>	 		     
+         </if>
+		</sql>
+
+        <sql id="chatsViewType">
+        	<if test="viewType == null">
+        		and	 isDel = 0
+        	</if>
+        	<if test="viewType!=null">
+	    	  <if test="viewType==1">
+	   			and	 to_days(a.createdAt)  =    to_days(now())<!-- 今日创建 -->
+	    	  </if>
+	    	   <if test="viewType==2">
+	    	  <![CDATA[	and	  date_sub(curdate(), INTERVAL 7 DAY) <= date(a.createdAt)]]> <!-- 周创建 -->
+	    	  </if>
+	    	  <if test="viewType==3">
+	  			 and month(a.createdAt)=MONTH(NOW())	<!-- 月创建 -->
+	    	  </if>
+	    	  <if test="viewType==6">
+	    	  	and	 a.createdBy  =  #{userid} <!-- 我的创建 -->
+	    	  </if>  	  
+	    	  <if test="viewType==7">
+	    	  	and	 a.status  =  2 <!-- 我的创建 -->
+	    	  </if>  	 
+	    	  <if test="viewType==5">
+	   			and	 a.isDel  = 1	<!-- 回收站 -->
+	    	  </if>
+	    	  <if test="viewType!=5">	
+	   			and	 a.isDel  = 0	
+	    	  </if>
+	    	  
+	    	 </if>
+	    	 
+    </sql>
+    
+	<select id="getChatsCompany" parameterType="int" resultType="com.smm.cuohe.domain.Company">
+		 select   id,name,entTypes   from  ch_company where id = #{companyId}
+	</select>
+	
+	
+	<select id="getUserByEmployeeId" parameterType="int" resultType="com.smm.cuohe.domain.User">
+	
+		select   *  from  ch_users where id = #{companyId}
+
+	</select>
+	
+	<select id="getdiscussChatRecordByChatId" parameterType="int" resultType="com.smm.cuohe.domain.DiscussChatRecord">
+	
+		select   *  from  ch_discuss_chat_record where chatID=#{chatID} order by createdAt desc  limit 1
+
+	</select>
+	
+	<select id="getChatsByemployeeId" parameterType="java.util.Map" resultType="com.smm.cuohe.domain.Chats">
+	
+		 select   *  from  ch_chats where employeeId = #{employeeId} and itemID = #{itemId}
+		 
+		 and DATE_ADD(onlineTime, INTERVAL 30 SECOND)>#{sysTime,jdbcType=TIMESTAMP}
+
+	</select>
+	
+	
+	<update id="updateById"  parameterType="java.util.Map">
+	
+		update ch_users set Online = #{online} where id = #{employeeId}
+		
+	</update>
+	
+	
+	<select id="getUserById" parameterType="int" resultType="com.smm.cuohe.domain.User">
+				 select   id,name from  ch_users  where id = #{id}
+	</select>
+	
+	
+	
+	<update id="updateStatusById"  parameterType="java.util.Map">
+		UPDATE ch_chats 
+			SET
+				STATUS = #{status},
+				orderId=#{orderId}
+			WHERE
+					id = #{id}
+	</update>
+	
+	<select id="getAllRecordCount" parameterType="int" resultType="int">
+	
+		select count(1) from ch_discuss_chat_record where chatId = #{chatId};
+	
+	</select>
+
+	<select id="getAllRecord" resultType="com.smm.cuohe.domain.DiscussChatRecord">
+  	
+  		select case type when 0 then '文本' when 1 then '议价' when 2 then '确认订单' end typeText,
+  			content,
+  			case chatFromType when 'U' then '撮合员' when 'C' then '用户' end chatFromType,
+  			createdAt
+  		from ch_discuss_chat_record
+  		where chatId = #{chatId} and type in(0,1,2)
+  		order by createdAt asc
+  		limit #{start}, #{len};
+  	
+  	</select>
+
+	<update id="updateChatsById" parameterType="java.util.Map">
+	
+		update ch_chats set updatedAt = #{updatedAt} where id = #{chatID}
+	
+	</update>
+	
+	<select id="getChatByEmpToday" resultType="int">
+	    SELECT COUNT(id) from ch_chats WHERE employeeId = #{empId}
+		<if test="startDate!=null">
+	     AND createdAt>DATE(#{startDate,jdbcType=TIMESTAMP})
+	    </if>
+	    <if test="endDate!=null">
+	    AND createdAt &lt; date_add(DATE(#{endDate,jdbcType=TIMESTAMP}), INTERVAL 1 day)
+	    </if>
+	</select>
+	<select id="getValidChats" resultType="com.smm.cuohe.domain.DiscussChatRecord">
+	    SELECT c.id AS chatId,r.id AS id,r.chatFromType,r.type,r.createdAt as createdAt FROM ch_chats c
+
+        LEFT  JOIN ch_discuss_chat_record r ON r.chatID = c.id
+
+        WHERE  r.id is NOT null AND c.employeeId = #{empId}
+	    
+	    <if test="startDate!=null">
+	     AND r.createdAt>DATE(#{startDate,jdbcType=TIMESTAMP})
+	    </if>
+	    <if test="endDate!=null">
+	    AND r.createdAt &lt; date_add(DATE(#{endDate,jdbcType=TIMESTAMP}), INTERVAL 1 day)
+	    </if>
+	</select>
+	
+	<select id="getChatTimes" resultType="com.smm.cuohe.domain.DiscussChatRecord">
+        SELECT c.id AS chatId ,MAX(r.createdAt) AS maxCreateTime,MIN(r.createdAt) AS minCreateTime FROM ch_chats c
+
+        LEFT  JOIN ch_discuss_chat_record r ON r.chatID = c.id 
+
+        WHERE r.id is NOT NULL AND r.chatFromType &lt;> '3'  AND c.employeeId = #{empId}
+        <if test="startDate!=null">
+	     AND r.createdAt>DATE(#{startDate,jdbcType=TIMESTAMP})
+	    </if>
+	    <if test="endDate!=null">
+	    AND r.createdAt &lt; date_add(DATE(#{endDate,jdbcType=TIMESTAMP}), INTERVAL 1 day)
+	    </if>
+        GROUP BY c.id
+     </select>
+</mapper>

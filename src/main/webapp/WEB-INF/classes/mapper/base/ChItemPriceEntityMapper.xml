@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChItemPriceEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChItemPriceEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="itemId" property="itemid" jdbcType="INTEGER" />
+    <result column="itemName" property="itemname" jdbcType="VARCHAR" />
+    <result column="recommendType" property="recommendtype" jdbcType="INTEGER" />
+    <result column="recommend" property="recommend" jdbcType="DECIMAL" />
+    <result column="highType" property="hightype" jdbcType="INTEGER" />
+    <result column="high" property="high" jdbcType="DECIMAL" />
+    <result column="lowType" property="lowtype" jdbcType="INTEGER" />
+    <result column="low" property="low" jdbcType="DECIMAL" />
+    <result column="cretedAt" property="cretedat" jdbcType="TIMESTAMP" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, itemId, itemName, recommendType, recommend, highType, high, lowType, low, cretedAt, 
+    createdBy
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_item_price
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_item_price
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChItemPriceEntity" >
+    insert into ch_item_price (id, itemId, itemName, 
+      recommendType, recommend, highType, 
+      high, lowType, low, 
+      cretedAt, createdBy)
+    values (#{id,jdbcType=INTEGER}, #{itemid,jdbcType=INTEGER}, #{itemname,jdbcType=VARCHAR}, 
+      #{recommendtype,jdbcType=INTEGER}, #{recommend,jdbcType=DECIMAL}, #{hightype,jdbcType=INTEGER}, 
+      #{high,jdbcType=DECIMAL}, #{lowtype,jdbcType=INTEGER}, #{low,jdbcType=DECIMAL}, 
+      #{cretedat,jdbcType=TIMESTAMP}, #{createdby,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChItemPriceEntity" >
+    insert into ch_item_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemid != null" >
+        itemId,
+      </if>
+      <if test="itemname != null" >
+        itemName,
+      </if>
+      <if test="recommendtype != null" >
+        recommendType,
+      </if>
+      <if test="recommend != null" >
+        recommend,
+      </if>
+      <if test="hightype != null" >
+        highType,
+      </if>
+      <if test="high != null" >
+        high,
+      </if>
+      <if test="lowtype != null" >
+        lowType,
+      </if>
+      <if test="low != null" >
+        low,
+      </if>
+      <if test="cretedat != null" >
+        cretedAt,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="itemname != null" >
+        #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendtype != null" >
+        #{recommendtype,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        #{recommend,jdbcType=DECIMAL},
+      </if>
+      <if test="hightype != null" >
+        #{hightype,jdbcType=INTEGER},
+      </if>
+      <if test="high != null" >
+        #{high,jdbcType=DECIMAL},
+      </if>
+      <if test="lowtype != null" >
+        #{lowtype,jdbcType=INTEGER},
+      </if>
+      <if test="low != null" >
+        #{low,jdbcType=DECIMAL},
+      </if>
+      <if test="cretedat != null" >
+        #{cretedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChItemPriceEntity" >
+    update ch_item_price
+    <set >
+      <if test="itemid != null" >
+        itemId = #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="itemname != null" >
+        itemName = #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendtype != null" >
+        recommendType = #{recommendtype,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        recommend = #{recommend,jdbcType=DECIMAL},
+      </if>
+      <if test="hightype != null" >
+        highType = #{hightype,jdbcType=INTEGER},
+      </if>
+      <if test="high != null" >
+        high = #{high,jdbcType=DECIMAL},
+      </if>
+      <if test="lowtype != null" >
+        lowType = #{lowtype,jdbcType=INTEGER},
+      </if>
+      <if test="low != null" >
+        low = #{low,jdbcType=DECIMAL},
+      </if>
+      <if test="cretedat != null" >
+        cretedAt = #{cretedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChItemPriceEntity" >
+    update ch_item_price
+    set itemId = #{itemid,jdbcType=INTEGER},
+      itemName = #{itemname,jdbcType=VARCHAR},
+      recommendType = #{recommendtype,jdbcType=INTEGER},
+      recommend = #{recommend,jdbcType=DECIMAL},
+      highType = #{hightype,jdbcType=INTEGER},
+      high = #{high,jdbcType=DECIMAL},
+      lowType = #{lowtype,jdbcType=INTEGER},
+      low = #{low,jdbcType=DECIMAL},
+      cretedAt = #{cretedat,jdbcType=TIMESTAMP},
+      createdBy = #{createdby,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

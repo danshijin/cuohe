@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.ICommodityAttrDAO">
+	
+	<resultMap type="com.smm.cuohe.domain.CommodityAttr" id="CommodityAttr">
+	
+		<id property="id" column="id" jdbcType="INTEGER"/>
+		
+		<result property="commodityId" column="commodity_id" jdbcType="INTEGER"/>
+		
+		<result property="attrId" column="attr_id" jdbcType="INTEGER" />
+		
+		<result property="attrValue" column="attr_value" jdbcType="VARCHAR" />
+		
+		<result property="attrName" column="attr_name" jdbcType="VARCHAR" />
+		
+		<result property="commodityName" column="commodity_name" jdbcType="VARCHAR" />
+		
+		<result property="createTime" column="create_time" jdbcType="VARCHAR" />
+		
+		<result property="editTime" column="edit_time" jdbcType="VARCHAR" />
+	
+	</resultMap>
+	
+	<select id="getCommidtyAttrByCommodityId" parameterType="int" resultMap="CommodityAttr">
+	
+		select * from ch_commodity_attr where commodity_id = #{commodityId};
+	
+	</select>
+
+</mapper>

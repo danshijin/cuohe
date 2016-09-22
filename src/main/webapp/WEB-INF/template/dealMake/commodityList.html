@@ -1,0 +1,29 @@
+<table border="0">
+
+<tr> <td width="30px"></td>
+<#list attrnamelist as attrname>
+<td width="130px"> ${attrname.name}  </td>
+
+  </#list> 
+  </tr>
+ 
+ <#list commlist as com>
+ <tr>
+	 <td><input type="radio"  value="${com.id}"  name="commodityId"/></td>
+	 <#list attrnamelist as attrn>
+	 <td>
+	 	<#list com.attrValuelist as attr>
+	 		
+	 			<#if attrn.name==attr.attrName>
+	 					${attr.attrValue}
+	 			</#if>
+	 		
+	 	</#list> 
+	 	</td>
+	 </#list>
+ </tr>
+ 
+ </#list>
+
+</table>
+

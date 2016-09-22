@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.IDiscussChatRecordDAO">
+
+	
+	<insert id="addRecord" parameterType="com.smm.cuohe.domain.DiscussChatRecord">
+		
+		insert into ch_discuss_chat_record(
+             chatID,
+             type,
+             <if test="content != null" >
+             	content,
+             </if>
+             <if test="price != null" >
+             	price,
+             </if>
+             <if test="volumn != null" >
+             	volumn,
+             </if>
+             chatFromType,
+             chatFromID,
+             status,
+             employeeID,
+             createdAt
+		) values (
+			#{chatId,jdbcType=INTEGER},
+			#{type,jdbcType=INTEGER},
+			<if test="content != null" >
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null" >
+				#{price,jdbcType=DOUBLE},
+			</if>
+			<if test="volumn != null" >
+				#{volumn,jdbcType=DOUBLE},
+			</if>
+			#{chatFromType,jdbcType=VARCHAR},
+			#{chatFromId,jdbcType=INTEGER},
+			#{status,jdbcType=INTEGER},
+			#{employeeId,jdbcType=INTEGER},
+			#{sysTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<select id="addRecordWithCheck" resultType="java.lang.Integer">
+	
+		CALL addChatRecordWithCheck(#{record.chatId},
+									#{record.type},
+									#{record.content},
+									#{record.price},
+									#{record.volumn},
+									#{record.chatFromType},
+									#{record.chatFromId},
+									#{record.status},
+									#{record.sysTime},
+									#{token}
+									);
+	
+	</select>
+	
+	
+	<select id="changeRecordStatusByDealMaker" resultType="java.lang.Integer">
+	
+		CALL changeRecordStatus(#{chatRecordId}, #{destStatus}, #{overtimeSeconds},#{sysTime});
+	
+	</select>
+	
+	<select id="isWakeUp" resultType="int">
+	
+		SELECT count(1) FROM ch_discuss_chat_record
+		WHERE chatId = #{chatId} AND employeeId = #{employeeId} AND TYPE = 3 AND STATUS = 4 AND chatFromType = 'U';
+	
+	</select>
+	
+	<select id="hasItemIdForDealMaker" parameterType="int" resultType="int">
+  		select count(1) from ch_items where id = #{itemId}
+  	</select>
+  	
+</mapper>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- 模态窗口编辑模板 -->
+<form action="" id="myform" class="form-horizontal form-bordered" novalidate="novalidate" method="post">
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;">选择联系人</h4>
+</div>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body">
+	<div class="portlet-body form">
+		<form role="form" class="form-horizontal" id="myForm">
+			<div class="form-body">
+				<div class="form-group form-md-radios">
+					<div >
+						<table class="ttTbl">
+							<thead>
+								<tr>
+									<th>&nbsp;</th>
+									<th>联系人姓名</th>
+									<th>关键人</th>
+									<th>手机</th>
+									<th>邮箱</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#list contacterList as contacter>
+									<tr>
+										<td><input type="checkbox" value="${contacter.id}" customerName ="${(contacter.name)!}" phone="${(contacter.mobilePhone)!}" email="${(contacter.email)!}"></td>
+										<td>${(contacter.name)!}</td>
+										<td>${(contacter.keyPersonTxt)!}</td>
+										<td>${(contacter.mobilePhone)!}</td>
+										<td>${(contacter.email)!}</td>
+									</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer">
+	<button type="button" onclick="sendContract()" class="btn green  fa fa-check"> 确定</button>
+	<button type="button" class="btn default fa fa-times" data-dismiss="modal"> 取消</button>
+</div>
+<!-- 结束 -->
+</form>
+<script>
+	var orderId = ${(orderId)!};
+	var sendType = "${(sendType)!}";
+	function sendContract(){
+		var phoneOrEmail = "";
+		var customerName = "";
+		$(".ttTbl tbody :checked").each(function(index, element){
+			
+			if(phoneOrEmail != ""){
+				phoneOrEmail +=",";
+			}
+			if(sendType == "sms"){
+				phoneOrEmail += $(element).attr("phone");
+			} else if (sendType == "email"){
+				phoneOrEmail += $(element).attr("email");
+			}
+			customerName = $(element).attr("customerName");
+		});
+		
+		$.get("sendContractBySelectedContacters.do", {"phoneOrEmail": phoneOrEmail, "customerName": customerName, "sendType": sendType, "orderId": orderId}, function(data){
+			
+			alert(data);
+			$(".close").click();
+		});
+		
+	}
+	
+	
+	
+</script>

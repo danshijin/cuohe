@@ -1,0 +1,105 @@
+<div class="col-md-12">
+	<div class="portlet light bordered" style="padding-bottom:25px;">
+		<div class="portlet-body" style="height: 13px;padding-top: 0px">
+			<div style="float: left;margin-top:3px;">
+				<span style="font-size:18px;">企业信息</span>
+			</div>
+			<div style="float: right; margin-bottom:5px;" id="ciBtn">
+				<button class="btn green" id="infoUpdate" >修改</button>
+				<button class="btn green" id="infoSave" style="display:none;">保存</button>
+				<button class="btn green" id="infoRestore">还原</button>
+				<button class="btn green" id="infoDel">删除</button>
+				<button class="btn green" onclick="toBack()">返回</button>
+			</div>
+		</div>
+	</div>    
+</div>
+<div class="col-md-12">
+	<div class="portlet light bordered">
+		<div class="portlet-body">
+		<form id="frm1">
+			<table class="tb" cellspacing="1" border="1">
+				<tr>
+					<td class="tdTitle" style="min-width:100px;">创建时间</td>
+					<td class="tdContent" id="createdAt"></td>
+					<td class="tdTitle">创建人</td>
+					<td class="tdContent" id="createdBy"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">负责人</td>
+					<td class="tdContent" id="pic"></td>
+					<td class="tdTitle">来源</td>
+					<td class="tdContent" id="categorySource"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">公司名</td>
+					<td class="tdContent" id="name"></td>
+					<td class="tdTitle">行业</td>
+					<td class="tdContent" id="salesProducts"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">客户级别</td>
+					<td class="tdContent" id="categoryCoo"></td>
+					<td class="tdTitle">省份</td>
+					<td class="tdContent" id="province"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">企业类型</td>
+					<td class="tdContent" id="entTypes"></td>
+					<td class="tdTitle">地址</td>
+					<td class="tdContent" id="address"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">年销售额</td>
+					<td class="tdContent" id="salesVolume"></td>
+					<td class="tdTitle">员工人数</td>
+					<td class="tdContent" id="categoryEmployee"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">法人</td>
+					<td class="tdContent" id="corporate"></td>
+					<td class="tdTitle">注册时间</td>
+					<td class="tdContent" id="registerDate"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">公司电话</td>
+					<td class="tdContent" id="companyPhone"></td>
+					<td class="tdTitle">企业性质</td>
+					<td class="tdContent" id="companyProperty"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">网址</td>
+					<td class="tdContent" id="companySite"></td>
+					<td class="tdTitle">联系人</td>
+					<td class="tdContent" id="contacters"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">关联企业</td>
+					<td class="tdContent" id="companyAss"></td>
+					<td class="tdTitle">首要采购联系人</td>
+					<td class="tdContent" id="primaryPurchaseContacter"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">采购商品</td>
+					<td class="tdContent" id="buyProducts"></td>
+					<td class="tdTitle">采购周期</td>
+					<td class="tdContent" id="categoryFreq"></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">上次采购时间</td>
+					<td class="tdContent" id="lastPurchaseTime"></td>
+					<td class="tdTitle"></td>
+					<td class="tdContent" id=""></td>
+				</tr>
+				<tr>
+					<td class="tdTitle"><div style="line-height:80px;">备注</div></td>
+					<td colspan=3  class="tdContent" id="commands"></td>
+				</tr>
+			</table></form>
+		</div>
+	</div>    
+</div>
+<script>
+company = ${customerJson};
+</script>
+<script src="${request.getContextPath()}/Public/js/customerDetail/companyView.js" type="text/javascript"></script>

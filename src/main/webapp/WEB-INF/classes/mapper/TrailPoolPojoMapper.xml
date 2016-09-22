@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.customermanage.ITrailPoolPojoDAO">
+
+<select id="getAllProductsByItemId" parameterType="int" resultType="java.lang.String">
+
+	select productName from ch_item_products where itemId = #{itemId}
+
+</select>
+
+    <!--  查询所有线索  -->
+    <select id="getTrailPoolList" parameterType="java.util.Map" resultType="TrailPoolPOJO">
+  SELECT p.id, 
+	itemId, 
+	userID userId,
+	getUserNameById(userID) userName, 
+	categorySource,
+	getCategoryNameById(categorySource) categorySourceName, 
+	nextTime, 
+	nextContext, 
+	p.status, 
+	createdAt, 
+	createdBy,
+	getUserNameById(createdBy), 
+	updatedAt, 
+	updatedBy,
+	getUserNameById(updatedBy),
+	categoryCoo, 
+	companyName, 
+	salesProducts,
+	address, 
+	corporate, 
+	companyPhone, 
+	compaySite,
+	entTypes, 
+	categoryEmployee,
+	getCategoryNameById(categoryEmployee) categoryEmployeeName, 
+	salesVolume,
+	getCategoryNameById(salesVolume) salesVolumeName, 
+	strRegisterDate, 
+	companyProperty,
+	getCategoryNameById(companyProperty) companyPropertyName,
+	c.id contractId,
+	c.contactName contractName,
+	c.email,
+	c.positions,
+	c.qqNum,
+	c.mobilePhone	 
+	FROM 
+	ch_trail_pool p  
+	left JOIN   ch_trail_contract c ON p.id=c.trailId AND  c.keycon=0    where   (
+	<if test="productsList!=null and !productsList.isEmpty()">
+	(
+	
+		<foreach collection="productsList" index="index" item="item" open="(" separator="or" close=")">
+		
+			p.salesProducts like '%${item}%' 
+		
+		</foreach>
+		
+	) or  
+	</if>p.itemId=#{itemId}) 
+	 
+       	<if test="trailId!=null and trailId!=''"> <!--  进行trailId筛选 -->
+	      AND p.id in (${trailId})
+	    </if> 
+	    <if test="type!=null and type!='' and type==1"> <!--  网站注册 -->
+	      AND p.categorySource=1
+	    </if> 
+	       <if test="type!=null and type!='' and type==2">  <!--  我创建的 -->
+	       AND p.createdBy=#{userID}
+	    </if>
+	    <if test="type!=null and type!='' and type==3">   <!--  部门创建的 -->
+	       AND p.itemId=#{itemId}
+	    </if> 
+	    <if test="type!=null and type!='' and type==4">   <!--  本月需要联系的 -->
+	      AND DATE_FORMAT(p.nextTime,'%Y-%m-%d') BETWEEN #{firstDate}  AND #{lastDate}
+	    </if>
+	    <if test="type!=null and type!='' and type==5">   <!--  从未联系的 -->
+	     <!--  AND c.id NOT IN(SELECT r.companyID FROM ch_com_records r) -->
+	    </if>
+	    <if test="type!=null and type!='' and type==9">   <!--  已转换 -->
+	     AND p.status =2
+	    </if>  
+	    <choose>
+	    	<when test="type!=null and type!='' and type==8"><!--  回收站 -->
+	    		AND p.status =1
+	    	</when>
+	    	<otherwise>
+	    		AND p.status !=1
+	    	</otherwise>
+	    </choose>
+	    <!-- 搜索条件 -->
+		<if test="tooplVal!=null and tooplVal!=''"><!-- 首先保证搜索条件2不为空 -->
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==1"><!-- 公司名称 搜索 -->
+		    	AND p.companyName ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==2"><!-- 来源 搜索 -->
+		    	AND getCategoryNameById(categorySource) ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==3"><!-- 联系人 搜索 -->
+		    	AND c.contactName ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==4"><!-- 职位 搜索 -->
+		    	AND c.positions ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==5"><!-- 手机 搜索 -->
+		    	AND c.mobilePhone ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==6"><!-- 邮箱 搜索 -->
+		    	AND c.email ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==7"><!-- qq 搜索 -->
+		    	AND c.qqNum ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==8"><!-- 地址 搜索 -->
+		    	AND p.address ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==9"><!-- 下次联系时间 搜索 -->
+		    	AND p.nextTime ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==10"><!-- 下次联系内容 搜索 -->
+		    	AND p.nextContext ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==11"><!-- 下次联系内容 搜索 -->
+		    	AND getUserNameById(userID) ${tpoolTwo} 
+		    </if>
+		     <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==12"><!-- 创建时间搜索 -->
+		    	AND p.createdAt ${tpoolTwo} 
+		    </if>
+		    <if test="tpoolOne!=null and tpoolOne!='' and tpoolOne==13"><!-- 修改时间 搜索 -->
+		    	AND p.updatedAt ${tpoolTwo} 
+		    </if>
+	    </if>
+		 <choose>
+	    	 <when test="type!=null and type!='' and type==7"> <!--  最近修改 -->
+	    	 		 ORDER BY  p.updatedAt  DESC   ,p.id desc
+	     	 </when>
+		     <otherwise> <!--  最近创建 或者全部 -->
+		     	  	ORDER BY  p.updatedAt  DESC ,p.id desc
+	         </otherwise>  
+        </choose>
+        <if test="startNum!=null and endNum !=null ">
+        	limit ${startNum},${endNum}
+        </if>
+    </select>
+    
+    <!-- 批量删除 -->
+	<update id="updateList" parameterType="String">
+		  UPDATE ch_trail_pool p SET p.status='1' WHERE p.id IN (${value})
+   </update>
+   
+   <!-- 添加线索池  -->
+   <insert id="addTrailPool" parameterType="com.smm.cuohe.domain.TrailPoolPOJO"  useGeneratedKeys="true" keyProperty="id"> 
+   
+   INSERT INTO ch_trail_pool 
+	( 
+	itemId, 
+	userID, 
+	categorySource, 
+	nextTime, 
+	nextContext, 
+	STATUS, 
+	createdAt, 
+	createdBy, 
+	updatedAt, 
+	updatedBy, 
+	categoryCoo, 
+	companyName, 
+	salesProducts, 
+	address, 
+	corporate, 
+	companyPhone, 
+	compaySite, 
+	entTypes, 
+	categoryEmployee, 
+	salesVolume, 
+	strRegisterDate, 
+	companyProperty,
+	areaId,
+	city
+	)
+	VALUES
+	( 
+	#{itemId,jdbcType=INTEGER},
+	#{userId,jdbcType=INTEGER},
+	#{categorySource,jdbcType=INTEGER},
+	#{nextTime,jdbcType=VARCHAR},
+	#{nextContext,jdbcType=INTEGER},
+	0,
+	#{createdAt,jdbcType=VARCHAR},
+	#{createdBy,jdbcType=INTEGER},
+	#{updatedAt,jdbcType=VARCHAR},
+	#{updatedBy,jdbcType=INTEGER},
+	#{categoryCoo,jdbcType=VARCHAR},
+	#{companyName,jdbcType=VARCHAR},
+	#{salesProducts,jdbcType=VARCHAR},
+	#{address,jdbcType=VARCHAR},	
+	#{corporate,jdbcType=VARCHAR},
+	#{companyPhone,jdbcType=VARCHAR},
+	#{compaySite,jdbcType=VARCHAR},
+	#{entTypes,jdbcType=VARCHAR},
+	#{categoryEmployee,jdbcType=INTEGER},
+	#{salesVolume,jdbcType=INTEGER},
+	#{strRegisterDate,jdbcType=VARCHAR},
+	#{companyProperty,jdbcType=INTEGER},
+	#{areaId,jdbcType=INTEGER},
+	#{city,jdbcType=INTEGER}
+		
+	);
+
+   </insert>
+   <!-- 添加线索联系人 -->
+   <insert id="addTrailContacer" parameterType="com.smm.cuohe.domain.TrailContract" >   
+		INSERT INTO ch_trail_contract 
+			(
+			trailId, 
+			positions, 
+			contactName, 
+			mobilePhone, 
+			qqNum, 
+			email, 
+			STATUS, 
+			KEYCON,
+			sex
+			)
+			VALUES
+			(
+			 #{trailId,jdbcType=INTEGER},
+			 #{positions,jdbcType=VARCHAR},
+			 #{contactName,jdbcType=VARCHAR},
+			 #{mobilePhone,jdbcType=VARCHAR},
+		 	 #{qqNum,jdbcType=VARCHAR},
+			 #{email,jdbcType=VARCHAR},
+			 #{status,jdbcType=INTEGER},
+			 #{first,jdbcType=INTEGER},
+			 #{sex,jdbcType=VARCHAR}
+			);
+   
+   
+   </insert>
+	<!-- 根据ID查询线索 -->
+	<select id="getTrailPoolById" parameterType="java.lang.String"  resultType="TrailPoolPOJO">
+	 SELECT p.id, 
+	itemId, 
+	userID userId,
+	getUserNameById(userID) userName, 
+	categorySource,
+	getCategoryNameById(categorySource) categorySourceName, 
+	nextTime, 
+	nextContext, 
+	p.status, 
+	createdAt, 
+	createdBy,
+	getUserNameById(createdBy), 
+	updatedAt, 
+	updatedBy,
+	getUserNameById(updatedBy),
+	categoryCoo, 
+	companyName, 
+	salesProducts,
+	address, 
+	corporate, 
+	companyPhone, 
+	compaySite,
+	entTypes, 
+	categoryEmployee,
+	getCategoryNameById(categoryEmployee) categoryEmployeeName, 
+	salesVolume,
+	getCategoryNameById(salesVolume) salesVolumeName, 
+	strRegisterDate, 
+	companyProperty,
+	getCategoryNameById(companyProperty) companyPropertyName,
+	c.id contractId,
+	c.contactName contractName,
+	c.email,
+	c.positions,
+	c.qqNum,
+	c.mobilePhone,
+	areaId,
+	city	 
+	FROM 
+	ch_trail_pool p  
+
+	left JOIN   ch_trail_contract c ON p.id=c.trailId AND  c.keycon=0  where p.id =#{value}
+
+	
+	</select>
+	<!-- 查询线索 -->
+	<select id="getTrailpoolById" parameterType="java.lang.String"  resultType="TrailPoolPOJO">
+	 SELECT p.id, 
+	itemId, 
+	userID userId,
+	getUserNameById(userID) userName, 
+	categorySource,
+	getCategoryNameById(categorySource) categorySourceName, 
+	nextTime, 
+	nextContext, 
+	p.status, 
+	createdAt, 
+	createdBy,
+	getUserNameById(createdBy), 
+	updatedAt, 
+	updatedBy,
+	getUserNameById(updatedBy),
+	categoryCoo, 
+	companyName, 
+	salesProducts,
+	address, 
+	corporate, 
+	companyPhone, 
+	compaySite,
+	entTypes, 
+	categoryEmployee,
+	getCategoryNameById(categoryEmployee) categoryEmployeeName, 
+	salesVolume,
+	getCategoryNameById(salesVolume) salesVolumeName, 
+	strRegisterDate, 
+	companyProperty,
+	getCategoryNameById(companyProperty) companyPropertyName,
+	c.id contractId,
+	c.contactName contractName,
+	c.email,
+	c.positions,
+	c.qqNum,
+	c.mobilePhone,
+	areaId,
+	city	 
+	FROM 
+	ch_trail_pool p  
+
+	left JOIN   
+	ch_trail_contract c 
+	ON p.id=c.trailId 
+	AND  c.keycon=0  
+	where 
+	1=1
+
+	<if test="trailIds!=null and trailIds!=''">
+	and p.id  in    
+   			(${trailIds})
+	</if>
+	and p.status !=1
+	ORDER BY  p.updatedAt DESC ,p.id desc
+	</select>
+	
+	
+	
+	
+	<!-- 根据线索ID查询线索联系人 -->
+	
+	<select id="gettrailcontractBytraiId" parameterType="java.lang.Integer"  resultType="com.smm.cuohe.domain.TrailContract">
+	SELECT 	id, 
+	trailId, 
+	positions, 
+	contactName, 
+	mobilePhone, 
+	qqNum, 
+	email, 
+	STATUS, 
+	keycon FIRST, 
+	sex
+	 
+	FROM 
+	ch_trail_contract    where trailId=#{value}
+	</select>
+<!-- 修改线索 -->
+    <update id="updateTrail" parameterType="com.smm.cuohe.domain.TrailPoolPOJO">
+    UPDATE ch_trail_pool 
+	SET
+	itemId = #{itemId,jdbcType=INTEGER} , 
+	userID = #{userId,jdbcType=INTEGER} , 
+	categorySource = #{categorySource,jdbcType=INTEGER} , 
+	nextTime = #{nextTime,jdbcType=VARCHAR} , 
+	nextContext = #{nextContext,jdbcType=INTEGER} , 
+	STATUS = 0, 
+	updatedAt = #{updatedAt,jdbcType=VARCHAR} , 
+	updatedBy = #{updatedBy,jdbcType=INTEGER} , 
+	categoryCoo =#{categoryCoo,jdbcType=VARCHAR}, 
+	companyName = #{companyName,jdbcType=VARCHAR} , 
+	salesProducts = #{salesProducts,jdbcType=VARCHAR} , 
+	address = #{address,jdbcType=VARCHAR}, 
+	corporate = #{corporate,jdbcType=VARCHAR} , 
+	companyPhone = #{companyPhone,jdbcType=VARCHAR}, 
+	compaySite = #{compaySite,jdbcType=VARCHAR} , 
+	entTypes = #{entTypes,jdbcType=VARCHAR}, 
+	categoryEmployee = #{categoryEmployee,jdbcType=INTEGER} , 
+	salesVolume = #{salesVolume,jdbcType=INTEGER}, 
+	strRegisterDate = #{strRegisterDate,jdbcType=VARCHAR} , 
+	companyProperty = #{companyProperty,jdbcType=INTEGER}, 
+	areaId = #{areaId,jdbcType=INTEGER}, 
+	city = #{city,jdbcType=INTEGER}	
+	WHERE
+	id = #{id,jdbcType=INTEGER} ;
+   </update>
+ <update id="updateTrailCon" parameterType="com.smm.cuohe.domain.TrailContract">
+ 
+	update  ch_trail_contract set  
+		
+			trailId=  #{trailId,jdbcType=INTEGER},
+			positions= #{positions,jdbcType=VARCHAR},
+			contactName= #{contactName,jdbcType=VARCHAR}, 
+			mobilePhone=  #{mobilePhone,jdbcType=VARCHAR},
+			qqNum=  #{qqNum,jdbcType=VARCHAR},
+			email=  #{email,jdbcType=VARCHAR},
+			STATUS= #{status,jdbcType=INTEGER},
+			KEYCON= #{first,jdbcType=INTEGER},
+			sex= #{sex,jdbcType=INTEGER}
+			where id=#{id,jdbcType=INTEGER}
+
+ </update>  
+   
+   
+</mapper>

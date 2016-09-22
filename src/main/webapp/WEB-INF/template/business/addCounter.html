@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+	<!-- 数字小数点后两位工具类 -->
+<script type="text/javascript" src="${request.getContextPath()}/Public/js/common/util.js"></script>
+<!-- 模态窗口编辑模板 -->
+<form action="" id="myform" class="form-horizontal form-bordered" novalidate="novalidate" method="post">
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;">进行还盘</h4>
+</div>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body">
+	<div class="portlet-body form">
+		<form role="form" class="form-horizontal" id="myForm">
+			<div class="form-body">
+				<input type="hidden" id="poolId" value="${poolId}">
+				<input type="hidden" id="poolType" value="${poolType}">
+				<input type="hidden" id="customerId" value="${customerId}">
+          		<table class="table table-striped  table-advance table-hover" border="0">
+		        	<tr>
+		        		<td style="text-align:right;">企业名称：</td>
+		        		<td><input  name="companyName"  id="companyName" style="width:200px;" />
+		        		<input  type="hidden"  id="companyNames" style="width:200px;" />
+		        		<span id="ERROR1" style="display:none;color: red;font-size: 12px;"">本客户已列为黑名单，不能进行还盘操作</span>
+		        		<span id="ERROR2" style="display:none;color: red;font-size: 12px;"">卖方已被对方列为黑名单，不能进行还盘操作</span>
+		        		<span id="ERROR3" style="display:none;color: red;font-size: 12px;">双方互为黑名单关系，不能进行还盘操作</span>
+		        		<span id="ERROR4" style="display:none;color: red;font-size: 12px;">不能选择自家公司还盘！</span>
+		        		</td>
+		        	</tr>
+		        	<tr>
+		        		<td style="text-align:right;">数量：</td>
+		        		<td>${quantity!''}</td>
+		        	</tr>
+		        	<tr>
+		        		<td style="text-align:right;">价格：</td>
+		        		<td>
+		        			<div class="form-group">
+							    <div class="col-sm-1"> 
+								    <input type="hidden" id="priceType_a" value="${priceType}"> 
+							    	<input type="hidden" name="priceType" id="priceType" value="${priceType}">
+							    	<input type="hidden" name="low" id="low" value="${low}">
+							     	 <select class="form-control" style="width:100px;" disabled >
+									    <!-- <#if "${priceType}"==0>
+							    			<option value="0"> 实价 </option>
+									   	<#else>
+											<option value="1"> 升  </option>
+											<option value="2"> 贴  </option>
+									   </#if> -->
+									     <option value="0" <#if priceType == 0>selected</#if>> 实价 </option>
+									     <option value="1" <#if priceType == 1>selected</#if>> 升贴水  </option>
+									</select>
+							    </div>
+							    <div style="width:200px; float:left; margin-left:90px;">
+									 <input type="text" id="price" class="form-control"/>
+									 
+									 <!-- 价格校验暂时舍弃  2015年12月29日下午4:46:57 -->
+									 <!-- <input type="text" id="price" class="form-control" onblur="checkPrice()"/> -->
+									 <!--  <span id="ERROR" style="display:none;color: red;font-size: 12px;"">还盘价不能低于今日最低报盘价</span> -->
+								</div>
+							</div>
+		        		</td>
+		        	</tr>
+				</table>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer">
+	<button type="button" class="btn default fa fa-times" data-dismiss="modal" id ="closeAddOfferView"> 返回</button>
+	<button type="button" onclick="addCounter()" class="btn green  fa fa-check"> 新建</button>
+</div>
+<!-- 结束 -->
+</form>
+<script>
+	$(function(){
+		selectCompany("companyName");
+		var priceType_a = $("#priceType_a").val();
+		var priceType = document.getElementById("priceType");
+		for (var i = 0; i < priceType.length; i++) {
+			if (priceType.options[i].value == priceType_a) {
+				priceType.options[i].selected = 'selected';
+			}
+		}
+		//小数点后两位check
+		checkNum_2($('#price'));
+	});
+	
+	//新建 
+	function addCounter(){
+		var poolPrice = {};
+		poolPrice.poolId = ${poolId};
+		poolPrice.poolType = ${poolType};
+		poolPrice.price = $("#price").val();
+		poolPrice.priceType = $("#priceType_a").val();
+		poolPrice.customerId = $("#companyName").val();
+		poolPrice.lastCustomerName = encodeURI($("#companyNames").val());
+		/* if($("#ERROR").css("display") == "inline"){
+			return false;
+		} */
+		if($("#ERROR1").css("display")=="inline" || $("#ERROR2").css("display")=="inline" || $("#ERROR3").css("display")=="inline" ||$("#ERROR4").css("display")=="inline"){
+			return;
+		}
+		if(!poolPrice.price){
+			alert("请填写价格");
+			return;
+		} else if (!poolPrice.customerId){
+			alert("请选择公司");
+			return;
+		}
+		
+		poolPrice.customerName = $("#companyName").select2("data").text;
+/* 		$.get(BASE_URL + "/business/addCounter.do", poolPrice, function(data){
+			if(data.status == 'ok'){
+				alert(data.msg);
+				initData();
+				$("#closeAddOfferView").click();
+			} else {
+				alert(data.msg);
+			}
+		}); */
+		
+		//新增还盘，撮合第二版加入  升贴价
+		$.get(BASE_URL + "/business/addCounterNew.do", poolPrice, function(result){
+			if(result  == 'OK'){
+				alert("新增成功");
+				initData();
+				$("#closeAddOfferView").click();
+			} else {
+				alert(result);
+			}
+		});
+		
+	}
+	
+	//每日最低还盘价的校验
+	function checkPrice(){
+		//数字强转为int类型 
+		var price = parseFloat($("#price").val());
+		//最低价
+		var low = parseFloat($("#low").val());
+		//alert(price+"-------"+high);
+		if($("#priceType").val() == 0){
+			if(price < low){
+				$("#ERROR").css("display","inline");
+			}else{
+				$("#ERROR").css("display","none");
+			}	
+		}
+		if($("#priceType").val() == 1){
+				$("#ERROR").css("display","none");
+		}
+		if($("#priceType").val() == 2){
+				$("#ERROR").css("display","none");
+		}
+	}
+	
+</script>

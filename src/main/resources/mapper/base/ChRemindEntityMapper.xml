@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChRemindEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChRemindEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="remindId" property="remindid" jdbcType="INTEGER" />
+    <result column="remindType" property="remindtype" jdbcType="INTEGER" />
+    <result column="remindDate" property="reminddate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, remindId, remindType, remindDate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_remind
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_remind
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChRemindEntity" >
+    insert into ch_remind (id, remindId, remindType, 
+      remindDate)
+    values (#{id,jdbcType=INTEGER}, #{remindid,jdbcType=INTEGER}, #{remindtype,jdbcType=INTEGER}, 
+      #{reminddate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChRemindEntity" >
+    insert into ch_remind
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="remindid != null" >
+        remindId,
+      </if>
+      <if test="remindtype != null" >
+        remindType,
+      </if>
+      <if test="reminddate != null" >
+        remindDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="remindid != null" >
+        #{remindid,jdbcType=INTEGER},
+      </if>
+      <if test="remindtype != null" >
+        #{remindtype,jdbcType=INTEGER},
+      </if>
+      <if test="reminddate != null" >
+        #{reminddate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChRemindEntity" >
+    update ch_remind
+    <set >
+      <if test="remindid != null" >
+        remindId = #{remindid,jdbcType=INTEGER},
+      </if>
+      <if test="remindtype != null" >
+        remindType = #{remindtype,jdbcType=INTEGER},
+      </if>
+      <if test="reminddate != null" >
+        remindDate = #{reminddate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChRemindEntity" >
+    update ch_remind
+    set remindId = #{remindid,jdbcType=INTEGER},
+      remindType = #{remindtype,jdbcType=INTEGER},
+      remindDate = #{reminddate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChOnlineHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChOnlineHistory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="employeeId" property="employeeid" jdbcType="INTEGER" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="onlineType" property="onlinetype" jdbcType="INTEGER" />
+    <result column="loginType" property="logintype" jdbcType="INTEGER" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="leaveTime" property="leaveTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, employeeId, createTime, onlineType, loginType,endTime,leaveTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_online_history
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_online_history
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChOnlineHistory" >
+    insert into ch_online_history (id, employeeId, createTime, 
+      onlineType, loginType,endTime,leaveTime)
+    values (#{id,jdbcType=INTEGER}, #{employeeid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{onlinetype,jdbcType=INTEGER}, #{logintype,jdbcType=INTEGER},#{endTime,jdbcType=TIMESTAMP},#{leaveTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChOnlineHistory" >
+    insert into ch_online_history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="employeeid != null" >
+        employeeId,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="onlinetype != null" >
+        onlineType,
+      </if>
+      <if test="logintype != null" >
+        loginType,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+        <if test="leaveTime != null" >
+        leaveTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="employeeid != null" >
+        #{employeeid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="onlinetype != null" >
+        #{onlinetype,jdbcType=INTEGER},
+      </if>
+      <if test="logintype != null" >
+        #{logintype,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if> <if test="leaveTime != null" >
+        #{leaveTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChOnlineHistory" >
+    update ch_online_history
+    <set >
+      <if test="employeeid != null" >
+        employeeId = #{employeeid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="onlinetype != null" >
+        onlineType = #{onlinetype,jdbcType=INTEGER},
+      </if>
+      <if test="logintype != null" >
+        loginType = #{logintype,jdbcType=INTEGER},
+      </if>
+       <if test="endTime != null" >
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="leaveTime != null" >
+        leaveTime = #{leaveTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChOnlineHistory" >
+    update ch_online_history
+    set employeeId = #{employeeid,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      leaveTime = #{leaveTime,jdbcType=INTEGER},
+      loginType = #{logintype,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryOnlineTime" resultType="com.smm.cuohe.domain.base.ChOnlineHistory">
+   SELECT * FROM ch_online_history WHERE employeeId = #{employeeId,jdbcType=INTEGER}
+   <if test="startDate!=null">
+   AND createTime>DATE(#{startDate,jdbcType=TIMESTAMP})
+   </if>
+   <if test="endDate!=null">
+   AND createTime &lt; date_add(DATE(#{endDate,jdbcType=TIMESTAMP}), INTERVAL 1 day)
+   </if>
+  </select>
+  
+  <select id="queryLastHistoryClient" resultType="com.smm.cuohe.domain.base.ChOnlineHistory">
+  SELECT * from ch_online_history WHERE loginType = 2 AND employeeId = #{employeeId,jdbcType=INTEGER} ORDER BY id DESC LIMIT 0,1
+  </select>
+  
+   <select id="queryLastHistoryWeb" resultType="com.smm.cuohe.domain.base.ChOnlineHistory">
+  SELECT * from ch_online_history WHERE loginType = 1 AND employeeId = #{employeeId,jdbcType=INTEGER} ORDER BY id DESC LIMIT 0,1
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- 模态窗口编辑模板 -->
+<form action="" id="myform" class="form-horizontal form-bordered" novalidate="novalidate" method="post">
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;">添加日志</h4>
+</div>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body">
+	<div class="portlet-body form">
+		<form role="form" class="form-horizontal" id="myForm">
+			<div class="form-body">
+				<div class="form-group form-md-radios">
+					<div >
+						<p style="font-weight:bold;">基本信息</p>
+						<table class="ttTblNoBorder">
+							<tr>
+								<td>标题</td>
+								<td><input placeholder="50个字符以内" maxlength = "50" style="width:450px;padding:.2em .5em;" id="newRecordTitle" /></td>
+							</tr>
+							<tr>
+								<td>内容</td>
+								<td><textarea rows=5 cols=61 id="newRecordContext" maxlength = "1000" ></textarea></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer">
+	<button type="button" class="btn default fa fa-times" data-dismiss="modal"> 取消</button>
+	<button type="button" onclick="changeParent()" class="btn green  fa fa-check"> 添加</button>
+</div>
+<!-- 结束 -->
+</form>
+<!-- 业务处理开始 -->
+<script>
+	function changeParent(){
+		var newRecordTitle = $("#newRecordTitle").val();
+		var newRecordContext = $("#newRecordContext").val();
+		if(newRecordTitle == ""){
+			alert("标题不能为空");
+			return;
+		}
+		if(newRecordContext == ""){
+			alert("内容不能为空");
+			return;
+		}
+		$.post("addComRecord.do",{"newRecordTitle":newRecordTitle, "newRecordContext":newRecordContext, "customerId":id},function(data){
+			if(data == "success"){
+				alert("添加成功");
+				$("#comRecordsA").click();
+				$(".close").click();
+			}
+		});
+	}
+	
+</script>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.ISupplyDao">
+	<!-- 查询供应商 -->
+	<select id="getAll" parameterType="java.util.HashMap"
+		resultType="Supply">
+		SELECT
+		cu.id,
+		com.companyName name,
+		re.updatedAt updatedAtByRecord,
+		re.title,
+		re.context,
+		com.entTypes,
+		t.name AS salesvolume,
+		con.name nameByContacter,
+		con.mobilePhone,
+		CONCAT(CASE WHEN pro.name IS NULL THEN '' ELSE pro.name END,' ',ar.name)  nameByArea,
+		cu.LastTransTime updatedAtByOrder,
+		com.categoryemployee,
+		c.name employeeString,
+		com.level,
+		a.name levelString,
+		u.name nameByUser,
+		cu.createdAt
+		FROM
+		ch_customs cu LEFT JOIN (SELECT r.* FROM ch_com_records r,(SELECT customerId,MAX(updatedAt) updatedAt FROM ch_com_records GROUP BY customerId) c WHERE r.customerId=c.customerId AND r.updatedAt =c.updatedAt ORDER BY r.customerId)  re ON cu.id = re.customerId 
+		INNER JOIN ch_customs com ON cu.id = com.id AND com.categorybusiness IN(2,3)
+		LEFT JOIN ch_contacter con ON con.id = (SELECT id FROM ch_contacter WHERE customerId=cu.id AND keyPerson = 1 LIMIT 1)
+		LEFT JOIN ch_areas ar ON com.areaID = ar.id
+		LEFT JOIN ch_areas pro ON ar.parentID=pro.id
+		LEFT JOIN ch_users u ON cu.PIC = u.id
+		LEFT JOIN ch_category c ON  c.id = com.categoryemployee
+		LEFT JOIN ch_category a ON  a.id = com.level 
+		LEFT JOIN ch_category t ON t.id = com.salesvolume 
+		where 1=1 
+		<if test="ids!=null and ids!=''">
+			and cu.id in (${ids})
+		</if>
+		<if test="itemId!=null">
+			and cu.itemID = ${itemId}
+		</if>
+		<if test="str!=null">
+			and ${str}
+		</if>
+		<if test="type ==2">
+			and cu.createdBy=${userId}
+		</if>
+		<if test="type ==3">
+			and cu.createdBy>0
+		</if>
+		<if test="type ==4">
+			and date(cu.createdAt)=DATE(NOW())
+		</if>
+		<if test="type ==5">
+			and date(cu.createdAt)>DATE(DATE_ADD(NOW(),INTERVAL -7
+			DAY))
+		</if>
+		<if test="type ==6">
+			and month(cu.createdAt)=MONTH(NOW())
+		</if>
+		<if test="type ==8">
+			and cu.status=1
+		</if>
+		<if test="type !=8">
+			and cu.status=0
+		</if>
+
+		<if test="type ==7">
+			order by cu.updatedAt desc ,cu.id desc
+		</if>
+
+		<if test="type !=7">
+			order by cu.createdAt desc ,cu.id desc
+		</if>
+		
+		<if test="startNum!=null and endNum !=null ">
+        	limit ${startNum},${endNum}
+        </if>
+	</select>
+	
+	<!-- 查询供应商记录数 -->
+	<select id="getAllCount" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+		SELECT
+		 count(*)
+		FROM
+		ch_customs cu LEFT JOIN (SELECT r.* FROM ch_com_records r,(SELECT customerId,MAX(updatedAt) updatedAt FROM ch_com_records GROUP BY customerId) c WHERE r.customerId=c.customerId AND r.updatedAt =c.updatedAt ORDER BY r.customerId)  re ON cu.id = re.customerId 
+		INNER JOIN ch_customs com ON cu.id = com.id AND com.categorybusiness IN(2,3)
+		LEFT JOIN ch_contacter con ON con.id = (SELECT id FROM ch_contacter WHERE customerId=cu.id AND keyPerson = 1 LIMIT 1)
+		LEFT JOIN ch_areas ar ON com.areaID = ar.id
+		LEFT JOIN ch_users u ON cu.PIC = u.id
+		LEFT JOIN ch_category c ON  c.id = com.categoryemployee
+		LEFT JOIN ch_category a ON  a.id = com.level
+		LEFT JOIN ch_category t ON t.id = com.salesvolume 
+		where 1=1 
+		<if test="itemId!=null">
+			and cu.itemID = ${itemId}
+		</if>
+		<if test="str!=null">
+			and ${str}
+		</if>
+		<if test="type ==2">
+			and cu.createdBy=${userId}
+		</if>
+		<if test="type ==3">
+			and cu.createdBy>0
+		</if>
+		<if test="type ==4">
+			and date(cu.createdAt)=DATE(NOW())
+		</if>
+		<if test="type ==5">
+			and date(cu.createdAt)>DATE(DATE_ADD(NOW(),INTERVAL -7
+			DAY))
+		</if>
+		<if test="type ==6">
+			and month(cu.createdAt)=MONTH(NOW())
+		</if>
+		<if test="type ==8">
+			and cu.status=1
+		</if>
+		<if test="type !=8">
+			and cu.status=0
+		</if>
+
+		<if test="type ==7">
+			order by cu.updatedAt desc 
+		</if>
+	</select>
+	
+
+	<delete id="deleteByIds" parameterType="java.lang.String">
+		update ch_customs set
+		status =1 where id in (${value})
+	</delete>
+
+	<!-- 准备导出数据 -->
+	<select id="getSupplyExportData" parameterType="java.lang.String"
+		resultType="Supply">
+		SELECT
+		cu.id,
+		com.companyName name,
+		re.updatedAt updatedAtByRecord,
+		re.title,
+		re.context,
+		com.entTypes,
+		t.name AS salesvolume,
+		con.name nameByContacter,
+		con.mobilePhone,
+		ar.name nameByArea,
+		cu.LastTransTime updatedAtByOrder,
+		com.categoryemployee,
+		c.name employeeString,
+		com.level,
+		a.name levelString,
+		u.name nameByUser,
+		cu.createdAt
+		FROM
+		ch_customs cu LEFT JOIN ch_com_records re ON cu.LastComID = re.id
+		INNER JOIN ch_customs com ON cu.id = com.id AND com.categorybusiness IN(2,3)
+		LEFT JOIN ch_contacter con ON con.id = (SELECT id FROM ch_contacter WHERE customerId=cu.id AND keyPerson = 1 LIMIT 1)
+		LEFT JOIN ch_areas ar ON com.areaID = ar.id
+		LEFT JOIN ch_users u ON cu.PIC = u.id
+		LEFT JOIN ch_category c ON  c.id = com.categoryemployee
+		LEFT JOIN ch_category a ON  a.id = com.level 
+		LEFT JOIN ch_category t ON t.id = com.salesvolume 
+		WHERE  cu.id
+		in
+		<foreach collection="array" item="supplyInfo" separator=","
+			open="(" close=")">
+
+			#{supplyInfo}
+
+		</foreach>
+		order by cu.createdAt  DESC ,cu.id desc
+	</select>
+
+</mapper>

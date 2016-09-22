@@ -1,0 +1,134 @@
+/*改写全局页面宽度*/
+@media (min-width: 1200px)
+.container-fluid {
+  	padding-right: 0px;
+  	padding-left: 0px;
+}
+@media (min-width: 992px)
+.container-fluid {
+  	padding-right: 0px;
+  	padding-left: 0px;
+}
+@media (min-width: 768px)
+.container-fluid {
+  	padding-right:0px;
+  	padding-left: 0px;
+}
+.entrust {
+	color: #333333;
+	margin: 11px 0;
+}
+
+.entrust em {
+	color: #9E9B9B;
+	font-size: 13px;
+	margin-bottom: 8px;
+	font-style: normal;
+	display: block;
+}
+
+.entrust em i {
+	font-size: 14px;
+}
+
+.entrust span {
+	font-size: 18px;
+	margin-bottom: 8px;
+	display: block;
+	text-align: left;
+}
+
+.entrust .btn+.btn {
+	margin-left: 0;
+}
+
+#hr {
+	margin: 20px 0;
+	border: 0;
+	border-top: 1px dotted #564E4E;
+	border-bottom: 0;
+}
+/*首页组件样式*/
+#indexContent {
+	border: 1px solid #e1e1e1 !important;
+	background-color: #fff;
+}
+
+#indexTitle {
+	padding: 11px 20px 9px 20px;
+	border-bottom: 1px solid #E5DFDF;
+}
+
+#date-picker {
+	float: left;
+	width: 46%;
+	border: 1px solid #e1e1e1 !important;
+	border-left: 2px solid #e6e9ec !important;
+}
+
+#recordRight {
+	float: left;
+	width: 54%
+}
+
+#content {
+	border: 1px solid #e1e1e1 !important;
+	border-left: 2px solid #e6e9ec !important;
+}
+
+#term {
+	border: 1px solid #e1e1e1 !important;
+	border-left: 2px solid #e6e9ec !important;
+	margin: 0 0 20px 0;
+	padding: 15px 30px 15px 15px;
+}
+
+#portletContent {
+	border: 1px solid #e1e1e1 !important;
+	background-color: #fff;
+}
+
+#portletTitle {
+	padding: 12px 0px 0px 10px;
+	border-bottom: 1px solid #E5DFDF;
+	background-color: rgba(239, 239, 239, 1);
+}
+
+.tb {
+	background-color: rgba(254, 254, 254, 1);
+	width: 100%;
+	border-color: rgba(224, 224, 225, 1);
+	border-top: rgba(224, 224, 225, 1);
+	border-left: rgba(224, 224, 225, 1);
+	border-bottom: rgba(224, 224, 225, 1);
+	border-right: rgba(224, 224, 225, 1);
+}
+
+.tb tr {
+	height: 40px;
+}
+
+.tdTitle {
+	width: 15%;
+	text-align: center;
+	background-color: rgba(239, 239, 239, 1);
+}
+
+.tdContent {
+	width: 35%;
+	padding-left: 16px;
+	background-color: rgba(246, 246, 246, 1);
+}
+
+.container-fluid {
+  	padding-right: 15px;
+  	padding-left: 15px;
+  	margin-right: auto;
+  	margin-left: auto;
+}
+.portlet > .portlet-title > .tools > a.myRemove {
+  background-image: url(../img/portlet-remove-icon.png);
+  background-repeat: no-repeat;
+  width: 11px;
+}
+

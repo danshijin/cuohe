@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.dealmake.IBuyOrderDao">
+	<insert id="insertBuyOrder" parameterType="com.smm.cuohe.domain.Order" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ch_orders
+            (orderCode,
+             itemID,
+             sellID,
+             buyID,
+             delivery,
+             receipttype, 
+             payment,
+             ware_Province,
+             ware_id, 
+             ware_Name,
+             deliveryDate,
+             poundDiff,
+             ttype,
+             OrderStatus,
+             STATUS,
+             source,
+             createdAt,
+             createdBy,
+             updatedAt,
+             updatedBy,
+             mall_seller_account, 
+			mall_buyer_account,
+			source_id,
+			confirmStatus,
+			ispledge,
+			pledgeprice,
+			serviceprice)
+			VALUES (
+				#{orderCode},
+				#{itemId},
+				#{sellId},
+				#{buyId},
+				#{delivery},
+				#{receipttype},
+				#{payment},
+				#{ware_province},
+				#{wareId},
+				getWareHouseNameById(#{wareId}),
+				#{deliveryDate},
+				#{poundDiff},
+				#{ttype},
+				#{orderStatus},
+				#{status},
+				#{source},
+				#{createdAt},
+				#{createdBy},
+				#{updatedAt},
+				#{updatedBy},
+				#{mallSellerAccount},
+				#{mallBuyerAccount},
+				#{sourceId},
+				#{confirmStatus},
+				#{ispledge},
+				#{pledgeprice},
+				#{serviceprice}
+			)
+	</insert>
+	
+	<select id="getSellPoolIdByChatIdForConversation" resultType="java.lang.Integer" parameterType="int">
+	
+		SELECT id FROM ch_sell_pool WHERE mall_sale_id = 
+		(select sellId from ch_chats where id = #{chatId}); 
+	
+	</select>
+	<insert id="insertBuySubOrder" parameterType="com.smm.cuohe.domain.SubOrder">
+		INSERT INTO ch_sub_orders 
+				(orderID, 
+				unit, 
+				quantity, 
+				price, 
+				ext, 
+				STATUS, 
+				createdAt, 
+				createdBy, 
+				updatedAt, 
+				updatedBy,
+				sell_id, 
+				commodity_id, 
+				mall_sale_id
+				)
+				VALUES
+				(#{orderId}, 
+				#{unit}, 
+				#{quantity}, 
+				#{price}, 
+				#{ext}, 
+				#{status}, 
+				#{createdAt}, 
+				#{createdBy}, 
+				#{updatedAt}, 
+				#{updatedBy}, 
+				#{sellId},
+				#{commodityId},
+				#{mallSaleId}
+				)
+	</insert>
+	
+	<!-- 省份级联仓库    2015年12月29日上午10:18:18 加上企业自建仓库-->
+	<select id="selWarehouseByArea"  resultType="com.smm.cuohe.domain.dealmake.Warehouse">
+	
+		SELECT id,NAME FROM ch_warehouse WHERE areaid=#{areaId} 
+		
+		and iswhole = 1 
+		
+		and FIND_IN_SET(#{itemId},catid)>0
+		
+		<if test="companyName != null and companyName != '' ">
+			UNION ALL
+			
+			SELECT id,NAME FROM ch_warehouse WHERE areaid=#{areaId} 
+			
+			and iswhole = 0 and company = #{companyName}
+		
+			and FIND_IN_SET(#{itemId},catid)>0
+			
+		</if>
+		
+	</select>
+	
+	<update id="updateSellPoolToClose" parameterType="int">
+	
+		update ch_sell_pool set isClose = 1 where id = #{sellPoolId};
+		
+	</update>
+	
+	
+	<select id="selWarehouseByAreaBlur" parameterType="java.util.HashMap" resultType="com.smm.cuohe.domain.dealmake.Warehouse">
+	
+				SELECT id,NAME FROM ch_warehouse WHERE areaid=#{areaId}  
+				 
+					<if test="wareName !=null and wareName !=''">
+						and name like CONCAT('%',#{wareName},'%')
+					</if>
+					
+					and iswhole = 1 and FIND_IN_SET(#{itemId},catid)>0
+				
+				<if test="companyName != null and companyName !='' ">
+				 	UNION ALL
+				 	
+				 	SELECT id,NAME FROM ch_warehouse WHERE areaid=#{areaId} 
+				 	
+				 	<if test="wareName !=null and wareName !=''">
+						and name like CONCAT('%',#{wareName},'%')
+					</if>
+					
+				 	and iswhole = 0 and company = #{companyName}
+				 	
+					and FIND_IN_SET(#{itemId},catid)>0
+					
+				</if>
+	</select>
+	
+	<select id="getMainItemAttr" parameterType="java.lang.Integer" resultType="com.smm.cuohe.domain.ItemAttr">
+			SELECT 	id, 
+				itemID, 
+				`name`, 
+				fillMode, 
+				dataRegural, 
+				`default_value` as defaulta, 
+				`options`, 
+				mainProperty, 
+				required, 
+				`status`, 
+				listOrder, 
+				createdAt, 
+				createdBy, 
+				updatedAt, 
+				UpdatedBy
+				 
+				FROM 
+				  ch_item_attr
+				 where status =0 and mainProperty  IS NOT NULL  
+				 and  itemID = #{itemId}
+				 order by  listOrder asc 
+	</select>
+	
+	<insert id="insAttrValues"  parameterType="com.smm.cuohe.domain.AttrValue">
+		INSERT INTO ch_attr_values 
+					(AttrID, 
+					AttrName, 
+					AttrValue, 
+					ExtID, 
+					STATUS, 
+					CreatedAt, 
+					CreatedBy, 
+					UpdatedAt, 
+					UpdatedBy
+					)
+					VALUES
+					(#{attrId}, 
+					#{attrName}, 
+					#{attrValue}, 
+					#{extId}, 
+					#{status}, 
+					#{createdAt}, 
+					#{createdBy}, 
+					#{updatedAt}, 
+					#{updatedBy}
+					)
+		
+	</insert>
+	
+	<select id="selCustomById" parameterType="java.lang.Integer"  resultType="com.smm.cuohe.domain.dealmake.ToOrder">
+	 	SELECT
+			  c.id as  companyId,
+			  c.companyName as companyName,
+			  i.id as itemId,
+			  i.name as itemName 
+			FROM ch_customs c,
+			  ch_items i
+			WHERE c.itemID = i.id
+			    AND c.id =${value}
+	</select>
+	
+	<select id="selProNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT NAME FROM ch_product WHERE id=#{id}
+	</select>
+	
+	<update id="updateBuyIsClose" parameterType="java.lang.Integer">
+		UPDATE ch_buy_pool SET isClose=1 WHERE id=#{id}
+	</update>
+	
+	<update id="updateBuyIsCloseAndIsConfirm" parameterType="java.lang.Integer">
+		UPDATE ch_buy_pool SET isClose=1 , isConfirm=1 WHERE id=#{id}
+	</update>
+	
+	<update id="updateSellIsClose" parameterType="java.lang.Integer">
+		UPDATE ch_sell_pool SET isClose=1 WHERE id=#{id}
+	</update>
+	
+	<update id="updateSellIsStatus" parameterType="java.lang.Integer">
+		UPDATE ch_sell_pool SET status=1 WHERE id=#{id}
+	</update>
+	
+	<update id="updateSell" parameterType="com.smm.cuohe.domain.dealmake.SellPool">
+	   update ch_sell_pool SET deliverytime = #{deliverytime} ,ware_province=#{wareProvince} ,ware_id=#{wareId} ,receipttype=#{receipttype} ,overflow=#{overflow} ,paytype=#{paytype} ,delivery=#{delivery}
+	   <if test="mallSaleId!=null">
+	   ,mall_sale_id=#{mallSaleId}
+	   </if>
+	   ,ware_name = (select name from ch_warehouse where id = #{wareId})
+	   WHERE id =#{id} 
+	</update>
+	
+	<select id="queryMallSaleIdByPoolId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT 	 
+			mall_sale_id
+			 
+			FROM 
+			ch_sell_pool 
+			WHERE id =#{poolId}
+	</select>
+	
+	<select id="queryCompanyInfo" parameterType="java.lang.Integer" resultType="com.smm.cuohe.domain.Customer">
+		SELECT c.id,c.companyName,p.price FROM ch_pool_price p,ch_customs c 
+		WHERE p.id=#{id}
+		AND p.customerId=c.id
+	</select>
+	
+	<update id="updateBuyPoolCreateSource" parameterType = "com.smm.cuohe.domain.dealmake.BuyPoolEntity">
+	
+		update ch_buy_pool set createSource = 2,mall_buy_id = #{mallbuyId} where id = #{id}
+	
+	</update>
+	
+</mapper>

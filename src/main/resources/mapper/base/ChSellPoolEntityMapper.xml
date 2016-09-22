@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChSellPoolEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChSellPoolEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ItemsID" property="itemsid" jdbcType="INTEGER" />
+    <result column="customerId" property="customerid" jdbcType="INTEGER" />
+    <result column="quantity" property="quantity" jdbcType="REAL" />
+    <result column="unit" property="unit" jdbcType="INTEGER" />
+    <result column="ware_province" property="wareProvince" jdbcType="INTEGER" />
+    <result column="ware_id" property="wareId" jdbcType="INTEGER" />
+    <result column="ware_name" property="wareName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="priority" property="priority" jdbcType="INTEGER" />
+    <result column="commands" property="commands" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="createdBy" property="createdby" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+    <result column="updatedBy" property="updatedby" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="volume" property="volume" jdbcType="INTEGER" />
+    <result column="commodity_id" property="commodityId" jdbcType="INTEGER" />
+    <result column="mall_sale_id" property="mallSaleId" jdbcType="INTEGER" />
+    <result column="mall_user_account" property="mallUserAccount" jdbcType="VARCHAR" />
+    <result column="paytype" property="paytype" jdbcType="INTEGER" />
+    <result column="receipttype" property="receipttype" jdbcType="INTEGER" />
+    <result column="delivery" property="delivery" jdbcType="INTEGER" />
+    <result column="deliverytime" property="deliverytime" jdbcType="VARCHAR" />
+    <result column="moq" property="moq" jdbcType="VARCHAR" />
+    <result column="outmoq" property="outmoq" jdbcType="VARCHAR" />
+    <result column="overflow" property="overflow" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="INTEGER" />
+    <result column="lastPriceType" property="lastpricetype" jdbcType="INTEGER" />
+    <result column="lastPrice" property="lastprice" jdbcType="DECIMAL" />
+    <result column="lastCustomerId" property="lastcustomerid" jdbcType="INTEGER" />
+    <result column="lastMallAccount" property="lastmallaccount" jdbcType="VARCHAR" />
+    <result column="lastCustomerName" property="lastcustomername" jdbcType="VARCHAR" />
+    <result column="poolPriceCount" property="poolpricecount" jdbcType="INTEGER" />
+    <result column="lastTime" property="lasttime" jdbcType="VARCHAR" />
+    <result column="isConfirm" property="isconfirm" jdbcType="INTEGER" />
+    <result column="orderId" property="orderid" jdbcType="VARCHAR" />
+    <result column="priceType" property="pricetype" jdbcType="INTEGER" />
+    <result column="isClose" property="isclose" jdbcType="INTEGER" />
+    <result column="initPrice" property="initprice" jdbcType="DECIMAL" />
+    <result column="FuturesMonth" property="futuresmonth" jdbcType="VARCHAR" />
+    <result column="initPriceType" property="initpricetype" jdbcType="INTEGER" />
+    <result column="createSource" property="createsource" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ItemsID, customerId, quantity, unit, ware_province, ware_id, ware_name, price, 
+    priority, commands, status, createdAt, createdBy, updatedAt, updatedBy, code, volume, 
+    commodity_id, mall_sale_id, mall_user_account, paytype, receipttype, delivery, deliverytime, 
+    moq, outmoq, overflow, source, lastPriceType, lastPrice, lastCustomerId, lastMallAccount, 
+    lastCustomerName, poolPriceCount, lastTime, isConfirm, orderId, priceType, isClose, 
+    initPrice, FuturesMonth, initPriceType, createSource
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_sell_pool
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_sell_pool
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChSellPoolEntity" >
+    insert into ch_sell_pool (id, ItemsID, customerId, 
+      quantity, unit, ware_province, 
+      ware_id, ware_name, price, 
+      priority, commands, status, 
+      createdAt, createdBy, updatedAt, 
+      updatedBy, code, volume, 
+      commodity_id, mall_sale_id, mall_user_account, 
+      paytype, receipttype, delivery, 
+      deliverytime, moq, outmoq, 
+      overflow, source, lastPriceType, 
+      lastPrice, lastCustomerId, lastMallAccount, 
+      lastCustomerName, poolPriceCount, lastTime, 
+      isConfirm, orderId, priceType, 
+      isClose, initPrice, FuturesMonth, 
+      initPriceType, createSource)
+    values (#{id,jdbcType=INTEGER}, #{itemsid,jdbcType=INTEGER}, #{customerid,jdbcType=INTEGER}, 
+      #{quantity,jdbcType=REAL}, #{unit,jdbcType=INTEGER}, #{wareProvince,jdbcType=INTEGER}, 
+      #{wareId,jdbcType=INTEGER}, #{wareName,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{priority,jdbcType=INTEGER}, #{commands,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createdat,jdbcType=TIMESTAMP}, #{createdby,jdbcType=INTEGER}, #{updatedat,jdbcType=TIMESTAMP}, 
+      #{updatedby,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{volume,jdbcType=INTEGER}, 
+      #{commodityId,jdbcType=INTEGER}, #{mallSaleId,jdbcType=INTEGER}, #{mallUserAccount,jdbcType=VARCHAR}, 
+      #{paytype,jdbcType=INTEGER}, #{receipttype,jdbcType=INTEGER}, #{delivery,jdbcType=INTEGER}, 
+      #{deliverytime,jdbcType=VARCHAR}, #{moq,jdbcType=VARCHAR}, #{outmoq,jdbcType=VARCHAR}, 
+      #{overflow,jdbcType=VARCHAR}, #{source,jdbcType=INTEGER}, #{lastpricetype,jdbcType=INTEGER}, 
+      #{lastprice,jdbcType=DECIMAL}, #{lastcustomerid,jdbcType=INTEGER}, #{lastmallaccount,jdbcType=VARCHAR}, 
+      #{lastcustomername,jdbcType=VARCHAR}, #{poolpricecount,jdbcType=INTEGER}, #{lasttime,jdbcType=VARCHAR}, 
+      #{isconfirm,jdbcType=INTEGER}, #{orderid,jdbcType=VARCHAR}, #{pricetype,jdbcType=INTEGER}, 
+      #{isclose,jdbcType=INTEGER}, #{initprice,jdbcType=DECIMAL}, #{futuresmonth,jdbcType=VARCHAR}, 
+      #{initpricetype,jdbcType=INTEGER}, #{createsource,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChSellPoolEntity" >
+    insert into ch_sell_pool
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemsid != null" >
+        ItemsID,
+      </if>
+      <if test="customerid != null" >
+        customerId,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="wareProvince != null" >
+        ware_province,
+      </if>
+      <if test="wareId != null" >
+        ware_id,
+      </if>
+      <if test="wareName != null" >
+        ware_name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="priority != null" >
+        priority,
+      </if>
+      <if test="commands != null" >
+        commands,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+      <if test="updatedby != null" >
+        updatedBy,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="volume != null" >
+        volume,
+      </if>
+      <if test="commodityId != null" >
+        commodity_id,
+      </if>
+      <if test="mallSaleId != null" >
+        mall_sale_id,
+      </if>
+      <if test="mallUserAccount != null" >
+        mall_user_account,
+      </if>
+      <if test="paytype != null" >
+        paytype,
+      </if>
+      <if test="receipttype != null" >
+        receipttype,
+      </if>
+      <if test="delivery != null" >
+        delivery,
+      </if>
+      <if test="deliverytime != null" >
+        deliverytime,
+      </if>
+      <if test="moq != null" >
+        moq,
+      </if>
+      <if test="outmoq != null" >
+        outmoq,
+      </if>
+      <if test="overflow != null" >
+        overflow,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="lastpricetype != null" >
+        lastPriceType,
+      </if>
+      <if test="lastprice != null" >
+        lastPrice,
+      </if>
+      <if test="lastcustomerid != null" >
+        lastCustomerId,
+      </if>
+      <if test="lastmallaccount != null" >
+        lastMallAccount,
+      </if>
+      <if test="lastcustomername != null" >
+        lastCustomerName,
+      </if>
+      <if test="poolpricecount != null" >
+        poolPriceCount,
+      </if>
+      <if test="lasttime != null" >
+        lastTime,
+      </if>
+      <if test="isconfirm != null" >
+        isConfirm,
+      </if>
+      <if test="orderid != null" >
+        orderId,
+      </if>
+      <if test="pricetype != null" >
+        priceType,
+      </if>
+      <if test="isclose != null" >
+        isClose,
+      </if>
+      <if test="initprice != null" >
+        initPrice,
+      </if>
+      <if test="futuresmonth != null" >
+        FuturesMonth,
+      </if>
+      <if test="initpricetype != null" >
+        initPriceType,
+      </if>
+      <if test="createsource != null" >
+        createSource,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemsid != null" >
+        #{itemsid,jdbcType=INTEGER},
+      </if>
+      <if test="customerid != null" >
+        #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=REAL},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=INTEGER},
+      </if>
+      <if test="wareProvince != null" >
+        #{wareProvince,jdbcType=INTEGER},
+      </if>
+      <if test="wareId != null" >
+        #{wareId,jdbcType=INTEGER},
+      </if>
+      <if test="wareName != null" >
+        #{wareName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="priority != null" >
+        #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="commands != null" >
+        #{commands,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="volume != null" >
+        #{volume,jdbcType=INTEGER},
+      </if>
+      <if test="commodityId != null" >
+        #{commodityId,jdbcType=INTEGER},
+      </if>
+      <if test="mallSaleId != null" >
+        #{mallSaleId,jdbcType=INTEGER},
+      </if>
+      <if test="mallUserAccount != null" >
+        #{mallUserAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="paytype != null" >
+        #{paytype,jdbcType=INTEGER},
+      </if>
+      <if test="receipttype != null" >
+        #{receipttype,jdbcType=INTEGER},
+      </if>
+      <if test="delivery != null" >
+        #{delivery,jdbcType=INTEGER},
+      </if>
+      <if test="deliverytime != null" >
+        #{deliverytime,jdbcType=VARCHAR},
+      </if>
+      <if test="moq != null" >
+        #{moq,jdbcType=VARCHAR},
+      </if>
+      <if test="outmoq != null" >
+        #{outmoq,jdbcType=VARCHAR},
+      </if>
+      <if test="overflow != null" >
+        #{overflow,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="lastpricetype != null" >
+        #{lastpricetype,jdbcType=INTEGER},
+      </if>
+      <if test="lastprice != null" >
+        #{lastprice,jdbcType=DECIMAL},
+      </if>
+      <if test="lastcustomerid != null" >
+        #{lastcustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="lastmallaccount != null" >
+        #{lastmallaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="lastcustomername != null" >
+        #{lastcustomername,jdbcType=VARCHAR},
+      </if>
+      <if test="poolpricecount != null" >
+        #{poolpricecount,jdbcType=INTEGER},
+      </if>
+      <if test="lasttime != null" >
+        #{lasttime,jdbcType=VARCHAR},
+      </if>
+      <if test="isconfirm != null" >
+        #{isconfirm,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="pricetype != null" >
+        #{pricetype,jdbcType=INTEGER},
+      </if>
+      <if test="isclose != null" >
+        #{isclose,jdbcType=INTEGER},
+      </if>
+      <if test="initprice != null" >
+        #{initprice,jdbcType=DECIMAL},
+      </if>
+      <if test="futuresmonth != null" >
+        #{futuresmonth,jdbcType=VARCHAR},
+      </if>
+      <if test="initpricetype != null" >
+        #{initpricetype,jdbcType=INTEGER},
+      </if>
+      <if test="createsource != null" >
+        #{createsource,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChSellPoolEntity" >
+    update ch_sell_pool
+    <set >
+      <if test="itemsid != null" >
+        ItemsID = #{itemsid,jdbcType=INTEGER},
+      </if>
+      <if test="customerid != null" >
+        customerId = #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=REAL},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=INTEGER},
+      </if>
+      <if test="wareProvince != null" >
+        ware_province = #{wareProvince,jdbcType=INTEGER},
+      </if>
+      <if test="wareId != null" >
+        ware_id = #{wareId,jdbcType=INTEGER},
+      </if>
+      <if test="wareName != null" >
+        ware_name = #{wareName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="priority != null" >
+        priority = #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="commands != null" >
+        commands = #{commands,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedby != null" >
+        updatedBy = #{updatedby,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="volume != null" >
+        volume = #{volume,jdbcType=INTEGER},
+      </if>
+      <if test="commodityId != null" >
+        commodity_id = #{commodityId,jdbcType=INTEGER},
+      </if>
+      <if test="mallSaleId != null" >
+        mall_sale_id = #{mallSaleId,jdbcType=INTEGER},
+      </if>
+      <if test="mallUserAccount != null" >
+        mall_user_account = #{mallUserAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="paytype != null" >
+        paytype = #{paytype,jdbcType=INTEGER},
+      </if>
+      <if test="receipttype != null" >
+        receipttype = #{receipttype,jdbcType=INTEGER},
+      </if>
+      <if test="delivery != null" >
+        delivery = #{delivery,jdbcType=INTEGER},
+      </if>
+      <if test="deliverytime != null" >
+        deliverytime = #{deliverytime,jdbcType=VARCHAR},
+      </if>
+      <if test="moq != null" >
+        moq = #{moq,jdbcType=VARCHAR},
+      </if>
+      <if test="outmoq != null" >
+        outmoq = #{outmoq,jdbcType=VARCHAR},
+      </if>
+      <if test="overflow != null" >
+        overflow = #{overflow,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="lastpricetype != null" >
+        lastPriceType = #{lastpricetype,jdbcType=INTEGER},
+      </if>
+      <if test="lastprice != null" >
+        lastPrice = #{lastprice,jdbcType=DECIMAL},
+      </if>
+      <if test="lastcustomerid != null" >
+        lastCustomerId = #{lastcustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="lastmallaccount != null" >
+        lastMallAccount = #{lastmallaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="lastcustomername != null" >
+        lastCustomerName = #{lastcustomername,jdbcType=VARCHAR},
+      </if>
+      <if test="poolpricecount != null" >
+        poolPriceCount = #{poolpricecount,jdbcType=INTEGER},
+      </if>
+      <if test="lasttime != null" >
+        lastTime = #{lasttime,jdbcType=VARCHAR},
+      </if>
+      <if test="isconfirm != null" >
+        isConfirm = #{isconfirm,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        orderId = #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="pricetype != null" >
+        priceType = #{pricetype,jdbcType=INTEGER},
+      </if>
+      <if test="isclose != null" >
+        isClose = #{isclose,jdbcType=INTEGER},
+      </if>
+      <if test="initprice != null" >
+        initPrice = #{initprice,jdbcType=DECIMAL},
+      </if>
+      <if test="futuresmonth != null" >
+        FuturesMonth = #{futuresmonth,jdbcType=VARCHAR},
+      </if>
+      <if test="initpricetype != null" >
+        initPriceType = #{initpricetype,jdbcType=INTEGER},
+      </if>
+      <if test="createsource != null" >
+        createSource = #{createsource,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChSellPoolEntity" >
+    update ch_sell_pool
+    set ItemsID = #{itemsid,jdbcType=INTEGER},
+      customerId = #{customerid,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=REAL},
+      unit = #{unit,jdbcType=INTEGER},
+      ware_province = #{wareProvince,jdbcType=INTEGER},
+      ware_id = #{wareId,jdbcType=INTEGER},
+      ware_name = #{wareName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      priority = #{priority,jdbcType=INTEGER},
+      commands = #{commands,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      createdBy = #{createdby,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      updatedBy = #{updatedby,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
+      volume = #{volume,jdbcType=INTEGER},
+      commodity_id = #{commodityId,jdbcType=INTEGER},
+      mall_sale_id = #{mallSaleId,jdbcType=INTEGER},
+      mall_user_account = #{mallUserAccount,jdbcType=VARCHAR},
+      paytype = #{paytype,jdbcType=INTEGER},
+      receipttype = #{receipttype,jdbcType=INTEGER},
+      delivery = #{delivery,jdbcType=INTEGER},
+      deliverytime = #{deliverytime,jdbcType=VARCHAR},
+      moq = #{moq,jdbcType=VARCHAR},
+      outmoq = #{outmoq,jdbcType=VARCHAR},
+      overflow = #{overflow,jdbcType=VARCHAR},
+      source = #{source,jdbcType=INTEGER},
+      lastPriceType = #{lastpricetype,jdbcType=INTEGER},
+      lastPrice = #{lastprice,jdbcType=DECIMAL},
+      lastCustomerId = #{lastcustomerid,jdbcType=INTEGER},
+      lastMallAccount = #{lastmallaccount,jdbcType=VARCHAR},
+      lastCustomerName = #{lastcustomername,jdbcType=VARCHAR},
+      poolPriceCount = #{poolpricecount,jdbcType=INTEGER},
+      lastTime = #{lasttime,jdbcType=VARCHAR},
+      isConfirm = #{isconfirm,jdbcType=INTEGER},
+      orderId = #{orderid,jdbcType=VARCHAR},
+      priceType = #{pricetype,jdbcType=INTEGER},
+      isClose = #{isclose,jdbcType=INTEGER},
+      initPrice = #{initprice,jdbcType=DECIMAL},
+      FuturesMonth = #{futuresmonth,jdbcType=VARCHAR},
+      initPriceType = #{initpricetype,jdbcType=INTEGER},
+      createSource = #{createsource,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

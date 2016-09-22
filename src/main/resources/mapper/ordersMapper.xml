@@ -1,0 +1,427 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.IOrdersDAO">
+
+	<sql id="base">
+		select a.orderId,b.orderCode,b.tType,d.name, a.ext,a.quantity,a.unit,a.price,c.content,b.createdAt,a.status, c.filePath, a.commodity_id
+		from ch_sub_orders a 
+		left join ch_orders b on b.id=a.orderid
+		left join ch_contract c on c.orderId = b.id
+		left join ch_commodity d on d.id= a.commodity_id
+	</sql>
+	
+	<resultMap id="suborder" type="com.smm.cuohe.domain.SubOrder">
+		
+		<collection property="commodityAttrList" column="commodity_id" select="com.smm.cuohe.dao.ICommodityAttrDAO.getCommidtyAttrByCommodityId" />
+		
+	</resultMap>
+	
+	
+	<select id="getSubOrdersByUserId" parameterType="java.lang.Integer" resultMap="suborder">
+		<include refid="base"/>
+		where sellId = #{id} or buyId = #{id}
+		and a.status &lt; 2
+	</select>
+	
+	<select id="getSubOrdersByOrderId" parameterType="java.lang.Integer" resultMap="suborder">
+		<include refid="base"/>
+		where
+		a.orderId=#{id}
+	</select>
+	
+	
+	<select id="getOrderDetailByOrderId" parameterType="java.lang.Integer" resultType="map">
+		(select a.id, b.companyName com_name,b.address,c.name con_name,c.telephone,c.mobilePhone
+		from ch_orders a 
+		left join ch_customs  b on b.id=a.sellid
+		left join ch_contacter c on c.customerId=a.sellid
+		where
+		a.id=#{id}
+		order by c.keyPerson desc limit 1)
+		union 
+		(select a.id,b.companyName com_name,b.address,c.name con_name,c.telephone,c.mobilePhone
+		from ch_orders a 
+		left join ch_customs  b on b.id=a.buyid
+		left join ch_contacter c on c.customerId=a.buyid
+		where a.id=#{id}
+		order by c.keyPerson desc limit 1)
+	</select>
+
+	<select id="getContractByOrderId" parameterType="int" resultType="com.smm.cuohe.domain.Contract">
+	
+		select * from ch_contract where orderId = #{orderId};
+		
+	</select>
+	
+	<resultMap type="com.smm.cuohe.domain.Order" id="orderWithContract">
+	
+		<id column="id" property="id"/>
+		<association property="contract" column="id" select="getContractByOrderId" />
+	
+	</resultMap>
+	
+	<select id="getOrderById" parameterType="java.util.Map" resultMap="orderWithContract">
+		select a.*
+		from ch_orders a
+		where a.id=#{id}
+	</select>
+	
+	<update id="cancelOrderByOrderId" parameterType="int">
+		update ch_orders
+		set orderStatus=2
+		where id=#{orderId}
+	</update>
+	
+	<update id="updateOrderStatus" parameterType="java.util.Map">
+		update ch_orders a
+		set a.orderstatus=#{status}
+		where a.id=#{id}
+	</update>
+
+	<update id="updateOrderContractPath" parameterType="java.lang.String">
+			update ch_contract 
+				set filePath=#{contractPath}
+		where id=#{id}
+			
+	</update>
+	<select id="getOrderList" parameterType="java.util.Map" resultMap="orderRecord">
+			SELECT
+				  b.id,
+				  b.orderCode,
+				  getItemNameById(b.itemid)             itemNm,
+				  DATE_FORMAT(b.createdAt,'%Y-%m-%d')    createdAt,
+				  b.status,
+				  b.itemId,
+				  v.name             wareNm,
+				  getUserNameById(b.createdBy) createdByName,
+				  getCompanyNameById(b.sellId) sellCompanyNm,
+				  getCompanyNameById(b.buyId) buyCompanyNm,
+				  c.content,
+				  b.orderStatus,
+				  b.confirmStatus
+				  <!-- case when c.confirmedAt is null then 0 else 1 end as confirmStatus -->
+				FROM ch_orders b
+				  LEFT JOIN ch_areas v
+				    ON v.id = b.ware_province
+				  left join ch_contract as c on b.id = c.orderId
+		 		 where  b.itemid=#{itemid}  and b.status=0
+		<include refid="contacterQuery"></include>
+		<include refid="mysqlPageSearchFoot"></include>
+	</select>
+	
+	
+	
+	<select id="getSubOrderAllById" parameterType="java.lang.Integer" resultType="map">
+			select b.id,a.id AS subId,b.orderCode,getItemNameById(b.itemid) product,a.quantity,a.unit,a.price, date_format(b.createdAt,'%Y-%m-%d') createdAt,b.orderstatus status,
+			v.name province, 
+			getUserNameById(b.createdBy),
+			getCompanyNameById(b.sellId) sellname,
+			getCompanyNameById(b.buyId) buyname,
+			c.attrvalue,c.attrname,ct.filePath,
+			b.sellId,
+			b.delivery,
+			b.payment,
+			b.poundDiff,
+			b.ware_Name,
+			b.deliveryDate,
+			b.ware_Province areaid,
+			b.buyId,
+			v.id,
+			b.itemid
+			from ch_orders b
+			left join ch_contract as ct on b.id = ct.orderId
+			left join ch_sub_orders a  on b.id=a.orderid
+			left join ch_areas v on v.id=b.ware_province
+		    left join ch_attr_values c on c.extid=a.ext
+		  where  b.id=#{id}
+	</select>
+
+	<select id="getOrderCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select    count(*) 	 
+			FROM ch_orders b
+				  LEFT JOIN ch_areas v
+				    ON v.id = b.ware_province
+				  left join ch_contract as c on b.id = c.orderId
+		 		 where  b.itemid=#{itemid}  and b.status=0
+		<include refid="contacterQuery"></include>
+		<include refid="mysqlPageSearchFoot"></include>
+	</select>
+
+	
+	<update id="orderEditor" parameterType="com.smm.cuohe.domain.Order">
+		update ch_orders
+		set
+			<if test="itemId!=null">  itemId              =#{itemId        },    </if>
+			<if test="sellId!=null">  sellId              =#{sellId        },    </if>
+			<if test="buyId!=null">  buyId               =#{buyId         },    </if>
+			<if test="delivery!=null">  delivery            =#{delivery      },    </if>
+			<if test="payment!=null">  payment             =#{payment       },    </if>
+			<if test="ware_province!=null">  ware_province       =#{ware_province },    </if>
+			<if test="ware_name!=null">  ware_name           =#{ware_name     },    </if>
+			<if test="deliveryDate!=null">  deliveryDate        =#{deliveryDate  },    </if>
+			<if test="poundDiff!=null">  poundDiff           =#{poundDiff     },    </if>
+			<if test="ttype!=null">  ttype               =#{ttype         },    </if>
+			<if test="source!=null">  source              =#{source        },    </if>
+			updatedAt=now(),
+			<if test="updatedBy!=null">  updatedBy     		=#{updatedBy    },   </if>
+			<if test="orderStatus!=null">  orderStatus     		=#{orderStatus    },   </if>
+			id=id
+			where id=#{id}      
+	</update>
+	
+	<update id="updateContractFilePath" >
+	
+		update ch_contract set filePath =concat_ws(';',filePath, #{filePath})where orderId = #{orderId};
+	
+	</update>
+
+	<insert id="addContractByFile">
+	
+		insert into ch_contract(orderId, filePath, createdAt) values(#{orderId, jdbcType=INTEGER}, #{filePath, jdbcType=VARCHAR}, now());
+	
+	</insert>
+
+
+	<update id="updateSubOrders" parameterType="com.smm.cuohe.domain.SubOrder">
+		update ch_sub_orders
+		set			  
+			quantity=#{quantity},
+			<if test="unit!=null">unit=#{unit},</if>
+			<if test="price!=null">price=#{price},</if>
+			<if test="ext!=null">ext=#{ext},</if>
+				updatedAt=now(),
+			<if test="updatedBy!=null">updatedBy=#{updatedBy},</if>
+			
+			id=id
+			where id=#{id}      
+	</update>
+
+	<sql id="contacterQuery" >
+			   <if test="attribute != null">
+	          and 
+	          ${attribute}  
+	         <if test="operator == 1">
+	 		    	like '%${content}%' 
+	   		 </if>  
+	   		<if test="operator == 2">
+	 			 not   like  '%${content}%' 
+	   		 </if>
+	   		<if test="operator == 3">
+	 			=	'${content}' 
+	   		 </if>
+	   		<if test="operator == 4">
+	 			!=	'${content}' 
+	   		 </if>
+	   		<if test="operator == 5">
+	 			like	'${content}%' 
+	   		 </if>	   		 
+	   		<if test="operator == 6">
+	 			like	'%${content}' 
+	   		 </if>	
+	   		<if test="operator == 7">
+	 			is 	null  or   ${attribute}  =''
+	   		 </if>	
+	   		<if test="operator == 8">
+	 			is not null and ${attribute} !=''
+	   		 </if>	    		     
+         </if>
+</sql>	
+    <sql id="mysqlPageSearchFoot" >
+		<if test="_orderby != null"  >
+				ORDER BY b.OrderStatus ASC,b.updatedAt DESC
+	 	</if>
+		 <if test="_start != null and _size != null" >
+			LIMIT  #{_start} , #{_size}
+	  	 </if>
+	</sql>
+	<select id="getKeyContacterByCompanyId" parameterType="java.lang.Integer" resultType="java.util.Map">
+	
+		select * from  ch_contacter a  
+		left  join ch_customs c  on a.customerId=c.id where keyPerson=1 and customerId=#{id}
+		
+	</select>
+	
+	<select id="getOrderCountBySellId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) 
+			FROM ch_orders
+			WHERE sellID =#{sellId}
+			and Status = 0;
+	</select>
+	
+	<select id="queryOrderByBuyId" parameterType="java.util.Map"  resultType="com.smm.cuohe.domain.Order">
+		SELECT a.*,b.name as sellCompanyNm ,c.name as buyCompanyNm ,d.name as wareNm ,e.name as userNm,f.name as itemNm FROM ch_orders a
+	
+		LEFT JOIN ch_customs 	b ON b.id = a.sellID 
+		
+		LEFT JOIN ch_customs c ON c.id = a.buyID
+		
+		LEFT JOIN ch_areas d ON d.id = a.ware_Province 
+		
+		LEFT JOIN  ch_users e ON e.id = a.createdBy 
+		
+		LEFT JOIN ch_items f ON f.id = a.itemID
+				
+		WHERE a.sellID = #{sellId}
+				 
+		and a.Status = 0;
+	</select>
+	
+	<select id="querySubOrderByOrderId" parameterType="java.util.Map"  resultType="com.smm.cuohe.domain.SubOrder">
+		SELECT a.*,b.name as sellCompanyNm ,c.name as buyCompanyNm ,d.name as wareNm ,e.name as userNm,f.name as itemNm FROM ch_sub_orders a
+
+		LEFT JOIN ch_orders g ON a.orderID = g.id 
+		
+		LEFT JOIN ch_customs b ON b.id = g.sellID 
+				
+		LEFT JOIN ch_customs c ON c.id = g.buyID
+		
+		LEFT JOIN ch_areas d ON d.id = g.ware_Province 
+		
+		LEFT JOIN  ch_users e ON e.id = g.createdBy 
+		
+		LEFT JOIN ch_items f ON f.id = g.itemID
+		
+		WHERE g.sellID = #{companyId}
+	</select>
+	
+	<select id="countOrdersBySellId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM ch_sub_orders a
+
+		LEFT JOIN ch_orders g ON a.orderID = g.id 
+		
+		LEFT JOIN ch_customs b ON b.id = g.sellID 
+				
+		LEFT JOIN ch_customs c ON c.id = g.buyID
+		
+		LEFT JOIN ch_areas d ON d.id = g.ware_Province 
+		
+		LEFT JOIN  ch_users e ON e.id = g.createdBy 
+		
+		LEFT JOIN ch_items f ON f.id = g.itemID
+		
+		WHERE g.sellID = #{companyId}
+	
+	</select>
+	
+	<select id="querySubOrderBycompanyId" parameterType="java.util.Map"  resultType="com.smm.cuohe.domain.SubOrder">
+		SELECT a.*,b.name as sellCompanyNm ,c.name as buyCompanyNm ,d.name as wareNm ,e.name as userNm,
+		
+		f.name as itemNm,g.orderCode as orderCode,g.orderStatus as orderStatus, g.confirmStatus, ct.content as orderContract
+		
+		FROM ch_sub_orders a
+
+		LEFT JOIN ch_orders g ON a.orderID = g.id 
+		
+		left join ch_contract ct on ct.orderId = g.id
+		
+		LEFT JOIN ch_customs b ON b.id = g.sellID 
+				
+		LEFT JOIN ch_customs c ON c.id = g.buyID
+		
+		LEFT JOIN ch_areas d ON d.id = g.ware_Province 
+		
+		LEFT JOIN  ch_users e ON e.id = g.createdBy 
+		
+		LEFT JOIN ch_items f ON f.id = g.itemID
+		
+		WHERE g.sellID = #{companyId}
+		
+		<!-- 分页 -->
+		<if test="startNum!=null and endNum !=null ">
+			limit ${startNum},${endNum}
+		</if>
+		
+	</select>
+	
+	
+	<resultMap type="com.smm.cuohe.domain.SubOrder" id="ttSubOrder">
+	
+		<result column="commodity_id" property="commodityId" />
+		
+		<collection property="commodityAttrList" column="commodity_id" select="com.smm.cuohe.dao.ICommodityAttrDAO.getCommidtyAttrByCommodityId"/>
+	
+	</resultMap>
+	
+	<select id="ttGetSubOrders" parameterType="int" resultMap="ttSubOrder">
+	
+		select * from ch_sub_orders where orderId = #{id};
+	
+	</select>
+	
+	<resultMap type="com.smm.cuohe.domain.Order" id="orderRecord">
+		
+		<result column="id" property="id" />
+		
+		<collection property="subOrderList" column="id" select="com.smm.cuohe.dao.ISubOrdersDAO.getSubOrdersByOrderId" />
+	
+		<collection property="contract" column="id" select="getContractByOrderId"/>
+	
+	</resultMap>
+	
+	<select id="getOrderRecord" resultMap="orderRecord" parameterType="int">
+	
+		select *, getItemNameById(o.itemId) as itemNm, getCompanyNameById(o.sellId) as sellCompanyNm, getCompanyNameById(o.buyId) as buyCompanyNm 
+		from ch_orders as o left join ch_contract as c on o.id = c.orderId
+		where o.sellId = #{customerId} or o.buyId = #{customerId} limit #{start}, #{len};
+	
+	</select>
+	
+	<select id="getCountOfOrderRecord" resultType="int" parameterType="int">
+	
+		select count(1) from ch_orders where sellId = #{companyId} or buyId = #{companyId};
+	
+	</select>
+	
+	
+	<select id="selectItemAttr" parameterType="int" resultType="java.util.Map">
+	
+		select name, mainProperty from ch_item_attr where itemId = #{itemId} and status = 0;
+	
+	</select>
+	
+	<select id="getOrderListBySellPoolId" parameterType="int" resultType="com.smm.cuohe.domain.Order">
+	
+		SELECT id, orderCode, getCompanyNameById(sellId) sellCompanyNm, getCompanyNameById(buyId) buyCompanyNm,  getOrderTotalPriceById(id) AS totalPrice 
+		FROM ch_orders WHERE source_id = #{sellPoolId} and source in(0, 4) order by createdAt desc
+	
+	</select>
+	
+	<select id="ifExistContract" parameterType="int" resultType="java.lang.Integer">
+	
+		SELECT COUNT(1) FROM ch_contract c LEFT JOIN ch_orders o ON c.orderId = o.id WHERE o.id = #{orderId};
+	
+	</select>
+	
+	<update id="updateLastTransTimeByOrderId" parameterType="int">
+		UPDATE ch_customs c,ch_orders o SET c.LastTransTime=o.createdAt WHERE o.id=#{orderId} AND (c.id=o.sellID OR c.id=o.buyID)
+	</update>
+	
+	<select id="getOrderCodeByOrderId" parameterType="int" resultType="java.lang.String">
+	
+		select orderCode from ch_orders where id = #{orderId};
+	
+	</select>
+	
+	<select id="getOrdersByEmpToday" resultType="java.lang.Integer">
+	   SELECT COUNT(id) FROM ch_orders WHERE  createdBy = #{empId} 
+	   <if test="startDate!=null">
+	     AND createdAt>DATE(#{startDate,jdbcType=TIMESTAMP})
+	    </if>
+	    <if test="endDate!=null">
+	    AND createdAt &lt; date_add(DATE(#{endDate,jdbcType=TIMESTAMP}), INTERVAL 1 day)
+	    </if>
+	</select>
+	
+	 <select id="getOrderAmountByEmpToday" resultType="com.smm.cuohe.domain.base.ChSubOrdersEntity">
+	 SELECT o.id as orderid ,s.price,s.quantity FROM ch_orders o LEFT JOIN ch_sub_orders s ON s.orderID = o.id
+	 where  o.createdBy = #{empId}
+	  <if test="startDate!=null">
+	     AND o.createdAt>DATE(#{startDate,jdbcType=TIMESTAMP})
+	    </if>
+	    <if test="endDate!=null">
+	    AND o.createdAt &lt; date_add(DATE(#{endDate,jdbcType=TIMESTAMP}), INTERVAL 1 day)
+	    </if>
+	 </select>
+</mapper>

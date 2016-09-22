@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!-- 模态窗口编辑模板 -->
+<form action="" id="myform" class="form-horizontal form-bordered" novalidate="novalidate" method="post">
+<!-- 窗口标题开始 -->
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title" style="font-weight:bold;"></h4>
+</div>
+<style>
+	#tab tr td{
+		text-align:left;
+		padding:0;
+	}
+	#tab tr td label{
+		text-align:left;
+		width:100%;
+		height:100%;
+		padding:.2em;
+		padding-left:15px;
+	}
+</style>
+<!-- 窗口标题结束-->
+<!-- 内容开始 -->
+<div class="modal-body" id="div'">
+	<div align="left" id="divlist">
+	<table id="tab" class="ttTbl">
+	<#if branlit??>
+		<#list branlit as bran >
+		<#if bran_index==0>	
+		<tr>
+		</#if>
+		<td>
+			<label >
+				<input type="checkbox" name="bran" value="${bran.catname}" 
+				<#if valuelist??>
+				<#list valuelist as val>
+				<#if val==bran.catname>
+				checked 
+				</#if>
+				</#list>
+				</#if>
+				>
+				&nbsp;${bran.catname}
+			</label>
+		</td>
+		<#if bran_index%2==1>
+		</tr><tr>
+	
+		
+		</#if>
+		</#list>
+		</#if>
+		</table>
+	</div>
+	
+</div>
+<!-- 内容结束 -->
+<!-- 底部按钮开始 -->
+<div class="modal-footer">
+	<button type="button" class="btn default fa fa-times" data-dismiss="modal"> 取消</button>
+	<button type="button" onclick="changeParent()" class="btn green  fa fa-check"> 确定</button>
+</div>
+<!-- 结束 -->
+</form>
+<!-- 业务处理开始 -->
+<script>
+	function changeParent(){
+		
+		var checkedBrand = $("input[name='bran']:checked").map(function(){
+			if($(this).val()){
+				return $(this).val();
+			}
+			$(this).attr(checked,false);
+		}).get().join(',');
+		
+		$(brandEl).val(checkedBrand);
+		var branlist=document.getElementsByName("bran");
+		for(var a=0 ; a<branlist.length;a++){
+			branlist[a].checked=false;	
+		}
+		$(".close").click(); 
+		
+	}
+</script>

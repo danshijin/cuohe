@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.IComRecordsDAO">
+	
+	<select id="getPagingRecordsByCustomerId" parameterType="int" resultType="com.smm.cuohe.domain.ComRecords">
+		
+		select rd.*, getUserNameById(rd.updatedBy) as updateUserName
+		from ch_com_records as rd
+		where customerId = #{customerId}
+		order by rd.updatedAt desc
+		limit #{start}, #{len}
+	
+	</select>
+	
+	<select id="getRecordsCountByCustomerId" parameterType="int" resultType="int">
+		select count(1) 
+		from ch_com_records as rd
+		where customerId = #{customerId}
+	</select>
+	
+	
+	<insert id="insertRecord" parameterType="com.smm.cuohe.domain.ComRecords">
+		insert into ch_com_records
+		(
+		itemId, 
+		customerId,
+		<!-- contacterId, --> 
+		title, context, createdAt, createdBy, updatedAt, updatedBy)
+		values(
+			#{itemId, jdbcType=INTEGER},
+			#{customerId, jdbcType=INTEGER},
+			<!-- #{contacterId, jdbcType=INTEGER}, -->
+			#{title, jdbcType=VARCHAR},
+			#{context, jdbcType=VARCHAR},
+			now(),
+			#{createdBy, jdbcType=INTEGER},
+			now(),
+			#{createdBy, jdbcType=INTEGER}
+		)
+	</insert>
+	
+	<update id="updateComRecord" parameterType="com.smm.cuohe.domain.ComRecords">
+		
+		update ch_com_records
+		set title = #{title, jdbcType=VARCHAR},
+			context = #{context, jdbcType=VARCHAR},
+			updatedAt = now(),
+			updatedBy = #{updatedBy, jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<delete id="deleteComRecord" parameterType="java.lang.Integer">
+		
+		delete from ch_com_records
+		where id = #{id}
+		
+	</delete>
+	
+</mapper>

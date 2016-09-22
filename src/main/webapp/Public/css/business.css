@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+#grid tr.trDeal{
+	color:#008000;
+}
+#grid tr.trClose{
+	color:#A8A8A8;
+}
+.dataDiv{
+	height:400px;
+	overflow:auto;
+}

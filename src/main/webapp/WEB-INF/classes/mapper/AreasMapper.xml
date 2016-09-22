@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.smm.cuohe.dao.IAreasDao">
+<cache eviction="LRU" type="com.smm.cuohe.tools.MybatisRedisCache" />
+
+<select id="getParentAreas"  parameterType="java.util.Map" resultType="com.smm.cuohe.domain.Areas" >	
+		select   * from ch_areas where parentID=0
+		
+		<!-- select   a.* from ch_areas a
+
+		INNER JOIN ch_warehouse  b ON b.areaid = a.id
+		 
+		where a.parentID=0 
+		
+		AND #{itemId} IN(b.catid)
+
+		GROUP BY a.`name` -->
+</select>
+
+<select id="getChildArea" parameterType="java.lang.String" resultType="com.smm.cuohe.domain.Areas">	
+		select  * from ch_areas where parentID=#{parentID}
+</select>
+
+<select id="getAreaById" parameterType="java.lang.String" resultType="com.smm.cuohe.domain.Areas">	
+		select  * from ch_areas where id=#{id}
+</select>
+
+<select id="getWarehouseById"  parameterType="java.util.Map" resultType="com.smm.cuohe.domain.dealmake.Warehouse">
+
+	SELECT * FROM ch_warehouse WHERE id = #{warehouseId}
+
+</select>
+
+</mapper>

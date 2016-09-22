@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<title>SMM撮合系统</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<link href="${request.getContextPath()}/Public/assets/admin/css/css.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/global/plugins/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/global/plugins/simple-line-icons/simple-line-icons.min.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/global/plugins/uniform/css/uniform.default.css"
+	rel="stylesheet" type="text/css">
+
+<link
+	href="${request.getContextPath()}/Public/assets/global/css/components-rounded.css"
+	id="style_components" rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/global/css/plugins.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/admin/css/layout.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/admin/css/themes/default.css"
+	rel="stylesheet" type="text/css" id="style_color">
+<link
+	href="${request.getContextPath()}/Public/assets/admin/css/custom.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css"
+	rel="stylesheet" type="text/css">
+
+<link
+	href="${request.getContextPath()}/Public/assets/admin/css/common.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="shortcut icon"
+	href="${request.getContextPath()}/Public/favicon.ico">
+<link href="${request.getContextPath()}/Public/css/client.css"
+	rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/css/kkpager.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/css/customerDetail.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+body {
+	margin: 0;
+	padding: 0;
+}
+/*div_Import */
+#div_Import {
+	position: fixed;
+	z-index: 999;
+	width: 600px;
+	height: 400px;
+	border: 1px solid #ccc;
+	background: #efefef;
+	display: none;
+	overflow: auto;
+}
+
+#div_Import .tit {
+	background: #ddd;
+	display: block;
+	height: 15px;
+}
+
+#div_Import .tit i {
+	float: right;
+	line-height: 15px;
+	padding: 0 8px;
+	cursor: pointer;
+}
+.tb tr td{
+	padding:.2em .5em;
+}
+.tb tr td:nth-child(2) {
+	width:35%;
+}
+</style>
+</head>
+
+<body class="page-header-top-fixed">
+	<!--头部信息结束 -->
+	<div class="page-header">
+		<!--头部开始-->
+		<#include "/include/top.html" />
+		<!-- 头部信息结束 -->
+
+
+		<!-- 头部菜单开始 -->
+		<#include "/include/top_menu.html" />
+		<!-- 头部菜单结束 -->
+	</div>
+	<!-- END HEADER -->
+
+	<!-- BEGIN PAGE CONTAINER -->
+	<div class="page-container">
+		<!-- 内容开始 -->
+		<div class="page-content">
+			<div class="container-fluid">
+				<div class="row margin-top-10">
+					<div class="portlet light">
+						<p style="font-weight:bold;" align="center">&nbsp;&nbsp;主要信息&nbsp;&nbsp;:&nbsp;&nbsp;</p>
+						<form id="form_main">
+						<table class="tb" cellspacing="1" border="1" id="tb_order_detail">
+							<input type="hidden" id="only" name="only" value="${only}">
+							<input type="hidden" id="user_name" name="user_name" >
+							<tbody>
+								<tr>
+									<td class="tdTitle" width="20%"><font color="red">*</font>负责人</td>
+									<td  id="pic">
+										<select name="pic" class="form-control">
+											<#if pics??>
+											<#list pics as el> 
+												<option ${(userId==el.id)?string('selected="selected"','')} value="${(el.id)!}">${(el.name)!}</option>
+											</#list>
+											</#if>
+										</select>
+									</td>
+									<td class="tdTitle"><font color="red">*</font>来源</td>
+									<td  id="categorySource">
+										<select name="categorySource" class="form-control">
+											<#if categorySource??>
+											<#list categorySource as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list> 
+											</#if>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>公司名</td>
+									<td  id="companyName">
+										<input type="text" name="companyName" style="width: 85%; display:inline-block;" class="form-control" placeholder="请输入公司名">
+										<button type="button" onclick="search(this)" class="btn green">搜索</button>
+									</td>
+									<td class="tdTitle"><font color="red">*</font>行业（主要销售）</td>
+									<td  id="salesProducts">
+										<input type="text" name="salesProducts" id='salesInput' class="form-control" style="min-width:240px;max-width:100%;height: 34px;">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>客户级别</td>
+									<td  id="level">
+										<select name="level" class="form-control">
+											<#if level??>
+											<#list level as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list> 
+											</#if>
+										</select>
+									</td>
+									<td class="tdTitle"><font color="red">*</font>省份</td>
+									<td  id="area">
+										<select onchange="setChildAreas(this)" style="width: 49%; display:inline-block;" class="form-control" id="cityid" >
+											<option value="" selected="selected">请选择</option>
+											<#if parentAreas??>
+											<#list parentAreas as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list>
+											</#if>
+										</select>
+										<select style="width: 49%; display:inline-block;" class="form-control">
+											<option value="" selected="selected">请选择</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>企业类型</td>
+									<td  id="entTypes">
+										<#if entTypes??>
+										<#list entTypes as el> 
+											<label><input type="checkbox" class="form-control" onclick="setEntType('${(el.id)!}')">&nbsp;${(el.name)!}&nbsp;</label>
+										</#list>
+										</#if>
+										<!-- 
+										<input type="checkbox">贸易商
+										<input type="checkbox">冶炼
+										<input type="checkbox">加工制造
+										<input type="checkbox">其他
+										-->
+									</td>
+									<td class="tdTitle"><font color="red">*</font>地址</td>
+									<td  id="address">
+										<input type="text"  id="addresss" name="address" class="form-control">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>年销售额</td>
+									<td  id="salesVolume">
+										<select name="salesVolume" class="form-control">
+											<#if salesvolume??>
+											<#list salesvolume as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list> 
+											</#if>
+											<!-- 
+											<option value="0-10万" selected="selected">0-10万</option>
+											<option value="10-100万">10-100万</option>
+											<option value="100-1000万">100-1000万</option>
+											<option value="1000万以上">1000万以上</option>
+											 -->
+										</select>
+									</td>
+									<td class="tdTitle"><font color="red">*</font>员人人数</td>
+									<td  id="categoryEmployee">
+										<select name="categoryEmployee" class="form-control">
+											<#if categoryemployee??>
+											<#list categoryemployee as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list>
+											</#if>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>采购商品</td>
+									<td  id="buyProducts">
+										<input type="text" name="buyProducts" id="buyInput" class="form-control" style="min-width:240px;max-width:100%;height: 34px;">
+									</td>
+									<td class="tdTitle"><font color="red">*</font>采购周期</td>
+									<td  id="categoryFreq">
+										<select name="categoryFreq" class="form-control">
+											<#if categoryfreq??>
+											<#list categoryfreq as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list>
+											</#if>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>采购量</td>
+									<td  id="buyVolume">
+										<input type="text" name="buyVolume" class="form-control">
+									</td>
+									<td class="tdTitle"><#if Session["userInfo"]["itemId"] != "26278" && Session["userInfo"]["itemId"] != "26299"><font color="red">*</font><#else>&nbsp;&nbsp;</#if>采购品牌</td>
+									<td  id="buyBrand">
+										<input type="text" name="buyBrand" id="brandInput" class="form-control" style="min-width:240px;max-width:100%;height: 34px;">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>上下家</td>
+									<td  id="categorybusiness">
+										<label><input type="checkbox"  onclick="setCategorybusiness('2')">供应商&nbsp;</label>
+										<label><input type="checkbox"  onclick="setCategorybusiness('1')">采购商</label>
+									</td>
+									<!-- <td class="tdTitle">标签</td>
+									<td >
+										<input type="text" name="tag" class="form-control">
+									</td> -->
+								</tr>
+							</tbody>
+						</table>
+						</form>
+						<br>
+						<p style="font-weight:bold;" align="center">&nbsp;&nbsp;联系人信息&nbsp;&nbsp;:&nbsp;&nbsp;</p>
+						<div id="block_contacter">
+						<form id="contacter_form">
+						<table class="tb" cellspacing="1" border="1">
+							<tbody>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>姓名</td>
+									<td >
+										<input type="text" id="name" name="name" class="form-control">
+									</td>
+									<td class="tdTitle"><font color="red">*</font>性别</td>
+									<td id="sexChooseTd">
+										<label style="margin-left: 20px;">
+											<input type="radio" value="0" name="sex" checked>男
+										</label>
+										<label style="margin-left: 20px;">
+										<input type="radio" value="1" name="sex" >女
+										</label>
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle"><font color="red">*</font>职位</td>
+									<td >
+										<input type="text"  id="position"  name="position" class="form-control"  maxlength="20" >
+									</td>
+									<td class="tdTitle"><font color="red">*</font>手机</td>
+									<td >
+										<input type="text" id="mobilePhone" maxlength="20"  name="mobilePhone" class="form-control" onBlur="onBlurHome();";  onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" >
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">QQ</td>
+									<td >
+										<input type="text" name="qq" class="form-control"  onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" >
+									</td>
+									<td class="tdTitle">固话</td>
+									<td >
+										<input type="text" name="telephone" maxlength="20" class="form-control">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">邮箱</td>
+									<td >
+										<input type="text" id="email" name="email" onblur="checkEmail()" class="form-control">
+									</td>
+									<td class="tdTitle">是否采购关键人</td>
+									<td id="keyPersonChooseId">
+										<label style="margin-left: 20px;">
+										<input type="radio" value="1" name="keyPerson" checked>是
+										</label>
+										<label style="margin-left: 20px;">
+										<input type="radio" value="0" name="keyPerson">否
+										</label>
+									</td>
+								</tr>
+								<tr style="display: none">
+									<td class="tdTitle">联系方向</td>
+									<td ></td>
+									<td class="tdTitle">&nbsp;</td>
+									<td ></td>
+								</tr>
+							</tbody>
+						</table>
+						</form>
+						<div style="margin-top: 5px" align="left">
+							<a style="font-weight:bold;" href="javascript:;" onclick="newContacter(this)">+添加联系人</a>
+						</div>
+						</div>
+						<br>
+						<p style="font-weight:bold;" align="center">&nbsp;&nbsp;附加信息&nbsp;&nbsp;:&nbsp;&nbsp;</p>
+						<form id="form_aditional">
+						<table class="tb" cellspacing="1" border="1">
+							<tbody>
+								<tr>
+									<td class="tdTitle">法人</td>
+									<td  id="corporate">
+										<input type="text" name="corporate" class="form-control">
+									</td>
+									<td class="tdTitle">注册时间</td>
+									<td  >
+										<input type="text" id="registerDate" name="registerDate" class="form-control" placeholder="例如：2012-09-12" >
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">公司电话</td>
+									<td  id="companyPhone">
+										<input type="text" name="companyPhone"  maxlength="20" class="form-control">
+									</td>
+									<td class="tdTitle">企业性质</td>
+									<td  id="companyProperty">
+										<select name="companyProperty" class="form-control">
+											<option value="" selected="selected">请选择</option>
+											<#if companyproperty??>
+											<#list companyproperty as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list>
+											</#if>
+											<!-- 
+											<option value="1">合资</option>
+											<option value="2">独资</option>
+											<option value="3">国有</option>
+											<option value="4">私营</option>
+											 -->
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">网址</td>
+									<td  id="companySite">
+										<input type="text" name="companySite" class="form-control">
+									</td>
+									<td class="tdTitle">税务登记证</td>
+									<td  id="taxNo">
+										<input type="text" name="taxNo" class="form-control">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">开户银行</td>
+									<td  id="bank">
+										<input type="text" name="bank" class="form-control">
+									</td>
+									<td class="tdTitle">银行帐号</td>
+									<td  id="bankAccount">
+										<input type="text" name="bankAccount" class="form-control">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">企业信誉</td>
+									<td  id="categoryCredit">
+										<select name="categoryCredit" class="form-control">
+											<option value="" selected="selected">请选择</option>
+											<#if categoryCredit??>
+											<#list categoryCredit as el> 
+												<option value="${(el.id)!}">${(el.name)!}</option>
+											</#list>
+											</#if>
+											<!--
+											<option value="0">好</option>
+											<option value="1">中</option>
+											<option value="2">差</option>
+											 -->
+										</select>
+									</td>
+									<td class="tdTitle">关联企业</td>
+									<td  id="companyAss">
+										<input type="text" name="companyAss" class="form-control">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">营业执照号</td>
+									<td  id="businessLicense">
+										<input type="text" name="businessLicense" class="form-control">
+									</td>
+									<td class="tdTitle">营业执照到期时间</td>
+									<td  id="expiryTime">
+										<input type="text" name="expiryTime" class="date form-control" readonly="readonly">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">标签</td>
+									<td >
+										<input type="text" name="tag" id="tag" class="form-control js-example-tags" style="min-width:240px;max-width:100%;height: 34px;">
+									</td>
+								</tr>
+								<tr>
+									<td class="tdTitle">备注</td>
+									<td class="" colspan="3" id="commands">
+										<textarea name="commands" rows="3" cols=""  class="form-control"></textarea>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+	<div class="modal-footer" style="text-align: center;">
+		<button type="button" onclick="save(0)" class="btn green  fa fa-check">保存</button>
+<!-- 		<button type="button" onclick="save(1)" class="btn green  fa fa-check">保存并新建</button> -->
+		<!-- <button type="button" class="btn green  fa fa-check" data-dismiss="modal"  onclick="window.location('${request.getContextPath()}/purchase/getAll.do?type=1')">返回</button> -->
+<!-- 		<label>&nbsp;&nbsp;<input type="checkbox" onclick="addOrUpdate(this)">&nbsp;同时更新（注册）商城用户</label> -->
+	</div>
+
+
+	<!-- END PAGE CONTAINER -->
+
+
+	<!-- 底部开始 -->
+	<#include "/include/foot.html" />
+	<!-- 底部结束 -->
+
+	<!--[if lt IE 9]>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/respond.min.js"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/jquery.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/jquery-migrate.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/jquery-ui/jquery-ui.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/js/bootstrap.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/jquery.blockui.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/jquery.cokie.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/uniform/jquery.uniform.min.js"
+		type="text/javascript"></script>
+
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/jquery.sparkline.min.js"
+		type="text/javascript"></script>
+
+	<script
+		src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"
+		type="text/javascript"></script>
+
+	<script
+		src="${request.getContextPath()}/Public/assets/global/scripts/metronic.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/admin/scripts/layout.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/admin/scripts/indexComponent.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/admin/scripts/commonUtils.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/admin/scripts/tc.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${request.getContextPath()}/Public/assets/admin/scripts/ajaxfileupload.js"
+		type="text/javascript"></script>
+	<script src="${request.getContextPath()}/Public/assets/global/plugins/kkpager.min.js" type="text/javascript"></script>
+
+<!-- select2  begin -->
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2_locale_zh-CN.js"></script>
+<link href="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css">
+<script src="${request.getContextPath()}/Public/js/customerDetail/businessSel.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/js/customerDetail/brandSel.js" type="text/javascript"></script>
+<!-- select2 end -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+		   Metronic.init(); // init metronic core componets
+		   Layout.init(); // init layout
+		});
+	</script>
+	<script>
+		BASE_URL = '${request.getContextPath()}';
+		//select2使用需要预先定义的businessArr数组
+		var businessArr = ['salesInput', 'buyInput'];
+		var userId = '${(userId)!}';
+		var levelArray = $.parseJSON('${(levelString)!}'||'[]');
+		var companyOfSearch = null;//通过搜索获取的公司信息
+		var account=null;
+		var emailBool=true;
+		var createMallAccount = 0;
+		$(function(){
+			$('.date').datepicker({
+			    format:'yyyy-mm-dd',
+		        weekStart: 1,
+		        todayBtn:  1,
+				autoclose: 1,
+				todayHighlight: 1,
+				startView: 2,
+				forceParse: 0,
+		        showMeridian: 1
+		    });
+			$("#companyName input").keydown(function(event){
+				if(event.keyCode == 13){
+					$(this).parent().children("button").click();
+				}
+			});
+		});
+		function checkEmail(){
+			var email = $('#email').val();
+			 if(email!=null&&email!=""){
+			  	var re3 = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+			  	///^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+			  	  if(!re3.test(email)){
+			  		  emailBool=false;
+			  		CommonUtils.succModal('提示',"输入邮箱格式不正确");
+				   } else {
+					   
+					   emailBool=true;
+				   }
+			} 
+		} 
+		
+		//检查表单元素
+		function checkForm(){
+
+			var company_name = $.trim($('#companyName').find('input').val());
+
+			if(company_name.length==0){
+				CommonUtils.succModal('提示','请输入公司名称');
+				return false;
+			}	
+			if($("#addresss").val()==null||$("#addresss").val()==''){
+				CommonUtils.succModal('提示',"地址不能为空");
+				return false;
+			}
+			var buyVolume = $('#buyVolume').find('input').val();
+			
+			if(buyVolume==null||buyVolume==''){
+				CommonUtils.succModal('提示',"采购量不能为空");
+				return false;
+			}
+			if(buyVolume&&!$.isNumeric(buyVolume)){
+				CommonUtils.succModal('提示',"采购量必须为数字");
+				return false;
+			}
+			if($("#salesInput").val()==null|| $("#salesInput").val()==''){
+				CommonUtils.succModal('提示',"请选择行业");
+				return false;
+			}
+			if(getEntType()==null|| getEntType()==''){
+				CommonUtils.succModal('提示',"请选择企业类型");
+				return false;
+			}
+			
+			if($("#cityid").val()==null||$("#cityid").val()=='' ){
+				CommonUtils.succModal('提示',"请选择省份");
+				return false;
+				
+			}
+			if($("#buyInput").val()==null|| $("#buyInput").val()==''){
+				CommonUtils.succModal('提示',"请选择采购商品");
+				return false;
+			}
+			var itemId = '${Session["userInfo"]["itemId"]}';
+			if(itemId != 26278 && itemId != 26299 && ($("#brandInput").val()==null|| $("#brandInput").val()=='')){
+				
+				CommonUtils.succModal('提示',"请选择采购品牌");
+				return false;
+			}
+			if(!($('#categorybusiness').find('input').eq(0).is(':checked')||$('#categorybusiness').find('input').eq(1).is(':checked'))){
+				CommonUtils.succModal('提示',"请选择上下家");
+				return false;
+			}
+			var name = $('#name').val();
+
+			if(name.length==0){
+				CommonUtils.succModal('提示','请输入联系人姓名');
+				return false;
+			}
+			
+			var position = $('#position').val();
+
+			if(position.length==0){
+				CommonUtils.succModal('提示','请输入联系人职位');
+				return false;
+			}
+			
+			
+			var mobilePhone = $('#mobilePhone').val();
+			if(mobilePhone.length==0){
+				CommonUtils.succModal('提示','请输入联系人手机');
+				return false;
+			}else{
+				 if (isNaN(mobilePhone)) {
+					 CommonUtils.succModal('提示','手机号码是数字亲~');
+					 return false;
+				  }
+				 //匹配13，14，15，17,18开头的手机号码！
+				 var reg = /^0?1[3|4|5|7|8][0-9]\d{8}$/;
+				 if(!reg.test(mobilePhone)){
+					 CommonUtils.succModal('提示','手机号码格式不正确!');
+					 return false;
+				 }
+			}
+			if(!emailBool){
+				CommonUtils.succModal('提示','邮箱格式不正确');
+				return false;
+			}
+			return true;
+		}
+
+		//保存表单，提交新增客户请求
+		function save(flag){
+			var checkResult=checkForm();
+            var checkBolur = onBlurHome();
+			if(!checkResult) return false;
+            if(!checkBolur) return false;
+			//处理页面数据
+			var paramObj = {};
+			paramObj.account=account;//商城的账号
+
+			var mainInfo = getMainInfo();
+			var contactersInfo = getContacters();
+			var aditionalInfo = getAditionalInfo();
+
+			mainInfo['areaId'] = (getArea()||'');
+			mainInfo['entTypes'] = (getEntType()||'');
+			mainInfo['categoryBusiness'] = (getCategorybusiness()||'');
+			mainInfo['contacters'] = contactersInfo;
+			mainInfo['createMallAccount'] = createMallAccount;
+			paramObj = $.extend(paramObj, mainInfo ,aditionalInfo);
+			
+			//提交保存客户信息
+			$.ajax({
+				type : "POST",
+				contentType: "application/json;charset=utf-8",
+				url : "${request.getContextPath()}/customer/save.do",
+				dataType : "json",
+				data : JSON.stringify(paramObj),
+				success : function(resp) {
+					if($.type(resp)=='object'){
+
+						if(resp.success==1){
+
+							//供应商列表页面
+							var supplyUrl="${request.getContextPath()}/supply/getAll.do?type=1";
+
+							//采购商列表页面
+							var purchaseUrl="${request.getContextPath()}/purchase/getAll.do?type=1";
+
+							var returnUrl=purchaseUrl;
+
+							//如果保存的客户是供应商，保存成功后跳转供应商列表
+							if(businessType[2] && businessType[2]==1) returnUrl=supplyUrl;
+
+							CommonUtils.succModal2("系统提示", "保存成功！", returnUrl);
+
+							//用户点击保存按钮
+							if(flag==0){
+								//location.reload(true);
+								$("#tag").val("");
+							}else if(flag==1){ //用户点击保存并新增按钮
+								//window.location="${request.getContextPath()}/purchase/getAll.do?type=1";
+								$("#tag").val("");
+								location.reload(true);
+							}
+ 							
+							return;
+						}else if(resp.success==0){
+							CommonUtils.succModal('保存','保存失败 :  '+(resp.msg||''));
+							$("#tag").val("");
+							return;
+						}
+					}
+				}
+			});
+		}
+
+		//企业类型
+		var entType = {};
+		function setEntType(typeId){
+			if(typeId){
+				if(entType[typeId]){
+					delete entType[typeId];
+				}else{
+					entType[typeId] = 1;
+				}
+			}
+		}
+		function getEntType(){
+			var keys = $.map(entType, function(value, key){
+			    return key;     
+			});
+			return keys.join(',');
+		}
+		//上下家
+		var businessType = {};
+		function setCategorybusiness(typeId){
+			if(typeId){
+				if(businessType[typeId]){
+					delete businessType[typeId];
+				}else{
+					businessType[typeId] = 1;
+				}
+			}
+		}
+		function getCategorybusiness(){
+			var keys = $.map(businessType, function(value, key){
+			    return key;     
+			});
+			if(keys.length==1){
+				return keys[0];
+			}else if(keys.length>1){
+				return 3;
+			}
+		}
+		//区域
+		var provinceEl;
+
+		//选择省级地区
+		function setChildAreas(el,selectId){
+			provinceEl = el;
+			$(el).next().find('option').remove();
+			$(el).next().append('<option value="">请选择</option>');
+			
+
+			var parentId = $(el).val();
+			if(parentId){
+				$.ajax({
+					type : "POST",
+					url : "${request.getContextPath()}/areas/getChildAreas.do?parentId="+parentId,
+					dataType : "json",
+					//el : el,
+					//selectId : selectId,
+					success : function(areas) {
+						if(areas && areas instanceof Array && areas.length>0){
+							var area;
+							for(var i=0;i<areas.length;i++){
+								area = areas[i];
+								if(area && typeof area=='object'){
+									if(selectId&&selectId==area.id){
+										$(el).next().append('<option selected="selected" value="'+ area.id +'">'+ area.name +'</option>');
+									}else{
+										$(el).next().append('<option value="'+ area.id +'">'+ area.name +'</option>');
+									}
+								}
+							}
+						}
+					}
+				});
+			}
+		}
+		function getArea(){
+			var area = $(provinceEl).next().val();
+			if(!area){
+				area = $(provinceEl).val();
+			}
+			return area;
+		}
+		//添加联系人
+		function newContacter(el){
+			$(el).parent().before('<br>');
+			var clone = $("#block_contacter form").eq(0).clone();
+			//console.log(clone);
+			clone[0].reset();
+			$(el).parent().before(clone);
+			$("input[name='sex']").click(function() {
+				$(this).parents("td").find("span.checked").removeClass("checked");
+				$(this).parent("span").addClass("checked");
+
+			});
+			$("input[name='keyPerson']").click(function() {
+				$(this).parents("td").find("span.checked").removeClass("checked");
+				$(this).parent("span").addClass("checked");
+
+			});
+		}
+
+
+		//获取所有主要信息
+		function getMainInfo(){
+			var array = $('#form_main').serializeArray();
+			return serializeArrayToJSON(array);
+		}
+
+
+
+		//获取所有联系人(json字符串)
+		var contacters = [];
+
+		//获取联系人信息
+		function getContacters(){
+				contacters = [];
+
+			$("#block_contacter form").each(function(i,form){
+				var array = $(form).serializeArray();
+				var contacter = serializeArrayToJSON(array);
+				if(contacter.name){
+					contacters.push(contacter);
+				}
+			});
+			return contacters;
+			
+		}
+
+
+		//获取附加信息
+		function getAditionalInfo(){
+			var array = $('#form_aditional').serializeArray();
+			var obj =  serializeArrayToJSON(array);
+			if(obj.registerDate == $("#registerDate").attr("placeholder")){
+				obj.registerDate = "";
+			}
+			return obj;
+		}
+
+
+
+		function serializeArrayToJSON(serializeArray){
+			var json = {};
+			serializeArray = $.map(serializeArray, function(obj, i){
+				var temp = {};
+				temp[obj.name]=obj.value
+			    return temp;
+			});
+			for(var i=0;i<serializeArray.length;i++){
+				json = $.extend(json, serializeArray[i]);
+			}
+			return json
+		}
+		var companyModel;
+
+
+		//根据企业名称和品目编号判断是否存在相关数据
+		function search(){
+			var searchStr = $("input[name=companyName]").val();
+			var placeHolder = $("#companyName").attr("placeHolder");;
+			if($.trim(searchStr).length==0 || searchStr ==placeHolder){
+				CommonUtils.succModal('提示','请输入公司名称');
+				return;
+			}
+			companyModel =  CommonUtils.editModal('${request.getContextPath()}/customer/gotoGetCompanyFromMallPage.do?searchString='+encodeURI(encodeURI(searchStr)),800);
+
+		}
+		
+		//根据手机号判断是否存在相关数据
+		function onBlurHome(){
+			var mobilePhone = $('#mobilePhone').val();
+			var companyName = $("input[name=companyName]").val();
+			if(mobilePhone.length==0){
+				CommonUtils.succModal('提示','请输入联系人手机');
+				return false;
+			}else{
+				if(companyName!=null&&companyName!=''&&companyName!='undefined'){
+				//根据电话号码获取商城用户信息
+		    	var company = 	getMallByphone(mobilePhone);
+					//判断主站中是否存在该手机号
+					if(company!=null&&company!="null"){//主站存在该手机号
+						if(companyName!=company){//手机号对应的公司名和当前公司不一致
+				    		if(isLoginName(mobilePhone)){//手机号码是登录名
+				    			CommonUtils.succModal('提示','该手机号码已经注册且公司不为当前公司');
+				    		    return false;
+				    		}else{
+				    			createMallAccount = 1;
+				    				return true;
+				    		}
+				    	}else{//手机号对应的公司名和当前公司一致 
+	 			    		//CommonUtils.succModal('提示','手机号对应的公司名和当前公司一致 ');
+				    	    return true;
+				    	}
+					}else{//商城中不存在该手机号
+						return true;
+					}
+				}else{
+					CommonUtils.succModal('提示','请输入公司名');
+					return false;
+				}
+		    	//companyModel =  CommonUtils.editModal('${request.getContextPath()}/customer/gotoGetCompanyCellphone.do?searchString='+encodeURI(mobilePhone),800);
+			}
+		}
+		
+		//根据电话号码获取主站中用户信息   
+		function getMallByphone(mobilePhone){
+			var company;
+			var url = "${request.getContextPath()}/customer/getSmmdbUsername.do";
+			var param = {tellPhone:mobilePhone}
+			var obj;
+			$.ajax({
+				type : "POST",
+				url : url,
+				dataType : "json",
+				async : false,
+				data : param,
+				success : function(data){
+					obj = data;
+				}});
+			if(obj.returnCode==0){//存在账户
+				company=obj.data.company;
+			}else{
+				company=null;
+			}
+			return company; 
+		}
+		//检查电话号码是否为登录名  
+		function isLoginName(mobilePhone){
+			var a;
+			var url = "${request.getContextPath()}/customer/getUserCount.do";
+			var param = {tellPhone:mobilePhone}
+			$.ajax({
+				type : "POST",
+				url : url,
+				dataType : "json",
+				async : false,
+				data : param,
+				success : function(data){
+				 if(data.returnCode==0){
+	 		        	a =  true;
+	 		        }else if(data.returnCode==1){
+	 		        	a =  false;
+	 		        }else{
+	 		        	CommonUtils.succModal('提示','异常');
+	 		        	a =  false;
+	 		        }
+				}
+			});
+			return a;
+		}
+		
+		
+		
+		
+
+		//选择品牌
+		var brandEl;
+		function brandList(el){
+			brandEl = el;
+			CommonUtils.editModal('${request.getContextPath()}/customer/brandlist.do?values='+encodeURI(encodeURI(el.value)),600);
+		}
+
+
+		//重置所有表单元素
+		function resetAllInput(){
+
+			$("#form_main")[0].reset();
+			$("#form_aditional")[0].reset();
+			$("#contacter_form")[0].reset();
+			$("#salesInput").select2("val","");
+			$("#buyInput").select2("val","");
+			$("#brandInput").select2("val","");
+			$("#categorybusiness span").each(function(index, element){
+				$(element).removeClass("checked");
+			});
+		}
+		
+
+		//从搜索结果里确认选中某公司信息
+		function optionConfirm(){
+			var company = {};
+			company.id=chooseCompanyId;
+			company.userName=chooseUserName;
+
+			if(!company.id){
+				CommonUtils.succModal('提示',"请选择公司");
+				return;
+			}
+
+			//通过获取的用户编号，再次调用接口获取公司详情
+			$.ajax({
+				type : "POST",
+				url : "${request.getContextPath()}/customer/companyDetail.do?companyId="+company.id+"&userName="+chooseUserName,
+				dataType : "json",
+				success : function(companyInfo) {
+
+//					debugger;
+
+					//重置所有表单元素
+					resetAllInput();
+
+					companyInfo = $.parseJSON(companyInfo);
+
+					if(companyInfo && $.isPlainObject(companyInfo)){
+
+						companyOfSearch = {};
+						account=companyInfo.userName;//商城会员账号				
+						$('#companyName').find('input').val(companyInfo.companyName||'');
+
+//						$('#companyName').find('input').attr('readonly','readonly');
+						
+
+						if($.trim(companyInfo.sell)){
+					         $("#salesInput").select2("val", companyInfo.sell.split(","));
+						}
+						
+						//$('#salesProducts').find('input').val(companyInfo.sell||'');
+						if(companyInfo.level){
+							$('#level').find('select').val(companyInfo.level);
+						}
+
+
+						//处理地址区域
+						var areaInfo = companyInfo.area;
+						if(areaInfo && $.isPlainObject(areaInfo)){
+							if(areaInfo.parentID==0){
+								$('#area').find('select').eq(0).val(areaInfo.id);
+							}else{
+								$('#area').find('select').eq(0).val(areaInfo.parentID);
+							}
+
+							setChildAreas($('#area').find('select').eq(0),areaInfo.id);
+
+						}
+
+						if(companyInfo.mode){
+							
+						}
+						$('#address').find('input').val(companyInfo.address||'');
+						var size = companyInfo.size||'';
+						$('#categoryEmployee').find('select option').each(function(){
+							if($(this).val()==size){
+								$(this).attr('selected','selected');
+							}
+						});
+						
+						if($.trim(companyInfo.Buy)){						
+							$("#buyInput").select2("val", companyInfo.Buy.split(","));
+						}
+						
+					 	//附加信息
+						if($.isNumeric(companyInfo.regyear)){
+							$('#registerDate').find('input').val(companyInfo.regyear);
+						}
+						if(companyInfo.telephone){
+							$('#companyPhone').find('input').val(companyInfo.telephone);
+						}
+						if(companyInfo.homepage){
+							$('#companySite').find('input').val(companyInfo.homepage);
+						}
+						if(companyInfo.bank){
+							$('#bank').find('input').val(companyInfo.bank);
+						}
+						if(companyInfo.bankAccount){
+							$('#bankAccount').find('input').val(companyInfo.bankAccount);
+						}
+						
+						//联系人信息
+						var form = $('#block_contacter form:first');
+						if(companyInfo.truename){
+							form.find("input[name='name']").val(companyInfo.truename);
+						}
+						if(companyInfo.gender===true){
+							$("#sexChooseTd span:last").removeClass("checked");
+							$("#sexChooseTd span:first").addClass("checked");
+						}else if(companyInfo.gender===false){
+							$("#sexChooseTd span:first").removeClass("checked");
+							$("#sexChooseTd span:last").addClass("checked");
+						}
+						if(companyInfo.career){
+							form.find("input[name='position']").val(companyInfo.career);
+						}
+						if(companyInfo.contactPhone){
+							form.find("input[name='mobilePhone']").val(companyInfo.contactPhone);
+						}
+						if(companyInfo.qq){
+							form.find("input[name='qq']").val(companyInfo.qq);				
+						}
+						if(companyInfo.email){
+							form.find("input[name='email']").val(companyInfo.email);
+						}
+						if(companyInfo.admin===true){
+							$("#keyPersonChooseId span:last").removeClass("checked");
+							$("#keyPersonChooseId span:first").addClass("checked");
+						}else if(companyInfo.admin===false){
+							$("#keyPersonChooseId span:first").removeClass("checked");
+							$("#keyPersonChooseId span:last").addClass("checked");
+						}
+						$('#user_name').val(companyInfo.userName);
+						$('#mobilePhone').attr('readonly',true);//禁用手机号输入框
+						$("#chooseCompanyClose").click();
+					}
+				}
+			});
+			
+		}
+		
+		$(".js-example-tags").select2({// 
+			   language: "zh_CN",
+			   tags: true,//自定义标签 
+		       placeholder: "标签",//文本框的提示信息
+		       multiple: true,//多选 
+		       minimumInputLength: 0,//至少输入n个字符，才去加载数据
+		       allowClear: true, //是否允许用户清除文本信息
+		       
+		       ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+		    	   url : "${request.getContextPath()}/customer/queryCustomerTag.do",
+		           dataType: 'json',//接收的数据类型
+		           type : "post",
+		           data: function (term, page) {//在查询时向服务器端传输的数据
+		               return {
+		            	   tagName:term, //联动查询的字符
+		                   page: 10 //一次性加载的数据条数
+		               };
+		           },
+		           results: function (data, page) { // parse the results into the format expected by Select2.
+		               // since we are using custom formatting functions we do not need to alter remote JSON data
+		               var realNames = new Array();    
+		                    for (var i = 0; i < data.length; i++) {
+		                         realNames.push({id: data[i].tagname, text: data[i].tagname});
+		                         
+		                  }
+		               return {results: realNames};
+		           }
+		       	},
+		       	/* initSelection: function(element, callback) {//加载初始化
+					var userId = $("#userId").val();
+					if (userId != "") {
+						$.ajax("${request.getContextPath()}/electric/queryCompanyById.do", {
+							dataType: 'json',//接收的数据类型
+				           	type : "post",
+				           	data:{"userId":userId}
+						}).done(function(data) { 
+							callback({id:data.userId,text:data.companyName}); 
+						});
+					}
+				}, */
+				createSearchChoice: function (term, data) {  //输入字符回车后创建新标签  结合 tags: true  使用 
+		            if ($(data).filter(function () {
+		                return this.text.localeCompare(term) === 0;
+		            }).length === 0)
+		            { return { id: term, text: term }; }
+
+		        },
+		       	formatResult: resultFormatResultTag, // omitted for brevity, see the source of this page
+		       	formatSelection: resultFormatSelectionTag,  // omitted for brevity, see the source of this page
+		       	dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+		       	escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+		    });
+		
+ 		function resultFormatResultTag(medata) {
+	        return medata.text; 
+		} 
+		      
+		function resultFormatSelectionTag(medata) {
+		        return medata.text; 
+		}  
+
+	</script>
+</body>
+</html>

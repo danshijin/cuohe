@@ -1,0 +1,71 @@
+<div class="page-header-top">
+    <div class="container-fluid">
+        <!-- LOGO开始 -->
+        <div class="page-logo" style="padding-top: 8px;">
+            <a href="#" onclick="gotoMenu('0','0','${request.getContextPath()}/user/loginSucc.do')"><img src="${request.getContextPath()}/Public/assets/admin/img/logo.png" alt="logo"></a>
+        </div>
+        <!--LOGO结束 -->
+
+        <a href="javascript:;" class="menu-toggler"></a>
+
+        <div class="top-menu">
+            <ul class="nav navbar-nav pull-right" id="chats">
+            	<!-- 用户登录信息开始 -->
+                <li class="dropdown dropdown-user dropdown-dark">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <img alt="" class="img-circle" src="${request.getContextPath()+ Session['userInfo'].image}" onerror="this.src='${request.getContextPath()}/Public/images/user/defaultHead.jpg'; this.onerror=null;">
+                        <span class="username username-hide-mobile" id="userName" style="color: rgba(51, 51, 51, 1);"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                            <a href="#" onclick="CommonUtils.editModal('${request.getContextPath()}/user/getItems.do','600')">
+                                <i class="icon-lock"></i>品目设置</a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="CommonUtils.editModal('${request.getContextPath()}/user/editUserFrameView.do','600')">
+                                <i class="icon-lock"></i>用户编辑</a>
+                        </li>
+                        <li>
+                            <a href="${request.getContextPath()}/user/loginOut.do">
+                                <i class="icon-key"></i>退出登录</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 用户登录信息开始 -->
+                <!--洽谈提示结束-->
+<!--                 <li class="droddown dropdown-separator"> -->
+<!--                     <span class="separator"></span> -->
+<!--                 </li> -->
+                <!--洽谈提示开始-->
+<!--                 <li class="dropdown dropdown-extended dropdown-dark dropdown-notification" id="header_notification_bar"> -->
+<!--                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"> -->
+<!--                         <i class="icon-bell"></i> -->
+<!--                       	  你有 <strong><span class="badge badge-default" >7</span></strong> 条洽谈请求 -->
+<!--                     </a> -->
+<!--                     <ul class="dropdown-menu"> -->
+<!--                         <li class="external"> -->
+<!--                             <h3>你有 <strong>12 </strong> 条洽谈请求</h3> -->
+<!--                             <a href="javascript:;">查看所有</a> -->
+<!--                         </li> -->
+<!--                         <li> -->
+<!--                             <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283"> -->
+<!--                                 <li> -->
+<!--                                     <a href="javascript:;"> -->
+<!--                                         <span class="time">just now</span> -->
+<!-- 										<span class="details"> -->
+<!-- 										<span class="label label-sm label-icon label-success"> -->
+<!-- 										<i class="fa fa-plus"></i> -->
+<!-- 										</span> -->
+<!-- 										New user registered. </span> -->
+<!--                                     </a> -->
+<!--                                 </li> -->
+<!--                             </ul> -->
+<!--                         </li> -->
+<!--                     </ul> -->
+<!--                 </li> -->
+            </ul>
+        </div>
+    </div>
+</div>
+<script>if(typeof(BASE_URL) == "undefined") BASE_URL = '${request.getContextPath()}'; </script>

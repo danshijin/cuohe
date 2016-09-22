@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChItemsEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChItemsEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="chartId" property="chartid" jdbcType="VARCHAR" />
+    <result column="categoryId" property="categoryid" jdbcType="VARCHAR" />
+    <result column="SHFEType" property="shfetype" jdbcType="VARCHAR" />
+    <result column="listOrder" property="listorder" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, chartId, categoryId, SHFEType, listOrder, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_items
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_items
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChItemsEntity" >
+    insert into ch_items (id, name, chartId, 
+      categoryId, SHFEType, listOrder, 
+      status)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{chartid,jdbcType=VARCHAR}, 
+      #{categoryid,jdbcType=VARCHAR}, #{shfetype,jdbcType=VARCHAR}, #{listorder,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChItemsEntity" >
+    insert into ch_items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="chartid != null" >
+        chartId,
+      </if>
+      <if test="categoryid != null" >
+        categoryId,
+      </if>
+      <if test="shfetype != null" >
+        SHFEType,
+      </if>
+      <if test="listorder != null" >
+        listOrder,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="chartid != null" >
+        #{chartid,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryid != null" >
+        #{categoryid,jdbcType=VARCHAR},
+      </if>
+      <if test="shfetype != null" >
+        #{shfetype,jdbcType=VARCHAR},
+      </if>
+      <if test="listorder != null" >
+        #{listorder,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChItemsEntity" >
+    update ch_items
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="chartid != null" >
+        chartId = #{chartid,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryid != null" >
+        categoryId = #{categoryid,jdbcType=VARCHAR},
+      </if>
+      <if test="shfetype != null" >
+        SHFEType = #{shfetype,jdbcType=VARCHAR},
+      </if>
+      <if test="listorder != null" >
+        listOrder = #{listorder,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChItemsEntity" >
+    update ch_items
+    set name = #{name,jdbcType=VARCHAR},
+      chartId = #{chartid,jdbcType=VARCHAR},
+      categoryId = #{categoryid,jdbcType=VARCHAR},
+      SHFEType = #{shfetype,jdbcType=VARCHAR},
+      listOrder = #{listorder,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

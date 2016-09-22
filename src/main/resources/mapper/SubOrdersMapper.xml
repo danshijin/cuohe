@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smm.cuohe.dao.ISubOrdersDAO">
+	
+	<resultMap type="com.smm.cuohe.domain.SubOrder" id="SubOrders">
+	
+		<id property="id" column="id" jdbcType="INTEGER" />
+		
+		<result property="sellId" column="sell_id" jdbcType="INTEGER" />
+		
+		<result property="commodityId" column="commodity_id" jdbcType="INTEGER" />
+		
+		<result property="mallSaleId" column="mall_sale_id" jdbcType="INTEGER" />
+		
+		<collection property="commodityAttrList" column="commodity_id" select="com.smm.cuohe.dao.ICommodityAttrDAO.getCommidtyAttrByCommodityId" />
+	
+	</resultMap>
+	
+	<select id="getSubOrdersByOrderId" resultMap="SubOrders">
+	
+		select so.*, c.name as itemNm 
+		from ch_sub_orders so 
+		left join ch_orders o on so.orderId = o.id
+		left join ch_commodity c on so.commodity_id = c.id
+		where so.orderId = #{orderId};
+	
+	</select>
+	
+	
+</mapper>

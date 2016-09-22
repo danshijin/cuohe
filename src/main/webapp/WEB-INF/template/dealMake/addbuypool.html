@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<title>新建买盘池</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<link href="${request.getContextPath()}/Public/assets/admin/css/css.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+
+<link href="${request.getContextPath()}/Public/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/css/plugins.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/layout.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color">
+<link href="${request.getContextPath()}/Public/assets/admin/css/custom.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+<link href="${request.getContextPath()}/Public/assets/admin/css/common.css" rel="stylesheet" type="text/css">
+
+
+
+<link rel="shortcut icon" href="${request.getContextPath()}/Public/favicon.ico">
+<!--[if lt IE 9]>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/respond.min.js"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+
+<script src="${request.getContextPath()}/Public/assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/layout.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/indexComponent.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/admin/scripts/commonUtils.js" type="text/javascript"></script>
+
+<!-- select2控件 -->
+<!-- select2控件 -->
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/Public/assets/global/plugins/select2/select2_locale_zh-CN.js"></script>
+<link href="${request.getContextPath()}/Public/assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css">
+
+<!-- 数据验证 -->
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-validation/js/jquery.validate.js" type="text/javascript"></script>
+<script src="${request.getContextPath()}/Public/assets/global/plugins/jquery-validation/js/localization/messages_zh.js" type="text/javascript"></script>
+<!-- 数字小数点后两位工具类 -->
+<script type="text/javascript" src="${request.getContextPath()}/Public/js/common/util.js"></script>
+
+<style type="text/css">
+    *
+    {
+        font-size: 14px;
+    }
+    #buyfrom label.error
+    {
+        color: Red;
+        font-size: 13px;
+        margin-left: 5px;
+        padding-left: 16px;
+        background:  left no-repeat;
+    }
+    .commonBtn{
+    	margin: 0 5px;
+    }
+    .normalBtn{
+    	border: 1px solid #C0C1B4; color:#555; background-color:#fff;
+    }
+</style>
+
+</head>
+<body class="page-header-top-fixed">
+<div class="page-header">
+	<!--头部开始-->
+	<#include "/include/top.html" />
+	<!-- 头部信息结束 -->
+
+	<!-- 头部菜单开始 -->
+	<#include "/include/top_menu.html" />
+	<!-- 头部菜单结束 -->
+</div>
+<!-- END HEADER -->
+<div class="page-container">
+	<div class="page-content">
+		<div class="container-fluid">
+			<ul class="page-breadcrumb breadcrumb">
+				<li>
+					<a href="#">首页</a><i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+					撮合管理<i class="fa fa-circle"></i>
+				</li>
+				<li class="active">
+					买盘池
+				</li>
+				<li class="active">
+					 添加买盘
+				</li>
+			</ul>
+			<div class="row margin-top-10">
+				<div class="col-md-12">
+					<div class="portlet light bordered" align="center">
+						<form class="form-horizontal" id="buyfrom">
+						<input type="hidden" in="only" name="only" value="${only}">
+						  <div class="form-group">
+						  	  <p align="left"><h3 style="font-weight: bold;">新建买盘池</h3></p>
+							  <p align="left" ><font size="4">选择产品:</font></p>
+								<table align="left" >
+									<tr>
+									<td width="100px"></td>
+									<#list prodList as pro>
+									
+									<td > <input type="button" onclick='commodity(${pro.id},"${pro.name}",this)'  name ="prodclass"  value="${pro.name}" class="btn commonBtn normalBtn" > </td>
+									
+									<#if pro_index%6==0 && pro_index!=0 >
+									</tr>
+									</#if>
+									</#list>
+								</table>
+								<div style="clear:both;"></div>
+							<input type="hidden" name="prodId"  id="prodId" />
+					  		<input type="hidden" name="prodName" id="prodName" /> 
+					  		<br >
+					  		<label  class="col-sm-2 control-label ">企业名称</label>
+						    <div class="col-sm-1">
+						    	
+						      <input  class="form-control"  width="100" id="companyid"  name="customerId" style="width: 270px;height: 60px;" />
+						    </div>
+						  </div>
+						  <!-- 新增报价人    2016年1月4日下午1:28:21 -->
+						 	<div class="form-group">
+								<label class="col-sm-2 control-label">报价人：</label>
+								<div class="col-sm-1">
+									<input class="form-control" width="100" id="offerer"
+											name="offerer" value="${user.id}" style="width: 130px; height: 60px;" />
+								</div>
+							</div>
+						   <#list itemAttrList as itemAttr>
+							  	<div class="form-group">
+							  		<input type="hidden" name="arrtName" value="${itemAttr.name}">
+							  		<input type="hidden" name="fillmode" value="${itemAttr.fillmode}">
+							  		<input type="hidden" name="ids" value="${itemAttr.id?c}">
+								    <label  class="col-sm-2 control-label">${itemAttr.name}：</label>
+								    <div class="col-sm-2">
+								    	<!-- 填写方式  文本框 -->
+									    <#if itemAttr.fillmode?? && itemAttr.fillmode==0>
+									    	<input class="required" type="text" name="attrValue${itemAttr.id}" class="form-control"  />
+									    </#if>
+									    <!-- 填写方式  下拉框-->
+								     	<#if itemAttr.fillmode?? && itemAttr.fillmode==1>
+								      		<select   name="attrValue${itemAttr.id}" class="form-control" >
+								      		<#if itemAttr.mainproperty?? && itemAttr.mainproperty==0 >
+								      			<option value="" >---请选择---</option>
+								      		</#if>
+								      			<#if itemAttr.optionsValue??>
+					  								<#list itemAttr.optionsValue as optionsValue>
+								      				<option value="${optionsValue!''}">${optionsValue!''}</option>
+								      				</#list>
+					  				  			</#if>
+								      		<select>
+								      	</#if>
+								      	<#if itemAttr.fillmode?? && itemAttr.fillmode==2>
+									   		 <#if itemAttr.optionsValue??>
+						  						<#list itemAttr.optionsValue as optionsValue>								      		
+													<input type="checkbox"  name="attrValue${itemAttr.id}" value="${optionsValue}" class="md-radiobtn" class="form-control"/>
+													${optionsValue}
+									      		</#list>
+						  				 	 	</#if>
+									    		</#if>						      	
+								      	<!-- 填写方式  单选框-->
+									    	<#if itemAttr.fillmode?? && itemAttr.fillmode==3>
+									      		<select  class="form-control required"  name="attrValue${itemAttr.id}">
+									      		<#if itemAttr.mainproperty?? && itemAttr.mainproperty==0 >
+									      			<option value="" >---请选择---</option>
+									      		</#if>
+									      			<#if itemAttr.optionsValue??>
+						  								<#list itemAttr.optionsValue as optionsValue>
+									      				<option value="${optionsValue!''}">${optionsValue!''}</option>
+									      				</#list>
+						  				  			</#if>
+									      		<select>
+									      	</#if>
+								    </div>
+							  	</div>
+						  </#list>
+						  <div class="form-group">
+						    <label  class="col-sm-2 control-label">数量：</label>
+						    <div class="col-sm-2" >
+						       <input type="text" class="form-control" id="quantit" name="quantit">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <label  class="col-sm-2 control-label">价格：</label>
+						    <div class="col-sm-2" >
+						       <input type="text" class="form-control" id="price" name="price">
+						    </div>
+						  </div>
+						   <div class="form-group">
+						    <label  class="col-sm-2 control-label">地区：</label>
+						    <div class="col-sm-2" >
+						       <select class="form-control" id="area" name="area">
+						       <#list  arealist as area >
+						       <option value="${area.id}">${area.name}</option>
+						       </#list>
+						       </select>
+						    </div>
+						  </div>
+						<div class="form-group">
+						   <label  class="col-sm-2 control-label">单位：</label>
+							    <div class="col-sm-2" >
+							      <select  id="unit" name="unit" class="form-control">
+							      <option value="0" selected="selected">吨</option>
+							 	<option value="1">千克</option>
+							      </select>
+							    </div>
+							</div>
+						
+						  <div class="form-group">
+						    <label  class="col-sm-2 control-label">采购标题：</label>
+						    <div class="col-sm-2">
+						      <input type="text" class="form-control" id="title" name="title">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <label  class="col-sm-2 control-label">采购内容：</label>
+						    <div class="col-sm-2">
+						      <textarea name="context" id="context" style="width:500px;height:150px;"></textarea>
+						    </div>
+						  </div>
+						 
+						  <div class="form-group">
+						    <div class="col-sm-offset-2 col-sm-10">
+						    	<button id="Button"  onclick="javascript :history.back(-1);" type="button" class="btn green pull-left">
+									返回 <i class="m-icon-swapright m-icon-white"></i>
+								</button>
+								
+						      	<button type="button"  id="savetButton" class="btn green pull-left">
+									新建<i class="m-icon-swapright m-icon-white"></i>
+								</button>
+								<button type="button"  id="savetButtonfabu" class="btn green pull-left">
+									发布到商城<i class="m-icon-swapright m-icon-white"></i>
+								</button>
+						    </div>
+						  </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 底部开始 -->
+<#include "/include/foot.html" />
+<!-- 底部结束 -->
+</body>
+<script>
+jQuery(document).ready(function() {
+	   
+		$(".control-label").css("text-align","center");
+	   
+	   $("#companyid").select2({
+		   language: "zh_CN",
+        placeholder: "关键字搜索公司",//文本框的提示信息
+        minimumInputLength: 0,//至少输入n个字符，才去加载数据
+        allowClear: true, //是否允许用户清除文本信息
+        /* multiple:true,//多选属性 */
+        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+     	   url : "${request.getContextPath()}/dealMake/queryCompanyByNm.do",
+            dataType: 'json',//接收的数据类型
+            type : "post",
+            data: function (term, page) {//在查询时向服务器端传输的数据
+                return {
+                    companyName: term, //联动查询的字符
+                    page: 10 //一次性加载的数据条数
+                };
+            },
+            results: function (data, page) { // parse the results into the format expected by Select2.
+                // since we are using custom formatting functions we do not need to alter remote JSON data
+                var realNames = new Array();    
+                     for (var i = 0; i < data.length; i++) {
+                          realNames.push({id: data[i].id, text: data[i].name});
+                   }
+                return {results: realNames};
+            }
+        },
+        formatResult: resultFormatResult, // omitted for brevity, see the source of this page
+        formatSelection: resultFormatSelection,  // omitted for brevity, see the source of this page
+        dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+        escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+    });
+	   
+	   
+   	Metronic.init(); // init metronic core componets
+   	Layout.init(); // init layout
+	   
+		//小数点后两位check
+	checkNum($('#price'));
+	   
+   	//库存最多小数点后最多4位 
+   	checkNum5($("#quantit"));
+});
+	recordDate();
+	//初始化日期
+	function recordDate() {
+		var nowDate = new Date();
+        //$('#date-picker').attr("date-date",nowDate.getFullYear()+"/"+parseInt(nowDate.getMonth()+1)+"/"+nowDate.getDate());
+        $('.date-picker').datepicker({
+    	    autoclose: true	   
+    	});
+        
+        
+	}
+
+	//保存不发布
+	$("#savetButton").bind("click",function(){
+		
+		if($("#prodId").val()==null ||""==$("#prodId").val()){
+			alert("请选择产品");
+			return ;
+		}
+		
+		if($("#offerer").val()==null ||""==$("#offerer").val()){
+			alert("请选择报价员");
+			return ;
+		}
+		
+		/*jQuery.validate.js 动态验证
+		 $(":input[name^='attrValue']").each(
+          function() {
+               $(this).rules("add", { required: true, messages: { required: "必须填写"} });
+          }
+        ) */
+		
+		if(!$("#buyfrom").validate({
+			//数据验证
+			rules:{
+				prodId:"required",
+				companyid:"required",
+				quantit:{
+					required: true,
+					min:0.001 //整数
+				} ,
+				price:{
+					required: true,
+					min:0.001 //整数
+				} ,
+				unit:"required",
+				title:"required",
+				context:"required",
+				companyID:"required",
+			}
+		
+		}).form()){
+			return;
+		} 
+
+		$.ajax({
+			url : "${request.getContextPath()}/buypool/addbuyPool.do",
+			type : "post",
+			dataType:"json",
+			async: false,
+			data : $("#buyfrom").serialize(),
+			success : function(result) {			      	
+		      	if(result.code=="success"){
+					alert(result.message);
+		      		window.location.href="${request.getContextPath()}/buypool/buylist.do";
+
+				}else if(result.code=="error"){
+					//alert("已经添加过此卖盘池，请重新选择条件");
+					alert("已经添加过此买盘池");
+					window.location.href="${request.getContextPath()}/buypool/buylist.do";
+		   		}else if (result.code=="CFKH") {
+		   			alert("商品不存在");
+		   			window.location.href="${request.getContextPath()}/buypool/buylist.do";
+				}else{
+					alert(result);
+					window.location.href="${request.getContextPath()}/buypool/buylist.do";
+				}
+			   }
+		});
+		
+			
+	});
+	
+//保存并发布	
+$("#savetButtonfabu").bind("click",function(){
+		
+		if($("#prodId").val()==null ||""==$("#prodId").val()){
+			alert("请选择产品");
+			return ;
+		}
+		
+		if($("#offerer").val()==null ||""==$("#offerer").val()){
+			alert("请选择报价员");
+			return ;
+		}
+		/*jQuery.validate.js 动态验证
+		 $(":input[name^='attrValue']").each(
+          function() {
+               $(this).rules("add", { required: true, messages: { required: "必须填写"} });
+          }
+        ) */
+		
+		if(!$("#buyfrom").validate({
+			//数据验证
+			rules:{
+				prodId:"required",
+				companyid:"required",
+				quantit:{
+					required: true,
+					min:0 //整数
+				} ,
+				price:{
+					required: true,
+					min:0 //整数
+				} ,
+				unit:"required",
+				title:"required",
+				context:"required",
+				companyID:"required",
+			}
+		
+		}).form()){
+			return;
+		} 
+
+		$.ajax({
+			url : "${request.getContextPath()}/buypool/addbuyPool.do?flag=fabu",
+			type : "post",
+			dataType:"json",
+			async: false,
+			data : $("#buyfrom").serialize(),
+			success : function(result) {			      	
+		      	if(result.code=="success"){
+					alert(result.message);
+		      		window.location.href="${request.getContextPath()}/buypool/buylist.do";
+
+				}else if(result.code=="error"){
+					//alert("已经添加过此卖盘池，请重新选择条件");
+					alert("已经添加过此买盘池");
+					window.location.href="${request.getContextPath()}/buypool/buylist.do";
+		   		}else if (result.code=="CFKH") {
+		   			alert("商品不存在");
+		   			window.location.href="${request.getContextPath()}/buypool/buylist.do";
+				}else{
+					alert(result);
+					window.location.href="${request.getContextPath()}/buypool/buylist.do";
+				}
+			   }
+		});
+	});
+	
+	function resultFormatResult(medata) {
+        return medata.text; 
+	} 
+	      
+	function resultFormatSelection(medata) {
+	        return medata.text; 
+	} 
+	
+	
+	function quit(){
+		
+  		window.location.href="${request.getContextPath()}/buypool/buylist.do";
+
+	}
+	
+	function  commodity(prodId,prodName,obj){
+		$("#prodId").val(prodId);
+		$("#prodName").val(prodName);
+		
+		var prodclasss=document.getElementsByName("prodclass");
+		$("input[name='prodclass']").removeClass("green");
+		
+		$(obj).addClass("green");
+    }
+	
+	
+	$("#offerer").select2({
+		 language: "zh_CN",
+	       placeholder: "搜索报价员",//文本框的提示信息
+	       minimumInputLength: 0,//至少输入n个字符，才去加载数据
+	       allowClear: true ,//是否允许用户清除文本信息
+	       ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+	    	   url : "${request.getContextPath()}/business/offererList.do",
+	           dataType: 'json',//接收的数据类型
+	           type : "post",
+	           data: function (term, page) {//在查询时向服务器端传输的数据
+	               return {
+	            	   userName:term, //联动查询的字符
+	                   page: 10 //一次性加载的数据条数
+	               };
+	           },
+	           results: function (data, page) { // parse the results into the format expected by Select2.
+	               // since we are using custom formatting functions we do not need to alter remote JSON data\
+	               var realNames = new Array();    
+	                    for (var i = 0; i < data.length; i++) {
+	                         realNames.push({id: data[i].id, text: data[i].name});
+	                         
+	                  }
+	               return {results: realNames};
+	           }
+	       	},
+	       	initSelection: function(element, callback) {//加载初始化
+				var userId = $("#offerer").val();
+				if (userId !== "") {
+					$.ajax("${request.getContextPath()}/business/initOfferer.do").done(function(data) { 
+						callback({id:data.id,text:data.name}); 
+					});
+				}
+			},
+	       	formatResult: resultFormatResult, // omitted for brevity, see the source of this page
+	       	formatSelection: resultFormatSelection,  // omitted for brevity, see the source of this page
+	       	dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+	       	escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+	});
+</script>
+</html>
+

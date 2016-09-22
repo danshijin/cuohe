@@ -1,0 +1,101 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.smm.cuohe.dao.IContractDao">
+
+	<resultMap id="Contract" type="com.smm.cuohe.domain.Contract">  
+		<id property="id" column="id" />
+		<result property="orderId" column="orderId"/>
+		<association property="sell" column="sellId" select="com.smm.cuohe.dao.ICompanyDAO.getCompanyViewById"/>
+		<association property="buy" column="buyId" select="com.smm.cuohe.dao.ICompanyDAO.getCompanyViewById"/>
+		<collection property="subOrders" column="orderId" select="com.smm.cuohe.dao.ISubOrdersDAO.getSubOrdersByOrderId"/>
+	</resultMap>
+
+	<select id="getSubOrders" parameterType="int" resultType="com.smm.cuohe.domain.SubOrder">
+	
+		select * from ch_sub_orders where orderId = #{orderId};
+		
+	</select>
+
+	<select id="getContractByOrderId" parameterType="java.lang.Integer" resultMap="Contract">
+		SELECT 
+			c.id,
+			o.id as orderId,
+			o.orderCode,
+			c.content,
+			c.filePath,
+			c.mallUrl,
+			c.createdAt,
+			c.confirmedAt,
+			o.itemId,
+			getItemNameById(itemId) as itemName,
+			o.sellId,
+			o.buyId,
+			o.delivery,
+			o.payment,
+			o.poundDiff,
+			o.payment,
+			o.ware_name
+		FROM ch_orders o left join ch_contract c on o.id = c.orderId
+		WHERE o.id=#{orderId};
+	</select>
+	
+	<insert id="addContractWithHtml" parameterType="java.util.Map">
+		
+		call addContractWithHtml(#{orderId}, #{contract}, #{contractMallUrl});
+		
+	</insert>
+	
+	<select id="getConfirmStatus" parameterType="int" resultType="java.lang.Integer">
+	
+		SELECT CASE WHEN confirmedAt IS NULL THEN 0 ELSE 1 END  AS confirmStatus FROM ch_contract WHERE orderId = #{orderId};
+		
+	</select>
+
+	<select id="selectItemAttr" parameterType="int" resultType="com.smm.cuohe.domain.ItemAttr">
+	
+		select name, mainProperty from ch_item_attr where itemId = #{itemId} and status = 0;
+	
+	</select>
+	
+	<select id="getBuyContactersByOrderId" parameterType="int" resultType="com.smm.cuohe.domain.Contacter">
+	
+		select id, name, keyPerson, 
+		case when keyPerson = 1 then '是' else '否' end as keyPersonTxt,
+		mobilePhone, email
+		from ch_contacter 
+		where customerId = (select buyId from ch_orders where id = #{orderId}) 
+		and tidentity in (0,2);
+		
+	</select>
+	
+	<select id="getContractContentAndOrderCodeByOrderId" parameterType="int" resultType="java.util.Map">
+	
+		select c.content,o.poundDiff,o.payment,o.orderCode,o.deliveryDate,o.delivery,o.receipttype,area.name as provinceName from ch_orders o 
+		
+		left join ch_contract c on c.orderId = o.id 
+		
+		LEFT JOIN ch_areas area ON area.id = o.ware_Province
+
+		where o.id = #{orderId};
+	
+	</select>
+	
+	<select id="getContractMallUrl" parameterType="int" resultType="java.lang.String">
+	
+		select mallUrl from ch_contract where orderId = #{orderId};
+	
+	</select>
+	
+	<select id="getAccountByOrderId" parameterType="int" resultType="java.util.Map">
+	
+		SELECT cb.account AS buyer,cs.account seller
+		FROM ch_orders o LEFT JOIN ch_customs cb ON o.buyId = cb.id 
+		LEFT JOIN ch_customs cs ON o.sellId = cs.id
+		WHERE o.id = #{orderId};
+	
+	</select>
+	
+
+</mapper>

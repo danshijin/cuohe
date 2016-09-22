@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smm.cuohe.dao.base.ChSysNoticeEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.smm.cuohe.domain.base.ChSysNoticeEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="noticetext" property="noticetext" jdbcType="VARCHAR" />
+    <result column="createdAt" property="createdat" jdbcType="TIMESTAMP" />
+    <result column="isRead" property="isread" jdbcType="INTEGER" />
+    <result column="readTime" property="readtime" jdbcType="TIMESTAMP" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="noticeType" property="noticetype" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="updatedAt" property="updatedat" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, noticetext, createdAt, isRead, readTime, account, noticeType, status, updatedAt
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ch_sys_notice
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ch_sys_notice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smm.cuohe.domain.base.ChSysNoticeEntity" >
+    insert into ch_sys_notice (id, noticetext, createdAt, 
+      isRead, readTime, account, 
+      noticeType, status, updatedAt
+      )
+    values (#{id,jdbcType=INTEGER}, #{noticetext,jdbcType=VARCHAR}, #{createdat,jdbcType=TIMESTAMP}, 
+      #{isread,jdbcType=INTEGER}, #{readtime,jdbcType=TIMESTAMP}, #{account,jdbcType=VARCHAR}, 
+      #{noticetype,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{updatedat,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.smm.cuohe.domain.base.ChSysNoticeEntity" >
+    insert into ch_sys_notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="noticetext != null" >
+        noticetext,
+      </if>
+      <if test="createdat != null" >
+        createdAt,
+      </if>
+      <if test="isread != null" >
+        isRead,
+      </if>
+      <if test="readtime != null" >
+        readTime,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="noticetype != null" >
+        noticeType,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="updatedat != null" >
+        updatedAt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="noticetext != null" >
+        #{noticetext,jdbcType=VARCHAR},
+      </if>
+      <if test="createdat != null" >
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isread != null" >
+        #{isread,jdbcType=INTEGER},
+      </if>
+      <if test="readtime != null" >
+        #{readtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="noticetype != null" >
+        #{noticetype,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smm.cuohe.domain.base.ChSysNoticeEntity" >
+    update ch_sys_notice
+    <set >
+      <if test="noticetext != null" >
+        noticetext = #{noticetext,jdbcType=VARCHAR},
+      </if>
+      <if test="createdat != null" >
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isread != null" >
+        isRead = #{isread,jdbcType=INTEGER},
+      </if>
+      <if test="readtime != null" >
+        readTime = #{readtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="noticetype != null" >
+        noticeType = #{noticetype,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updatedat != null" >
+        updatedAt = #{updatedat,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smm.cuohe.domain.base.ChSysNoticeEntity" >
+    update ch_sys_notice
+    set noticetext = #{noticetext,jdbcType=VARCHAR},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      isRead = #{isread,jdbcType=INTEGER},
+      readTime = #{readtime,jdbcType=TIMESTAMP},
+      account = #{account,jdbcType=VARCHAR},
+      noticeType = #{noticetype,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      updatedAt = #{updatedat,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
